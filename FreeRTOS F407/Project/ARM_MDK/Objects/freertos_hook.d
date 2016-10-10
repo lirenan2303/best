@@ -1,0 +1,13 @@
+.\objects\freertos_hook.o: ..\..\USER\FreeRTOS_Hook.c
+.\objects\freertos_hook.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\freertos_hook.o: ..\..\FreeRTOS\Source\include\FreeRTOS.h
+.\objects\freertos_hook.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\freertos_hook.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\freertos_hook.o: ..\..\FreeRTOS\FreeRTOSConfig.h
+.\objects\freertos_hook.o: ..\..\FreeRTOS\Source\include\projdefs.h
+.\objects\freertos_hook.o: ..\..\FreeRTOS\Source\include\portable.h
+.\objects\freertos_hook.o: ..\..\FreeRTOS\Source\include\deprecated_definitions.h
+.\objects\freertos_hook.o: ..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h
+.\objects\freertos_hook.o: ..\..\FreeRTOS\Source\include\mpu_wrappers.h
+.\objects\freertos_hook.o: ..\..\FreeRTOS\Source\include\task.h
+.\objects\freertos_hook.o: ..\..\FreeRTOS\Source\include\list.h

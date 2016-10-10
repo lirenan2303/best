@@ -1,0 +1,1079 @@
+Dependencies for Project 'FreeRTOS_STM32F4', Target 'FreeRTOS_STM32F4': (DO NOT MODIFY !)
+F (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)()
+F (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)()
+F (..\..\Libraries\StartUp\startup_stm32f40_41xxx.s)(0x560E8AAA)(--cpu Cortex-M4.fp -g --apcs=interwork -I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include--pd "__UVISION_VERSION SETA 514" --pd "STM32F407xx SETA 1"--list .\listings\startup_stm32f40_41xxx.lst --xref -o .\objects\startup_stm32f40_41xxx.o --depend .\objects\startup_stm32f40_41xxx.d)
+F (..\..\Libraries\stm32f4xx_it.c)(0x57A98E10)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\stm32f4xx_it.o --omf_browse .\objects\stm32f4xx_it.crf --depend .\objects\stm32f4xx_it.d)
+I (..\..\Libraries\stm32f4xx_it.h)(0x5559F376)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+F (..\..\Libraries\system_stm32f4xx.c)(0x57A94C96)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\system_stm32f4xx.o --omf_browse .\objects\system_stm32f4xx.crf --depend .\objects\system_stm32f4xx.d)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+F (..\..\Libraries\FWLIB\src\misc.c)(0x555C4796)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\misc.o --omf_browse .\objects\misc.crf --depend .\objects\misc.d)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+F (..\..\Libraries\FWLIB\src\stm32f4xx_exti.c)(0x555C4796)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\stm32f4xx_exti.o --omf_browse .\objects\stm32f4xx_exti.crf --depend .\objects\stm32f4xx_exti.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+F (..\..\Libraries\FWLIB\src\stm32f4xx_gpio.c)(0x555C4796)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\stm32f4xx_gpio.o --omf_browse .\objects\stm32f4xx_gpio.crf --depend .\objects\stm32f4xx_gpio.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+F (..\..\Libraries\FWLIB\src\stm32f4xx_pwr.c)(0x555C4796)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\stm32f4xx_pwr.o --omf_browse .\objects\stm32f4xx_pwr.crf --depend .\objects\stm32f4xx_pwr.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+F (..\..\Libraries\FWLIB\src\stm32f4xx_rcc.c)(0x555C4796)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\stm32f4xx_rcc.o --omf_browse .\objects\stm32f4xx_rcc.crf --depend .\objects\stm32f4xx_rcc.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+F (..\..\Libraries\FWLIB\src\stm32f4xx_usart.c)(0x555C4796)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\stm32f4xx_usart.o --omf_browse .\objects\stm32f4xx_usart.crf --depend .\objects\stm32f4xx_usart.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+F (..\..\Libraries\FWLIB\src\stm32f4xx_flash.c)(0x555C4796)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\stm32f4xx_flash.o --omf_browse .\objects\stm32f4xx_flash.crf --depend .\objects\stm32f4xx_flash.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+F (..\..\Libraries\FWLIB\src\stm32f4xx_fsmc.c)(0x555C4796)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\stm32f4xx_fsmc.o --omf_browse .\objects\stm32f4xx_fsmc.crf --depend .\objects\stm32f4xx_fsmc.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+F (..\..\Libraries\FWLIB\src\stm32f4xx_rtc.c)(0x555C4796)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\stm32f4xx_rtc.o --omf_browse .\objects\stm32f4xx_rtc.crf --depend .\objects\stm32f4xx_rtc.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+F (..\..\Libraries\FWLIB\src\stm32f4xx_dma.c)(0x555C4796)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\stm32f4xx_dma.o --omf_browse .\objects\stm32f4xx_dma.crf --depend .\objects\stm32f4xx_dma.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+F (..\..\USER\FreeRTOS_Hook.c)(0x57CA3778)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\freertos_hook.o --omf_browse .\objects\freertos_hook.crf --depend .\objects\freertos_hook.d)
+I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+F (..\..\USER\ballast_comm.c)(0x57D1119C)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\ballast_comm.o --omf_browse .\objects\ballast_comm.crf --depend .\objects\ballast_comm.d)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\semphr.h)(0x5620F7DC)
+I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\USER\ballast_comm.h)(0x57AD7DFE)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (..\..\ZKLib_STM32F4\stm32\uart_debug.h)(0x57C63F14)
+I (..\..\USER\gateway_protocol.h)(0x57CCD41C)
+I (..\..\USER\ballast_protocol.h)(0x57C67C60)
+F (..\..\USER\electric.c)(0x57D111AE)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\electric.o --omf_browse .\objects\electric.crf --depend .\objects\electric.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\semphr.h)(0x5620F7DC)
+I (..\..\USER\electric.h)(0x57AD7A38)
+I (..\..\ZKLib_STM32F4\stm32\uart_debug.h)(0x57C63F14)
+I (..\..\USER\gateway_protocol.h)(0x57CCD41C)
+I (..\..\USER\ballast_protocol.h)(0x57C67C60)
+F (..\..\USER\gsm.c)(0x57F9D216)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\gsm.o --omf_browse .\objects\gsm.crf --depend .\objects\gsm.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\semphr.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+I (..\..\USER\gsm.h)(0x57F8A45A)
+I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\ZKLib_STM32F4\stm32\uart_debug.h)(0x57C63F14)
+I (..\..\ZKLib_STM32F4\stm32\norflash.h)(0x57EDF77C)
+I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5475F300)
+I (..\..\ZKLib_STM32F4\stm32\fsmc_nor.h)(0x57F99F78)
+I (..\..\USER\gateway_protocol.h)(0x57CCD41C)
+I (..\..\USER\ballast_protocol.h)(0x57C67C60)
+I (..\..\USER\sys_debug.h)(0x57EDFD9A)
+F (..\..\USER\main.c)(0x57F9B26A)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (..\..\USER\electric.h)(0x57AD7A38)
+I (..\..\USER\time_plan.h)(0x57AD7A2A)
+I (..\..\USER\sys_debug.h)(0x57EDFD9A)
+I (..\..\USER\gsm.h)(0x57F8A45A)
+I (..\..\USER\ballast_Comm.h)(0x57AD7DFE)
+I (..\..\ZKLib_STM32F4\stm32\rtc.h)(0x57AAB642)
+I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5475F300)
+I (..\..\ZKLib_STM32F4\stm32\delay.h)(0x57AAC042)
+F (..\..\USER\time_plan.c)(0x57AD8C7C)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\time_plan.o --omf_browse .\objects\time_plan.crf --depend .\objects\time_plan.d)
+I (..\..\USER\time_plan.h)(0x57AD7A2A)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+F (..\..\USER\sys_debug.c)(0x57F9979E)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\sys_debug.o --omf_browse .\objects\sys_debug.crf --depend .\objects\sys_debug.d)
+I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\semphr.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (..\..\USER\sys_debug.h)(0x57EDFD9A)
+I (..\..\ZKLib_STM32F4\stm32\norflash.h)(0x57EDF77C)
+I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5475F300)
+I (..\..\ZKLib_STM32F4\stm32\fsmc_nor.h)(0x57F99F78)
+I (..\..\USER\gsm.h)(0x57F8A45A)
+F (..\..\USER\gateway_protocol.c)(0x57CCD420)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\gateway_protocol.o --omf_browse .\objects\gateway_protocol.crf --depend .\objects\gateway_protocol.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+I (..\..\USER\gsm.h)(0x57F8A45A)
+I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\ZKLib_STM32F4\stm32\uart_debug.h)(0x57C63F14)
+I (..\..\USER\gateway_protocol.h)(0x57CCD41C)
+F (..\..\USER\ballast_protocol.c)(0x57C68538)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\ballast_protocol.o --omf_browse .\objects\ballast_protocol.crf --depend .\objects\ballast_protocol.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+I (..\..\USER\gsm.h)(0x57F8A45A)
+I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\ZKLib_STM32F4\stm32\uart_debug.h)(0x57C63F14)
+F (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c)(0x5620F7DC)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\port.o --omf_browse .\objects\port.crf --depend .\objects\port.d)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+F (..\..\FreeRTOS\Source\portable\MemMang\heap_2.c)(0x57A8024A)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\heap_2.o --omf_browse .\objects\heap_2.crf --depend .\objects\heap_2.d)
+I (d:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5475F300)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+F (..\..\FreeRTOS\Source\list.c)(0x5620F7DC)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\list.o --omf_browse .\objects\list.crf --depend .\objects\list.d)
+I (d:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5475F300)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+F (..\..\FreeRTOS\Source\queue.c)(0x5620F7DC)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\queue.o --omf_browse .\objects\queue.crf --depend .\objects\queue.d)
+I (d:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
+F (..\..\FreeRTOS\Source\tasks.c)(0x5620F7DC)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\tasks.o --omf_browse .\objects\tasks.crf --depend .\objects\tasks.d)
+I (d:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\timers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\StackMacros.h)(0x5620F7DC)
+F (..\..\ZKLib_STM32F4\stm32\rtc.c)(0x57BAA780)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\rtc.o --omf_browse .\objects\rtc.crf --depend .\objects\rtc.d)
+I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\ZKLib_STM32F4\stm32\rtc.h)(0x57AAB642)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5475F300)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\semphr.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+I (..\..\ZKLib_STM32F4\stm32\delay.h)(0x57AAC042)
+F (..\..\ZKLib_STM32F4\stm32\fsmc_nor.c)(0x57F99F42)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\fsmc_nor.o --omf_browse .\objects\fsmc_nor.crf --depend .\objects\fsmc_nor.d)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\ZKLib_STM32F4\stm32\fsmc_nor.h)(0x57F99F78)
+I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+F (..\..\ZKLib_STM32F4\stm32\norflash.c)(0x57EDF700)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\norflash.o --omf_browse .\objects\norflash.crf --depend .\objects\norflash.d)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (..\..\FreeRTOS\Source\include\semphr.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
+I (..\..\ZKLib_STM32F4\stm32\norflash.h)(0x57EDF77C)
+I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5475F300)
+I (..\..\ZKLib_STM32F4\stm32\fsmc_nor.h)(0x57F99F78)
+I (..\..\USER\sys_debug.h)(0x57EDFD9A)
+F (..\..\ZKLib_STM32F4\stm32\uart_debug.c)(0x57CFA21C)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FreeRTOS\NEW FreeRTOS\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\uart_debug.o --omf_browse .\objects\uart_debug.crf --depend .\objects\uart_debug.d)
+I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
+I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57EB5988)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+I (..\..\USER\sys_debug.h)(0x57EDFD9A)
