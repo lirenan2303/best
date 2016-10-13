@@ -136,7 +136,8 @@ void UpdataNetTime(char *p)
 	{
 	  RTC_SetTime(RTC_Format_BIN,&RTC_TimeTypeInitStructure);
 		RTC_SetDate(RTC_Format_BIN,&RTC_DateTypeInitStructure);
+		
 		vTaskDelay(1);
+		xSemaphoreGive(RTC_SystemRunningSemaphore);
 	}
-	xSemaphoreGive(RTC_SystemRunningSemaphore);
 }

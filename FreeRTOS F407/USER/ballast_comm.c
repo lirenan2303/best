@@ -218,7 +218,7 @@ static void vBallastComm1Task(void *parameter)
 	u8 message[sizeof(BallastComm1RxData.Buff)];
 	u8 protocol_type;
 	
-	while(1)
+	for(;;)
 	{
 		if(xQueueReceive(BallastComm1Queue, &message, configTICK_RATE_HZ) == pdTRUE)
 		{

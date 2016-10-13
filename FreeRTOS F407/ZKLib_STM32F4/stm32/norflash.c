@@ -32,8 +32,8 @@ void NorFlashWrite(u32 addr, const u16 *ram, int len)
 		{
 		   printf_str("\r\nNOR_FLASH Write Error!!!");
 		}
+		xSemaphoreGive(norflash_semaphore);
   }
-	xSemaphoreGive(norflash_semaphore);
 }
 
 void NorFlashEraseSector(uint32_t addr)
@@ -47,8 +47,8 @@ void NorFlashEraseSector(uint32_t addr)
 		{
 			 printf_str("\r\nNOR_FLASH Erase Sector Error!!!");
 		}
+		xSemaphoreGive(norflash_semaphore);
   }
-  xSemaphoreGive(norflash_semaphore);
 }
 
 void NorFlashEraseChip(void) 
@@ -60,8 +60,8 @@ void NorFlashEraseChip(void)
 		status = FSMC_NOR_EraseChip();
 		if(status != NOR_SUCCESS)
 			 printf_str("\r\nNOR_FLASH Erase Chip Error!!!");
+		xSemaphoreGive(norflash_semaphore);
   }
-	xSemaphoreGive(norflash_semaphore);
 }
 
 void NorFlashRead(u32 addr, u16 *ram, int len) 
@@ -69,7 +69,7 @@ void NorFlashRead(u32 addr, u16 *ram, int len)
   if (xSemaphoreTake(norflash_semaphore, configTICK_RATE_HZ * 5) == pdTRUE)
   {
     FSMC_NOR_ReadBuffer(ram, addr, len);
+		xSemaphoreGive(norflash_semaphore);
   }
-	xSemaphoreGive(norflash_semaphore);
 }
 

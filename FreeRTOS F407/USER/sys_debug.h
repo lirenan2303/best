@@ -1,6 +1,8 @@
 #ifndef __SYS_DEBUG_H
 #define __SYS_DEBUG_H
 
+#include "stm32f4xx.h"
+
 #define DEBUG_COM       USART6
 #define DEBUG_COM_IRQn  USART6_IRQn
 

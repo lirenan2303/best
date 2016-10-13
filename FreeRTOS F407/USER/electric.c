@@ -216,7 +216,7 @@ static void vElectTask(void *parameter)
 	u8 message[sizeof(EleRxData.Buff)];
 	u8 protocol_type;
 	
-	while(1)
+	for(;;)
 	{
 		if(xQueueReceive(ElectricQueue, &message, configTICK_RATE_HZ / 10) == pdTRUE)
 		{

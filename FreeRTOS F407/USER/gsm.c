@@ -17,7 +17,7 @@
 #include "common.h"
 #include "sys_debug.h"
 
-#define GSM_TASK_STACK_SIZE			     (configMINIMAL_STACK_SIZE + 1024)
+#define GSM_TASK_STACK_SIZE			     (configMINIMAL_STACK_SIZE + 1024*2)
 
 #define  GSM_COM            USART3
 
@@ -357,8 +357,8 @@ ErrorStatus SendMsgToSim(char*cmd, char *ack, u32 waittime)
 			  }
 		  }
 		}
+		xSemaphoreGive(GsmTx_semaphore);
   }
-	xSemaphoreGive(GsmTx_semaphore);
 	return GSM_MsgState;
 }
 
@@ -389,8 +389,8 @@ void SimSendData(u8 *buf,u8 buf_size)
 					}
 				}
 			}
+			xSemaphoreGive(GsmTx_semaphore);
 		}
-		xSemaphoreGive(GsmTx_semaphore);
 		if(SendState == ERROR)
 		{
 			if(sendtimes == 1)

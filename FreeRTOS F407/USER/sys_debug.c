@@ -1,3 +1,4 @@
+#include "stm32f4xx.h"
 #include <string.h>
 #include <stdio.h>
 #include "FreeRTOS.h"
@@ -48,9 +49,9 @@ void printf_str(char *str)
 		RS485_SEND_SEL
 		printf("%s",str);
 		RS485_RECEIVE_SEL
+		
+		xSemaphoreGive(printf_semaphore);
 	}
-	
-	xSemaphoreGive(printf_semaphore);
 }
 
 void printf_buff(u8 *buf, u16 buf_size)
@@ -64,9 +65,14 @@ void printf_buff(u8 *buf, u16 buf_size)
 			printf("\r\n");
 		}
 		RS485_RECEIVE_SEL
+		
+		xSemaphoreGive(printf_semaphore);
 	}
+}
+
+void printf_data(u8 data)
+{
 	
-	xSemaphoreGive(printf_semaphore);
 }
 
 static inline void DebugRxDataClear(DebugMessage *temp)
@@ -274,7 +280,7 @@ static void vUartDebugTask(void *parameter)
 {
   char DebugDateBuff[DEBUG_BUFF_SIZE];
 	
-	while(1)
+	for(;;)
 	{
 		if(xQueueReceive(uartDebugQueue,DebugDateBuff,portMAX_DELAY) == pdTRUE)
 		{
