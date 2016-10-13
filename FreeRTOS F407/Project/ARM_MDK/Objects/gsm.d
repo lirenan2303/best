@@ -1,5 +1,4 @@
 .\objects\gsm.o: ..\..\USER\gsm.c
-.\objects\gsm.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h
 .\objects\gsm.o: ..\..\Libraries\stm32f4xx.h
 .\objects\gsm.o: ..\..\Libraries\CORE\core_cm4.h
 .\objects\gsm.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
@@ -54,6 +53,8 @@
 .\objects\gsm.o: ..\..\ZKLib_STM32F4\stm32\norflash.h
 .\objects\gsm.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\gsm.o: ..\..\ZKLib_STM32F4\stm32\fsmc_nor.h
+.\objects\gsm.o: ..\..\ZKLib_STM32F4\stm32\rtc.h
 .\objects\gsm.o: ..\..\USER\gateway_protocol.h
 .\objects\gsm.o: ..\..\USER\ballast_protocol.h
+.\objects\gsm.o: ..\..\USER\common.h
 .\objects\gsm.o: ..\..\USER\sys_debug.h

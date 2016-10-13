@@ -28,10 +28,6 @@ typedef struct
 	void (*handlerFunc)(u8 *); //(*指针变量名)(形参列表)(指针强制类型转化)
 } MessageHandlerMap;
 
-
-u8 BCC_CheckSum(u8 *buf, u8 len);
-u8 chr2hex(u8 chr);
-u8 hex2chr(u8 hex);
 void HandleGatewayParam(u8 *p);
 
 #endif

@@ -1,3 +1,4 @@
+#include "stm32f4xx.h"
 #include "stm32f4xx_gpio.h"
 #include "stm32f4xx_dma.h"
 #include "FreeRTOSConfig.h"
@@ -10,11 +11,13 @@
 #include <stdio.h>
 #include "uart_debug.h"
 #include "norflash.h"
+#include "rtc.h"
 #include "gateway_protocol.h"
 #include "ballast_protocol.h"
+#include "common.h"
 #include "sys_debug.h"
 
-#define GSM_TASK_STACK_SIZE			     (configMINIMAL_STACK_SIZE + 1024*10)
+#define GSM_TASK_STACK_SIZE			     (configMINIMAL_STACK_SIZE + 1024)
 
 #define  GSM_COM            USART3
 
@@ -338,12 +341,16 @@ ErrorStatus SendMsgToSim(char*cmd, char *ack, u32 waittime)
 				GSM_MsgState = SUCCESS;
 				break;
 			}
-			else 
+			else
 			{
 				if(xQueueReceive(GSM_AT_queue, &message, waittime/2) == pdTRUE)
 			  {
 				  if(strstr(message, ack) != NULL)
 				  {
+						if(strcmp(ack, "+CCLK: ") == 0)
+						{
+							UpdataNetTime(message);
+						}
 					  GSM_MsgState = SUCCESS;
 					  break;
 				  }
@@ -555,6 +562,8 @@ static void vGSMTask(void *parameter)
 	{
 		while(!GsmStartConnect());
 		GPRS_ConnectState = SUCCESS;
+		
+		SendMsgToSim("AT+CCLK?\r\n", "+CCLK: ", configTICK_RATE_HZ);//更新网络时间
 		break;
 	}
 	

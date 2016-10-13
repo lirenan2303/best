@@ -9,10 +9,10 @@
 #include "semphr.h"
 #include "electric.h"
 #include "uart_debug.h"
+#include "common.h"
 #include "gateway_protocol.h"
-#include "ballast_protocol.h"
 
-#define ELECTRIC_TASK_STACK_SIZE		(configMINIMAL_STACK_SIZE + 1024*5)
+#define ELECTRIC_TASK_STACK_SIZE		(configMINIMAL_STACK_SIZE + 1024)
 #define ELECTRIC_BUFF_SIZE  100
 
 xSemaphoreHandle EleTx_semaphore;

@@ -51,5 +51,5 @@
 .\objects\electric.o: ..\..\FreeRTOS\Source\include\semphr.h
 .\objects\electric.o: ..\..\USER\electric.h
 .\objects\electric.o: ..\..\ZKLib_STM32F4\stm32\uart_debug.h
+.\objects\electric.o: ..\..\USER\common.h
 .\objects\electric.o: ..\..\USER\gateway_protocol.h
-.\objects\electric.o: ..\..\USER\ballast_protocol.h

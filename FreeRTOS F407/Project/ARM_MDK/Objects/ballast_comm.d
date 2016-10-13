@@ -51,5 +51,6 @@
 .\objects\ballast_comm.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h
 .\objects\ballast_comm.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h
 .\objects\ballast_comm.o: ..\..\ZKLib_STM32F4\stm32\uart_debug.h
-.\objects\ballast_comm.o: ..\..\USER\gateway_protocol.h
+.\objects\ballast_comm.o: ..\..\USER\common.h
 .\objects\ballast_comm.o: ..\..\USER\ballast_protocol.h
+.\objects\ballast_comm.o: ..\..\USER\gateway_protocol.h

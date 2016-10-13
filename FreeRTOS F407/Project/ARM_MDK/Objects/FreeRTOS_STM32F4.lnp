@@ -21,6 +21,7 @@
 ".\objects\sys_debug.o"
 ".\objects\gateway_protocol.o"
 ".\objects\ballast_protocol.o"
+".\objects\common.o"
 ".\objects\port.o"
 ".\objects\heap_2.o"
 ".\objects\list.o"

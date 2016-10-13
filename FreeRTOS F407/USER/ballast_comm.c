@@ -9,11 +9,12 @@
 #include "stm32f4xx_usart.h"
 #include "stm32f4xx_dma.h"
 #include "uart_debug.h"
-#include "gateway_protocol.h"
+#include "common.h"
 #include "ballast_protocol.h"
+#include "gateway_protocol.h"
 
 
-#define ZIGBEE_TASK_STACK_SIZE		     (configMINIMAL_STACK_SIZE + 1024*10)
+#define ZIGBEE_TASK_STACK_SIZE		     (configMINIMAL_STACK_SIZE + 1024)
 #define BALLAST_BUFF_SIZE   100
 
 #define  BALLAST_COMM1      UART4
@@ -219,7 +220,7 @@ static void vBallastComm1Task(void *parameter)
 	
 	while(1)
 	{
-		if(xQueueReceive(BallastComm1Queue, &message, configTICK_RATE_HZ / 10) == pdTRUE)
+		if(xQueueReceive(BallastComm1Queue, &message, configTICK_RATE_HZ) == pdTRUE)
 		{
 			protocol_type = (chr2hex(message[5])<<4 | chr2hex(message[6]));
 			const MessageHandlerMap *map = Ballast_MessageMaps;

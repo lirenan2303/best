@@ -51,3 +51,4 @@
 .\objects\rtc.o: ..\..\FreeRTOS\Source\include\task.h
 .\objects\rtc.o: ..\..\FreeRTOS\Source\include\list.h
 .\objects\rtc.o: ..\..\ZKLib_STM32F4\stm32\delay.h
+.\objects\rtc.o: ..\..\USER\common.h

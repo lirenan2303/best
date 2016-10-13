@@ -26,7 +26,7 @@ int main(void)
   	GSMInit();
     BallastCommInit();
     ElectricInit();
-//    TimePlanInit();
+    TimePlanInit();
 
   //printf("\n==============================\n");
   //printf("%s", Version());
