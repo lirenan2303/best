@@ -470,7 +470,7 @@ I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
-F (..\..\USER\ballast_comm.c)(0x57FF303C)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\ballast_comm.o --omf_browse .\objects\ballast_comm.crf --depend .\objects\ballast_comm.d)
+F (..\..\USER\ballast_comm.c)(0x5800A8C6)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\ballast_comm.o --omf_browse .\objects\ballast_comm.crf --depend .\objects\ballast_comm.d)
 I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
 I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
 I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
@@ -486,8 +486,7 @@ I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
 I (..\..\FreeRTOS\Source\include\semphr.h)(0x5620F7DC)
 I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
 I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
-I (..\..\USER\ballast_comm.h)(0x57AD7DFE)
-I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\USER\ballast_comm.h)(0x580181A8)
 I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
 I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
 I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
@@ -501,6 +500,7 @@ I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
@@ -522,7 +522,7 @@ I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
 I (..\..\ZKLib_STM32F4\stm32\uart_debug.h)(0x57FC8FE8)
 I (..\..\USER\common.h)(0x57FD8CB0)
-I (..\..\USER\ballast_protocol.h)(0x57C67C60)
+I (..\..\USER\ballast_protocol.h)(0x5801929A)
 I (..\..\USER\gateway_protocol.h)(0x57FC8FD8)
 F (..\..\USER\electric.c)(0x57FF3030)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\electric.o --omf_browse .\objects\electric.crf --depend .\objects\electric.d)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
@@ -577,7 +577,7 @@ I (..\..\USER\electric.h)(0x57AD7A38)
 I (..\..\ZKLib_STM32F4\stm32\uart_debug.h)(0x57FC8FE8)
 I (..\..\USER\common.h)(0x57FD8CB0)
 I (..\..\USER\gateway_protocol.h)(0x57FC8FD8)
-F (..\..\USER\gsm.c)(0x57FF32BA)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\gsm.o --omf_browse .\objects\gsm.crf --depend .\objects\gsm.d)
+F (..\..\USER\gsm.c)(0x58046942)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\gsm.o --omf_browse .\objects\gsm.crf --depend .\objects\gsm.d)
 I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
 I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
 I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
@@ -628,15 +628,15 @@ I (..\..\USER\gsm.h)(0x57F8A45A)
 I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
 I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
 I (..\..\ZKLib_STM32F4\stm32\uart_debug.h)(0x57FC8FE8)
-I (..\..\ZKLib_STM32F4\stm32\norflash.h)(0x57EDF77C)
+I (..\..\ZKLib_STM32F4\stm32\norflash.h)(0x58004DF8)
 I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5475F300)
 I (..\..\ZKLib_STM32F4\stm32\fsmc_nor.h)(0x57F99F78)
-I (..\..\ZKLib_STM32F4\stm32\rtc.h)(0x57FB48CE)
+I (..\..\ZKLib_STM32F4\stm32\rtc.h)(0x58044578)
 I (..\..\USER\gateway_protocol.h)(0x57FC8FD8)
-I (..\..\USER\ballast_protocol.h)(0x57C67C60)
+I (..\..\USER\ballast_protocol.h)(0x5801929A)
 I (..\..\USER\common.h)(0x57FD8CB0)
 I (..\..\USER\sys_debug.h)(0x57FF21B4)
-F (..\..\USER\main.c)(0x57FF3C2C)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+F (..\..\USER\main.c)(0x580465C8)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
 I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
 I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
 I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
@@ -685,11 +685,13 @@ I (..\..\USER\electric.h)(0x57AD7A38)
 I (..\..\USER\time_plan.h)(0x57FB48B4)
 I (..\..\USER\sys_debug.h)(0x57FF21B4)
 I (..\..\USER\gsm.h)(0x57F8A45A)
-I (..\..\USER\ballast_Comm.h)(0x57AD7DFE)
-I (..\..\ZKLib_STM32F4\stm32\rtc.h)(0x57FB48CE)
+I (..\..\USER\ballast_Comm.h)(0x580181A8)
+I (..\..\USER\ballast_protocol.h)(0x5801929A)
+I (..\..\ZKLib_STM32F4\stm32\rtc.h)(0x58044578)
 I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5475F300)
 I (..\..\ZKLib_STM32F4\stm32\delay.h)(0x57AAC042)
-F (..\..\USER\time_plan.c)(0x57FF31CE)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\time_plan.o --omf_browse .\objects\time_plan.crf --depend .\objects\time_plan.d)
+I (..\..\USER\km_ctrl.h)(0x5801924E)
+F (..\..\USER\time_plan.c)(0x580194DA)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\time_plan.o --omf_browse .\objects\time_plan.crf --depend .\objects\time_plan.d)
 I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
 I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
 I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
@@ -788,7 +790,7 @@ I (..\..\FreeRTOS\Source\include\semphr.h)(0x5620F7DC)
 I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
 I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
 I (..\..\USER\sys_debug.h)(0x57FF21B4)
-I (..\..\ZKLib_STM32F4\stm32\norflash.h)(0x57EDF77C)
+I (..\..\ZKLib_STM32F4\stm32\norflash.h)(0x58004DF8)
 I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5475F300)
 I (..\..\ZKLib_STM32F4\stm32\fsmc_nor.h)(0x57F99F78)
 I (..\..\USER\gsm.h)(0x57F8A45A)
@@ -843,7 +845,7 @@ I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
 I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
 I (..\..\ZKLib_STM32F4\stm32\uart_debug.h)(0x57FC8FE8)
 I (..\..\USER\gateway_protocol.h)(0x57FC8FD8)
-F (..\..\USER\ballast_protocol.c)(0x57C68538)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\ballast_protocol.o --omf_browse .\objects\ballast_protocol.crf --depend .\objects\ballast_protocol.d)
+F (..\..\USER\ballast_protocol.c)(0x580181C4)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\ballast_protocol.o --omf_browse .\objects\ballast_protocol.crf --depend .\objects\ballast_protocol.d)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
 I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
 I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
@@ -878,6 +880,7 @@ I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (..\..\USER\ballast_comm.h)(0x580181A8)
 I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
 I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
 I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57FF1E70)
@@ -893,7 +896,8 @@ I (..\..\USER\gsm.h)(0x57F8A45A)
 I (d:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
 I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
 I (..\..\ZKLib_STM32F4\stm32\uart_debug.h)(0x57FC8FE8)
-F (..\..\USER\common.c)(0x57FD841C)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\common.o --omf_browse .\objects\common.crf --depend .\objects\common.d)
+I (..\..\USER\ballast_protocol.h)(0x5801929A)
+F (..\..\USER\common.c)(0x58009770)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\common.o --omf_browse .\objects\common.crf --depend .\objects\common.d)
 I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
 I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
 I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
@@ -929,6 +933,53 @@ I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
 I (..\..\USER\common.h)(0x57FD8CB0)
+F (..\..\USER\km_ctrl.c)(0x5801D94C)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\km_ctrl.o --omf_browse .\objects\km_ctrl.crf --depend .\objects\km_ctrl.d)
+I (..\..\USER\km_ctrl.h)(0x5801924E)
+I (..\..\Libraries\stm32f4xx.h)(0x57CA6774)
+I (..\..\Libraries\CORE\core_cm4.h)(0x5559F3AE)
+I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Libraries\CORE\core_cmInstr.h)(0x5559F3AE)
+I (..\..\Libraries\CORE\core_cmFunc.h)(0x5559F39E)
+I (..\..\Libraries\CORE\core_cmSimd.h)(0x5559F39C)
+I (..\..\Libraries\system_stm32f4xx.h)(0x5559F434)
+I (..\..\Libraries\stm32f4xx_conf.h)(0x5559F37A)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_adc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_crc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dbgmcu.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dma.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_exti.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_flash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_i2c.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_iwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_pwr.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rcc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_sdio.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_spi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_syscfg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_tim.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_usart.h)(0x57CA7B9E)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_wwdg.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\misc.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_cryp.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_hash.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_rng.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_can.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
+I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
+I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
+I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
+I (..\..\FreeRTOS\FreeRTOSConfig.h)(0x57FF1E70)
+I (..\..\FreeRTOS\Source\include\projdefs.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\portable.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\deprecated_definitions.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\mpu_wrappers.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
+I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
+I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
 F (..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c)(0x5620F7DC)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\port.o --omf_browse .\objects\port.crf --depend .\objects\port.d)
 I (..\..\FreeRTOS\Source\include\FreeRTOS.h)(0x57DDF29E)
 I (d:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5475F300)
@@ -997,9 +1048,9 @@ I (..\..\FreeRTOS\Source\include\task.h)(0x56228178)
 I (..\..\FreeRTOS\Source\include\list.h)(0x5620F7DC)
 I (..\..\FreeRTOS\Source\include\timers.h)(0x5620F7DC)
 I (..\..\FreeRTOS\Source\include\StackMacros.h)(0x5620F7DC)
-F (..\..\ZKLib_STM32F4\stm32\rtc.c)(0x57FF3270)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\rtc.o --omf_browse .\objects\rtc.crf --depend .\objects\rtc.d)
+F (..\..\ZKLib_STM32F4\stm32\rtc.c)(0x580448D0)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I..\..\Libraries -I..\..\Libraries\CORE -I..\..\Libraries\FWLIB\inc -I..\..\FreeRTOS -I..\..\FreeRTOS\Source\include -I..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F -I..\..\USER -I..\..\ZKLib_STM32F4 -I..\..\ZKLib_STM32F4\stm32-I "F:\FIT MANAGER V3.4 Software\FreeRTOS F407\Project\ARM_MDK\RTE"-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0-I d:\Keil_v5\ARM\CMSIS\Include-I d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\Device\Include-D__UVISION_VERSION="514" -DSTM32F407xx -DUSE_STDPERIPH_DRIVER -DSTM32F40_41xxx --C99-o .\objects\rtc.o --omf_browse .\objects\rtc.crf --depend .\objects\rtc.d)
 I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
-I (..\..\ZKLib_STM32F4\stm32\rtc.h)(0x57FB48CE)
+I (..\..\ZKLib_STM32F4\stm32\rtc.h)(0x58044578)
 I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
 I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5475F300)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h)(0x555C4782)
@@ -1133,7 +1184,7 @@ I (..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h)(0x555C4782)
 I (..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h)(0x555C4782)
 I (..\..\FreeRTOS\Source\include\semphr.h)(0x5620F7DC)
 I (..\..\FreeRTOS\Source\include\queue.h)(0x5620F7DC)
-I (..\..\ZKLib_STM32F4\stm32\norflash.h)(0x57EDF77C)
+I (..\..\ZKLib_STM32F4\stm32\norflash.h)(0x58004DF8)
 I (d:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5475F300)
 I (..\..\ZKLib_STM32F4\stm32\fsmc_nor.h)(0x57F99F78)
 I (..\..\USER\sys_debug.h)(0x57FF21B4)

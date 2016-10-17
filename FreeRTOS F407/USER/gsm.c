@@ -111,7 +111,7 @@ static void GSM_USART_Init(void)
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;//×Ö³¤Îª8Î»Êý¾Ý¸ñÊ½
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;//Ò»¸öÍ£Ö¹Î»
 	USART_InitStructure.USART_Parity = USART_Parity_No;//ÎÞÆæÅ¼Ð£ÑéÎ»
-	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;//ÎÞÓ²¼þÊý¾ÝÁ÷¿ØÖÆ
+	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_RTS_CTS;//·¢ËÍ½ÓÊÕÓ²¼þÁ÷¿ØÖÆ
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;	//ÊÕ·¢Ä£Ê½
   USART_Init(GSM_COM, &USART_InitStructure); //³õÊ¼»¯´®¿Ú
 	
@@ -147,7 +147,7 @@ static void GSM_CtrlPinInit(void)
 static void GSM_TX_DMA_Init(void) 
 {
 	DMA_InitTypeDef  DMA_InitStructure;
-//	NVIC_InitTypeDef NVIC_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
 	
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1,ENABLE);//DMA1Ê±ÖÓÊ¹ÄÜ 
   DMA_DeInit(DMA1_Stream3);//DMA1Êý¾ÝÁ÷3
@@ -172,14 +172,14 @@ static void GSM_TX_DMA_Init(void)
   DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;//ÍâÉèÍ»·¢µ¥´Î´«Êä
   DMA_Init(DMA1_Stream3, &DMA_InitStructure);//³õÊ¼»¯DMA Stream
 	
-	//DMA_ITConfig(DMA1_Stream3, DMA_IT_TC, ENABLE);
+	DMA_ITConfig(DMA1_Stream3, DMA_IT_TC, ENABLE);
 	USART_DMACmd(USART3,USART_DMAReq_Tx,ENABLE);  //Ê¹ÄÜ´®¿Ú3µÄDMA·¢ËÍ
 		
-//	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Stream3_IRQn;//´®¿ÚÖÐ¶ÏÍ¨µÀ
-//	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=15;//ÇÀÕ¼ÓÅÏÈ¼¶
-//	NVIC_InitStructure.NVIC_IRQChannelSubPriority =0;		//×ÓÓÅÏÈ¼¶
-//	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQÍ¨µÀÊ¹ÄÜ
-//	NVIC_Init(&NVIC_InitStructure);	//¸ù¾ÝÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯NVIC¼Ä´æÆ÷¡
+	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Stream3_IRQn;//´®¿ÚÖÐ¶ÏÍ¨µÀ
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=15;//ÇÀÕ¼ÓÅÏÈ¼¶
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority =0;		//×ÓÓÅÏÈ¼¶
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQÍ¨µÀÊ¹ÄÜ
+	NVIC_Init(&NVIC_InitStructure);	//¸ù¾ÝÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯NVIC¼Ä´æÆ÷¡
 }
 
 static inline void GsmRxDataInput(GsmMessage *temp, char dat)
@@ -264,7 +264,7 @@ void USART3_IRQHandler(void)
 			
 		  GsmRxDataInput(&GsmRxData,data);
 		
-			if(((GsmRxData.length > 4) && (data == 0x0A)) || (data == '>'))
+			if((GsmRxData.length > 4) && (data == 0x0A))
 			{
 				xQueueSendFromISR(GSM_AT_queue, GsmRxData.Buff, &xHigherPriorityTaskWoken);
 				portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
@@ -278,22 +278,39 @@ void USART3_IRQHandler(void)
 	}
 }
 
+
 void GsmDMA_TxBuff(char *buf, u8 buf_size)
 {
 	char message[sizeof(GsmRxData.Buff)];
 	
-	DMA_ClearFlag(DMA1_Stream3,DMA_FLAG_TCIF3);//Çå³ýDMA1_Steam3´«ÊäÍê³É±êÖ¾
-	
-	memcpy(GsmTxData.Buff, buf, buf_size);
-	GsmTxData.length = buf_size;
+	if(xSemaphoreTake(GsmTx_semaphore, configTICK_RATE_HZ * 5) == pdTRUE)
+	{
+		DMA_ClearFlag(DMA1_Stream3,DMA_FLAG_TCIF3);//Çå³ýDMA1_Steam3´«ÊäÍê³É±êÖ¾
 		
-	DMA_Cmd(DMA1_Stream3, DISABLE);                         //¹Ø±ÕDMA´«Êä 
-	while(DMA_GetCmdStatus(DMA1_Stream3) != DISABLE){}	    //È·±£DMA¿ÉÒÔ±»ÉèÖÃ  
-	DMA_SetCurrDataCounter(DMA1_Stream3,GsmTxData.length);  //Êý¾Ý´«ÊäÁ¿  
+		memcpy(GsmTxData.Buff, buf, buf_size);
+		GsmTxData.length = buf_size;
 			
-	xQueueReceive(GSM_AT_queue, &message, 0);               //¿ªÆôDMA´«ÊäÖ®Ç°Çå¿ÕATÏûÏ¢¶ÓÁÐ
-			
-	DMA_Cmd(DMA1_Stream3, ENABLE);                          //¿ªÆôDMA´«Êä 
+		DMA_Cmd(DMA1_Stream3, DISABLE);                         //¹Ø±ÕDMA´«Êä 
+		while(DMA_GetCmdStatus(DMA1_Stream3) != DISABLE){}	    //È·±£DMA¿ÉÒÔ±»ÉèÖÃ  
+		DMA_SetCurrDataCounter(DMA1_Stream3,GsmTxData.length);  //Êý¾Ý´«ÊäÁ¿  
+				
+		xQueueReceive(GSM_AT_queue, &message, 0);               //¿ªÆôDMA´«ÊäÖ®Ç°Çå¿ÕATÏûÏ¢¶ÓÁÐ
+				
+		DMA_Cmd(DMA1_Stream3, ENABLE);                          //¿ªÆôDMA´«Êä 
+	}
+}
+
+void DMA1_Stream3_IRQHandler(void)
+{
+	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+	
+	if(DMA_GetFlagStatus(DMA1_Stream3,DMA_FLAG_TCIF3) == SET)
+	{
+		DMA_ClearFlag(DMA1_Stream3,DMA_FLAG_TCIF3);
+		
+	  xSemaphoreGiveFromISR(GsmTx_semaphore, &xHigherPriorityTaskWoken);
+		portEND_SWITCHING_ISR( xHigherPriorityTaskWoken);
+	}
 }
 
 ErrorStatus RelinkTCP(void)
@@ -310,7 +327,7 @@ ErrorStatus RelinkTCP(void)
 		return ERROR;
 	}
 	
-	if(!SendMsgToSim(NULL, "CONNECT OK", configTICK_RATE_HZ * 20))
+	if(!SendMsgToSim(NULL, "\r\nCONNECT\r\n", configTICK_RATE_HZ * 20))
 	{
 		printf_str("\r\nÎÞ·¨Á¬½Ó·þÎñÆ÷IP¶Ë¿Ú\r\n");
 		return ERROR;
@@ -327,92 +344,78 @@ ErrorStatus SendMsgToSim(char*cmd, char *ack, u32 waittime)
 	
 	startT = xTaskGetTickCount();
   
-	if(xSemaphoreTake(GsmTx_semaphore, configTICK_RATE_HZ * 5) == pdTRUE)
+	while(xTaskGetTickCount() - startT < waittime)
 	{
-		while(xTaskGetTickCount() - startT < waittime)
+		if(cmd != NULL)
 		{
-      if(cmd != NULL)
-			{
-		  	GsmDMA_TxBuff(cmd, strlen(cmd));
-			}
-		
-			if(ack == NULL)
-			{
-				GSM_MsgState = SUCCESS;
-				break;
-			}
-			else
-			{
-				if(xQueueReceive(GSM_AT_queue, &message, waittime/2) == pdTRUE)
-			  {
-				  if(strstr(message, ack) != NULL)
-				  {
-						if(strcmp(ack, "+CCLK: ") == 0)
-						{
-							UpdataNetTime(message);
-						}
-					  GSM_MsgState = SUCCESS;
-					  break;
-				  }
-			  }
-		  }
+			GsmDMA_TxBuff(cmd, strlen(cmd));
 		}
-		xSemaphoreGive(GsmTx_semaphore);
-  }
+		if(ack == NULL)
+		{
+			GSM_MsgState = SUCCESS;
+			break;
+		}
+		else
+		{
+			if(xQueueReceive(GSM_AT_queue, &message, waittime/2) == pdTRUE)
+			{
+				if(strstr(message, ack) != NULL)
+				{
+					if((strcmp(ack, "+CCLK: ") == 0))
+					{
+						UpdataNetTime(message);
+					}
+					GSM_MsgState = SUCCESS;
+					break;
+				}
+				else if(strstr((char*)message, "*PSUTTZ: ") != NULL)
+				{
+					NetTimeCentury(message);
+				}
+			}
+		}
+	}
 	return GSM_MsgState;
 }
 
 void SimSendData(u8 *buf,u8 buf_size)
 {
-	ErrorStatus SendState = ERROR;
-	u8 sendtimes = 0;
 	char message[sizeof(GsmRxData.Buff)];
 	
-	while(1)
+	if(xQueueReceive(GSM_AT_queue, &message, 0) == pdTRUE)
 	{
-		sendtimes++;
-		if(xSemaphoreTake(GsmTx_semaphore, configTICK_RATE_HZ * 5) == pdTRUE)
+		if(strcmp(message, "\r\nCLOSED\r\n") == 0)
 		{
-			GsmDMA_TxBuff("AT+CIPSEND\r\n",sizeof("AT+CIPSEND\r\n"));
-			if(xQueueReceive(GSM_AT_queue, &message, configTICK_RATE_HZ * 5) == pdTRUE)
+		  if(RelinkTCP() == ERROR)
 			{
-				if(strstr(message, ">") != NULL)
-				{
-					*(buf + buf_size) = 0x1a;
-					GsmDMA_TxBuff((char*)buf,buf_size+1);
-					if(xQueueReceive(GSM_AT_queue, &message, configTICK_RATE_HZ * 5) == pdTRUE)
-					{
-						if(strstr(message, "SEND OK") != NULL)
-						{
-							SendState = SUCCESS;
-						}
-					}
-				}
-			}
-			xSemaphoreGive(GsmTx_semaphore);
-		}
-		if(SendState == ERROR)
-		{
-			if(sendtimes == 1)
-			{
-				if(RelinkTCP() == SUCCESS)
-				{
-					continue;
-				}
-				else
-				{
-					GsmStartConnect();
-					continue;
-				}
-			}
-			else
-			{
-				NVIC_SystemReset();
+				if(GsmStartConnect() == ERROR)
+					NVIC_SystemReset();
 			}
 		}
-		else
-			break;
-  }
+	}
+  GsmDMA_TxBuff((char*)buf,buf_size);
+}
+
+ErrorStatus SwitchToCommand(void)
+{
+	vTaskDelay(configTICK_RATE_HZ);
+	if(!SendMsgToSim("+++", "OK", configTICK_RATE_HZ * 8))
+	{
+		printf_str("ÃüÁîÄ£Ê½ÇÐ»»Ê§°Ü\r");
+		return ERROR;
+	}
+	vTaskDelay(configTICK_RATE_HZ);
+	return SUCCESS;
+}
+
+ErrorStatus SwitchToData(void)
+{
+	if(!SendMsgToSim("ATO\r\n", "CONNECT", configTICK_RATE_HZ * 5))
+	{
+		printf_str("Êý¾ÝÄ£Ê½ÇÐ»»Ê§°Ü\r");
+		return ERROR;
+	}	
+	return SUCCESS;
 }
 
 static void GSM_ModuleStart(void)
@@ -423,7 +426,7 @@ static void GSM_ModuleStart(void)
 	 	vTaskDelay(configTICK_RATE_HZ * 3 / 2);
 		GPIO_SetBits(GPIO_GPRS_PW_EN, PIN_GPRS_PW_EN);
 		
-		if(!SendMsgToSim(NULL, "NORMAL POWER DOWN", configTICK_RATE_HZ * 10))//GSM¹Ø±ÕÕý³£ 
+		if(!SendMsgToSim(NULL, "NORMAL POWER DOWN", configTICK_RATE_HZ * 10))//GSM¹Ø±ÕÕý³£
 		{
 			continue;
 		}
@@ -460,30 +463,30 @@ ErrorStatus GsmStartConnect(void)
 		return ERROR;
 	}
 	
-	if(!SendMsgToSim("ATE0\r", "OK", configTICK_RATE_HZ))//»ØÏÔÄ£Ê½¹Ø±Õ
+	if(!SendMsgToSim("ATE0\r\n", "OK", configTICK_RATE_HZ))//»ØÏÔÄ£Ê½¹Ø±Õ
 	{
 	  printf_str("\r\n»ØÏÔÄ£Ê½¹Ø±ÕÒì³££¡\r\n");
 		return ERROR;
 	}
 	
-	if(!SendMsgToSim("AT+CIPMODE=0\r\n", "OK", configTICK_RATE_HZ)) //Ñ¡ÔñTCPIPÄ£Ê½Îª·ÇÍ¸Ã÷Ä£Ê½
+	if(!SendMsgToSim("AT+CIPMODE=1\r\n", "OK", configTICK_RATE_HZ)) //Ñ¡ÔñTCPIPÄ£Ê½ÎªÍ¸Ã÷´«Êä
 	{
-	  printf_str("\r\nGSM´«ÊäÄ£Ê½ÅäÖÃÒì³££¡\r\n");
+	  printf_str("\r\nÍ¸Ã÷´«ÊäÅäÖÃÒì³££¡\r\n");
 		return ERROR;
 	}
+	
+	if(!SendMsgToSim("AT+CIPCCFG=5,2,1024,1\r\n", "\r\nOK\r\n", configTICK_RATE_HZ)) //ÅäÖÃ´«Êä²ÎÊý
+	{
+	  printf_str("\r\nGSM´«Êä²ÎÊýÅäÖÃÒì³££¡\r\n");
+		return ERROR;
+	}
+	
 	
 	if(!SendMsgToSim("AT+CLTS=1\r\n", "OK", configTICK_RATE_HZ)) //»ñÈ¡±¾µØÊ±¼ä´Á
 	{
 	  printf_str("\r\nGSM»ñÈ¡Ê±¼äÒì³££¡\r\n");
 		return ERROR;
 	}
-
-	
-//	if(!SendMsgToSim("AT+CIPCCFG=5,2,1024,1\r\n", "\r\nOK\r\n", configTICK_RATE_HZ / 2, 2)) //ÅäÖÃ´«Êä²ÎÊý
-//	{
-//	  printf_str("\r\nGSM´«Êä²ÎÊýÅäÖÃÒì³££¡\r\n");
-//		return ERROR;
-//	}
 	
 	if(!SendMsgToSim("AT+CPIN?\r\n", "+CPIN: READY", configTICK_RATE_HZ * 4))//²éÑ¯SIM¿¨ÊÇ·ñREADY
 	{
@@ -499,9 +502,9 @@ ErrorStatus GsmStartConnect(void)
 		return ERROR;
 	}
 	
-	if(!SendMsgToSim("AT+CGATT=0\r", "OK", configTICK_RATE_HZ * 4)) //¸½¼Ó»ògprs·þÎñ·ÖÀë
+	if(!SendMsgToSim("AT+CGATT=0\r", "OK", configTICK_RATE_HZ * 4)) //gprs·ÖÀë
 	{
-			printf("AT+CGATT=0 error\r");
+			printf("\r\nGPRS·ÖÀëÒì³£\r\n");
 			return ERROR;
   }
 	
@@ -519,15 +522,27 @@ ErrorStatus GsmStartConnect(void)
 	
 	if(!SendMsgToSim(buf, "OK", configTICK_RATE_HZ * 20))//Á¬½Ó·þÎñÆ÷
 	{
-		printf_str("\r\nÎÞ·¨Á¬½Ó·þÎñÆ÷IP¶Ë¿Ú\r\n");
+		printf_str("\r\nTCP¸ñÊ½²»ÕýÈ·\r\n");
 		return ERROR;
 	}
 	
-	if(!SendMsgToSim(NULL, "CONNECT OK", configTICK_RATE_HZ * 30))
+	if(!SendMsgToSim(NULL, "\r\nCONNECT\r\n", configTICK_RATE_HZ * 30))
 	{
 		printf_str("\r\nÎÞ·¨Á¬½Ó·þÎñÆ÷IP¶Ë¿Ú\r\n");
 		return ERROR;
 	}
+	
+	vTaskDelay(configTICK_RATE_HZ);
+	
+	SwitchToCommand();
+	
+	if(!SendMsgToSim("AT+CCLK?\r\n", "+CCLK: ", configTICK_RATE_HZ)) //¸üÐÂÍøÂçÊ±¼ä
+	{
+		printf("»ñÈ¡ÍøÂçÊ±¼äÊ§°Ü\r\n");
+		return ERROR;
+  }
+	
+	SwitchToData();
 	
 	return SUCCESS;
 }
@@ -562,14 +577,13 @@ static void vGSMTask(void *parameter)
 	{
 		while(!GsmStartConnect());
 		GPRS_ConnectState = SUCCESS;
-		
-		SendMsgToSim("AT+CCLK?\r\n", "+CCLK: ", configTICK_RATE_HZ);//¸üÐÂÍøÂçÊ±¼ä
+
 		break;
 	}
 	
 	for(;;)
 	{
-		if(xQueueReceive(GSM_GPRS_queue, message, configTICK_RATE_HZ) == pdTRUE)
+		if(xQueueReceive(GSM_GPRS_queue, message, configTICK_RATE_HZ/10) == pdTRUE)
 		{
 			protocol_type = (chr2hex(message[11])<<4 | chr2hex(message[12]));
 			const MessageHandlerMap *map = GPRS_MessageMaps;

@@ -56,7 +56,7 @@
 //#define NORFLASH_PARAM_OFFSET   		   		((u32)0x00001000)
 //#define NORFLASH_STRATEGY_OFFSET        	((u32)0x00001000)
 
-//镇流器参数及策略扇区内偏移 
+//镇流器参数及策略扇区内偏移  0x64100000 - 0x64800000 可以存储1792盏单灯数据
 #define NORFLASH_BALLAST_NUM   				          ((u32)0x00100000)//镇流器数目
 #define NORFLASH_BALLAST_BASE  				          ((u32)0x00101000)//镇流器参数基址
 #define PARAM_ZIGBEE_ADDR_OFFSET                ((u32)0x00000000)//(0x00000000-0x00000006)共4*2个字节ASCII码存储ZIGBEE地址

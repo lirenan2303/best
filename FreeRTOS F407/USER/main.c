@@ -8,25 +8,30 @@
 #include "sys_debug.h"
 #include "gsm.h"
 #include "ballast_Comm.h"
+#include "ballast_protocol.h"
 #include "rtc.h"
 #include "delay.h"
+#include "km_ctrl.h"
 
 
 extern void WatchdogInit(void);
 extern void NorFlashInit(void);
 //extern void RtcInit(void);
 
+
 int main(void)
 {
 	  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);//设置系统中断优先级分组2
  //  WatchdogInit();
     NorFlashInit();
-    RtcInit(); 
+    RtcInit();
     UartDebugInit();
   	GSMInit();
     BallastCommInit();
     ElectricInit();
-    TimePlanInit();
+//    TimePlanInit();
+	  KM_CtrlInit();
+	  AllTableInit();
 
   //printf("\n==============================\n");
   //printf("%s", Version());

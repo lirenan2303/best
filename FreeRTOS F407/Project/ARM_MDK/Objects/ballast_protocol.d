@@ -35,6 +35,7 @@
 .\objects\ballast_protocol.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h
 .\objects\ballast_protocol.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h
 .\objects\ballast_protocol.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h
+.\objects\ballast_protocol.o: ..\..\USER\ballast_comm.h
 .\objects\ballast_protocol.o: ..\..\FreeRTOS\Source\include\FreeRTOS.h
 .\objects\ballast_protocol.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\ballast_protocol.o: ..\..\FreeRTOS\FreeRTOSConfig.h
@@ -50,3 +51,4 @@
 .\objects\ballast_protocol.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\ballast_protocol.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\ballast_protocol.o: ..\..\ZKLib_STM32F4\stm32\uart_debug.h
+.\objects\ballast_protocol.o: ..\..\USER\ballast_protocol.h

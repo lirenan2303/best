@@ -7,5 +7,6 @@
 
 void UpdataNetTime(char *p);
 u8 RtcInit(void);
+void NetTimeCentury(char *p);
 
 #endif

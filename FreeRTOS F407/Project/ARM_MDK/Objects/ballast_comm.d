@@ -15,7 +15,6 @@
 .\objects\ballast_comm.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\ballast_comm.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\ballast_comm.o: ..\..\USER\ballast_comm.h
-.\objects\ballast_comm.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h
 .\objects\ballast_comm.o: ..\..\Libraries\stm32f4xx.h
 .\objects\ballast_comm.o: ..\..\Libraries\CORE\core_cm4.h
 .\objects\ballast_comm.o: ..\..\Libraries\CORE\core_cmInstr.h

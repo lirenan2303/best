@@ -16,7 +16,6 @@ static void vTimePlanTask(void *parameter)
 	{
    
 	}
-	
 }
 
 void TimePlanInit(void)

@@ -14,6 +14,11 @@
 static SemaphoreHandle_t RTC_SystemRunningSemaphore;
 NVIC_InitTypeDef   NVIC_InitStructure;
 
+RTC_DateTypeDef RTC_DateTypeInitStructure;
+RTC_TimeTypeDef RTC_TimeTypeInitStructure;
+
+u16 YearCentury = 2000;
+
 //void RTC_WKUP_IRQHandler(void)
 //{
 //	if(RTC_GetFlagStatus(RTC_FLAG_WUTF)==SET)//WK_UP中断
@@ -108,8 +113,6 @@ void UpdataNetTime(char *p)
 {
 	char buf[30];
 	short temp[10];
-  RTC_DateTypeDef RTC_DateTypeInitStructure;
-	RTC_TimeTypeDef RTC_TimeTypeInitStructure;
 	
 	sscanf(p, "%*s%s", buf); 
 	
@@ -123,7 +126,7 @@ void UpdataNetTime(char *p)
 	RTC_TimeTypeInitStructure.RTC_Minutes = Bcd2ToByte(chr2hex(buf[13])<<4 | chr2hex(buf[14]));
 	RTC_TimeTypeInitStructure.RTC_Seconds = Bcd2ToByte(chr2hex(buf[16])<<4 | chr2hex(buf[17]));
 	
-	RTC_DateTypeInitStructure.RTC_WeekDay = CaculateWeekDay(((u16)RTC_DateTypeInitStructure.RTC_Year+2000), 
+	RTC_DateTypeInitStructure.RTC_WeekDay = CaculateWeekDay(((u16)RTC_DateTypeInitStructure.RTC_Year + YearCentury), 
 	                                        RTC_DateTypeInitStructure.RTC_Month, RTC_DateTypeInitStructure.RTC_Date);
 	
 	if(RTC_DateTypeInitStructure.RTC_Year < 16)//年份是否小于16年
@@ -139,5 +142,19 @@ void UpdataNetTime(char *p)
 		
 		vTaskDelay(1);
 		xSemaphoreGive(RTC_SystemRunningSemaphore);
+	}
+}
+
+void NetTimeCentury(char *p)
+{
+	char buf[30];
+	short temp[10];
+	
+	sscanf(p, "%*s%s", buf); 
+	
+  if(sscanf(buf,"%hd,%hd,%hd,%hd,%hd,%hd,",&temp[0],&temp[1],&temp[2],&temp[3],&temp[4], &temp[5]) == 6)//检查校时字符串格式是否正确
+	{
+	  YearCentury = Bcd2ToByte(chr2hex(buf[0])<<4 | chr2hex(buf[1]));
+		YearCentury *= 100;
 	}
 }
