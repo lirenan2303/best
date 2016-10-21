@@ -548,6 +548,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\USER\km_ctrl.c</FilePath>
             </File>
+            <File>
+              <FileName>lat_longitude.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\USER\lat_longitude.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

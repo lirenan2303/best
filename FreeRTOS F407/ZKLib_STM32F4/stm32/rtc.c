@@ -13,11 +13,7 @@
 
 static SemaphoreHandle_t RTC_SystemRunningSemaphore;
 NVIC_InitTypeDef   NVIC_InitStructure;
-
-RTC_DateTypeDef RTC_DateTypeInitStructure;
-RTC_TimeTypeDef RTC_TimeTypeInitStructure;
-
-u16 YearCentury = 2000;
+TimeTypeDef time;
 
 //void RTC_WKUP_IRQHandler(void)
 //{
@@ -78,6 +74,10 @@ u8 RtcInit(void)
     RTC_Init(&RTC_InitStructure);
 	 
 		RTC_WriteBackupRegister(RTC_BKP_DR0,0xA5A5);	//标记已经初始化过了
+		
+		RTC_WriteBackupRegister(RTC_BKP_DR1,20);	//世纪备份
+		
+		RTC_WriteBackupRegister(RTC_BKP_DR2,32);	//时区备份
 	}
 	
 //  RTC_Set_WakeUp(RTC_WakeUpClock_CK_SPRE_16bits,0);
@@ -111,13 +111,23 @@ u8 CaculateWeekDay(int y,int m, int d) //基姆拉尔森公式
 
 void UpdataNetTime(char *p)
 {
+	RTC_DateTypeDef RTC_DateTypeInitStructure;
+  RTC_TimeTypeDef RTC_TimeTypeInitStructure;
 	char buf[30];
 	short temp[10];
+	int Zone_value = 0;
 	
 	sscanf(p, "%*s%s", buf); 
 	
   if(sscanf(buf,"\"%hd/%hd/%hd,%hd:%hd:%hd+%hd\"",&temp[0],&temp[1],&temp[2],&temp[3],&temp[4], &temp[5], &temp[6]) != 7)//检查校时字符串格式是否正确
     return;
+	
+	Zone_value = temp[6];
+	if(RTC_ReadBackupRegister(RTC_BKP_DR2) != Zone_value)
+	{
+	  PWR_BackupAccessCmd(ENABLE);	//使能后备寄存器访问 
+	  RTC_WriteBackupRegister(RTC_BKP_DR2,Zone_value);	//时区备份
+	}
 
 	RTC_DateTypeInitStructure.RTC_Year = Bcd2ToByte(chr2hex(buf[1])<<4 | chr2hex(buf[2]));
 	RTC_DateTypeInitStructure.RTC_Month = Bcd2ToByte(chr2hex(buf[4])<<4 | chr2hex(buf[5]));
@@ -126,7 +136,7 @@ void UpdataNetTime(char *p)
 	RTC_TimeTypeInitStructure.RTC_Minutes = Bcd2ToByte(chr2hex(buf[13])<<4 | chr2hex(buf[14]));
 	RTC_TimeTypeInitStructure.RTC_Seconds = Bcd2ToByte(chr2hex(buf[16])<<4 | chr2hex(buf[17]));
 	
-	RTC_DateTypeInitStructure.RTC_WeekDay = CaculateWeekDay(((u16)RTC_DateTypeInitStructure.RTC_Year + YearCentury), 
+	RTC_DateTypeInitStructure.RTC_WeekDay = CaculateWeekDay(((u16)RTC_DateTypeInitStructure.RTC_Year + RTC_ReadBackupRegister(RTC_BKP_DR1)*100), 
 	                                        RTC_DateTypeInitStructure.RTC_Month, RTC_DateTypeInitStructure.RTC_Date);
 	
 	if(RTC_DateTypeInitStructure.RTC_Year < 16)//年份是否小于16年
@@ -149,12 +159,40 @@ void NetTimeCentury(char *p)
 {
 	char buf[30];
 	short temp[10];
+	int YearCentury = 0;
 	
 	sscanf(p, "%*s%s", buf); 
 	
   if(sscanf(buf,"%hd,%hd,%hd,%hd,%hd,%hd,",&temp[0],&temp[1],&temp[2],&temp[3],&temp[4], &temp[5]) == 6)//检查校时字符串格式是否正确
 	{
 	  YearCentury = Bcd2ToByte(chr2hex(buf[0])<<4 | chr2hex(buf[1]));
-		YearCentury *= 100;
+		
+		if(RTC_ReadBackupRegister(RTC_BKP_DR1) != YearCentury)
+		{
+			PWR_BackupAccessCmd(ENABLE);	//使能后备寄存器访问 
+			RTC_WriteBackupRegister(RTC_BKP_DR1,YearCentury);	//世纪备份
+		}
+	}
+}
+
+void ReadRTC_Time(TimeTypeDef* TimeStruct)
+{
+	RTC_DateTypeDef RTC_DateTypeInitStructure;
+  RTC_TimeTypeDef RTC_TimeTypeInitStructure;
+	
+	if(xSemaphoreTake(RTC_SystemRunningSemaphore, configTICK_RATE_HZ * 5) == pdTRUE)
+	{
+		RTC_GetDate(RTC_Format_BIN,&RTC_DateTypeInitStructure);
+		RTC_GetTime(RTC_Format_BIN,&RTC_TimeTypeInitStructure);
+		
+		TimeStruct->tm_sec = RTC_TimeTypeInitStructure.RTC_Seconds;
+	  TimeStruct->tm_min = RTC_TimeTypeInitStructure.RTC_Minutes;
+	  TimeStruct->tm_hour = RTC_TimeTypeInitStructure.RTC_Hours;
+	  TimeStruct->tm_mday = RTC_DateTypeInitStructure.RTC_Date;
+	  TimeStruct->tm_mon = RTC_DateTypeInitStructure.RTC_Month;
+	  TimeStruct->tm_year = RTC_DateTypeInitStructure.RTC_Year + RTC_ReadBackupRegister(RTC_BKP_DR1)*100;
+	  TimeStruct->tm_wday = RTC_DateTypeInitStructure.RTC_WeekDay;
+		
+		xSemaphoreGive(RTC_SystemRunningSemaphore);
 	}
 }

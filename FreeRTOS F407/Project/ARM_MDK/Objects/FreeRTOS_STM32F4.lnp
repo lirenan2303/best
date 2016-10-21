@@ -23,6 +23,7 @@
 ".\objects\ballast_protocol.o"
 ".\objects\common.o"
 ".\objects\km_ctrl.o"
+".\objects\lat_longitude.o"
 ".\objects\port.o"
 ".\objects\heap_2.o"
 ".\objects\list.o"

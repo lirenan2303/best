@@ -16,23 +16,24 @@
 #define NORFLASH_IP2_PORT2			              ((u32)0x00003000)
 
 //网关参数1
-#define NORFLASH_MANAGER_PARA1_BASE		        ((u32)0x00004000)//ASCII码存储
-#define NORFLASH_LNG_OFFSET				            ((u32)0x00000000)
-#define NORFLASH_LAT_OFFSET			    	        ((u32)0x0000000A)
-#define NORFLASH_ZIGBEE_NUM_OFFSET			      ((u32)0x00000013)
-#define NORFLASH_DATA_UPDATA_INVL_OPPSET  	  ((u32)0x00000014)
-#define NORFLASH_LOOP_NUM_OFFSET				      ((u32)0x00000016)
-#define NORFLASH_ZIGBEE_CFG_OFFSET	  	      ((u32)0x00000018)
+#define NORFLASH_MANAGER_PARA1_BASE		        ((u32)0x00004000)//ASCII码存储*2
+#define NORFLASH_MANAGER_ID_OFFSET   	        ((u32)0x00000002)
+#define NORFLASH_LNG_OFFSET				            ((u32)0x0000000E)
+#define NORFLASH_LAT_OFFSET			    	        ((u32)0x00000022)
+#define NORFLASH_ZIGBEE_NUM_OFFSET			      ((u32)0x00000036)
+#define NORFLASH_DATA_UPDATA_INVL_OPPSET  	  ((u32)0x00000038)
+#define NORFLASH_LOOP_NUM_OFFSET				      ((u32)0x0000003C)
+#define NORFLASH_ZIGBEE_CFG_OFFSET	  	      ((u32)0x00000040)
 
 //网关参数2
-#define NORFLASH_MANAGER_PARA2_BASE  	        ((u32)0x00005000)//16进制存储
+#define NORFLASH_MANAGER_PARA2_BASE  	        ((u32)0x00005000)//ASCII码存储*2
 #define NORFLASH_TURN_ON1_OFFSET              ((u32)0x00000000)
 #define NORFLASH_TURN_ON2_OFFSET              ((u32)0x00000001)
 #define NORFLASH_TURN_OFF1_OFFSET  		        ((u32)0x00000002)
 #define NORFLASH_TURN_OFF2_OFFSET    	        ((u32)0x00000003)
 
 //网关参数3
-#define NORFLASH_MANAGER_PARA3_BASE           ((u32)0x00006000)//16进制存储
+#define NORFLASH_MANAGER_PARA3_BASE           ((u32)0x00006000)//ASCII码存储*2
 #define NORFLASH_VIN_HIGH_OFFSET         		  ((u32)0x00000000)
 #define NORFLASH_VIN_LOW_OFFSET         		  ((u32)0x00000006)
 #define NORFLASH_NOLOAD_CURRENT_OFFSET        ((u32)0x0000000C)
@@ -86,6 +87,7 @@ void NorFlashEraseChip(void);
 
 bool NorFlashMutexLock(uint32_t time);
 void NorFlashMutexUnlock(void);
+void MemStorage_Convert(u8 *msg, u16 cvt_size, u16 *write_buf);
 
 
 #endif

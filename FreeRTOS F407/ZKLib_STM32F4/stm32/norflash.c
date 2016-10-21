@@ -73,3 +73,13 @@ void NorFlashRead(u32 addr, u16 *ram, int len)
   }
 }
 
+void MemStorage_Convert(u8 *msg, u16 cvt_size, u16 *write_buf)
+{
+  u8 i;
+	
+	for(i=0;i<cvt_size;i++)
+	{
+		*(write_buf+i) = *(msg+i);
+	}
+}
+

@@ -51,3 +51,8 @@
 .\objects\gateway_protocol.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\gateway_protocol.o: ..\..\ZKLib_STM32F4\stm32\uart_debug.h
 .\objects\gateway_protocol.o: ..\..\USER\gateway_protocol.h
+.\objects\gateway_protocol.o: ..\..\ZKLib_STM32F4\stm32\norflash.h
+.\objects\gateway_protocol.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\gateway_protocol.o: ..\..\ZKLib_STM32F4\stm32\fsmc_nor.h
+.\objects\gateway_protocol.o: ..\..\USER\common.h
+.\objects\gateway_protocol.o: ..\..\USER\lat_longitude.h

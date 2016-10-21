@@ -6,6 +6,7 @@ typedef enum
 	ACKERROR = 0,           /*从站应答异常*/
 	GATEPARAM = 0x01,       /*网关参数下载*/
 	LIGHTPARAM = 0x02,      /*灯参数下载*/
+	STRATEGY = 0x03,        /*灯策略下载*/
 	DIMMING = 0x04,         /*灯调光控制*/
 	LAMPSWITCH = 0x05,      /*灯开关控制*/
 	READDATA = 0x06,        /*读镇流器数据*/
@@ -29,5 +30,10 @@ typedef struct
 } MessageHandlerMap;
 
 void HandleGatewayParam(u8 *p);
+void HandleLightParam(u8 *p);
+void HandleStrategyDownload(u8 *p);
+void HandleLightDimmer(u8 *p);
+void HandleLightOnOff(u8 *p);
+
 
 #endif

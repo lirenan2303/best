@@ -8,8 +8,6 @@
 
 #define UPLOAD_TASK_STACK_SIZE			     (configMINIMAL_STACK_SIZE + 2*1024)
 
-
-
 static void vTimePlanTask(void *parameter)
 {
 	for(;;)
