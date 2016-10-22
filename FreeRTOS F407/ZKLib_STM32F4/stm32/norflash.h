@@ -42,7 +42,7 @@
 #define NORFLASH_OTHER_ALARMS_OFFSET          ((u32)0x0000001D)
 
 
-//#define NORFLASH_SECTOR_SIZE   				    ((u32)0x00001000)
+#define NORFLASH_SECTOR_SIZE   				    ((u32)0x00001000)
 //#define NORFLASH_MANAGEM_BASE  				    ((u32)0x00001000)//网关参数-经纬度、上传数据时间间隔
 //#define NORFLASH_ONOFFTIME1   				    ((u32)0x00003000)//开关灯时间1
 //#define NORFLASH_ONOFFTIME2   				    ((u32)0x00004000)//开关灯时间2

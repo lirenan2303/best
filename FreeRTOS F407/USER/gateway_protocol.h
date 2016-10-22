@@ -35,5 +35,7 @@ void HandleStrategyDownload(u8 *p);
 void HandleLightDimmer(u8 *p);
 void HandleLightOnOff(u8 *p);
 
+void AllParaInit(void);
+
 
 #endif

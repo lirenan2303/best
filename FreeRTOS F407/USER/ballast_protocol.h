@@ -7,7 +7,7 @@
 typedef struct{
 u8 branch;
 u8 segment;
-u16 pole_num; 
+u16 pole_id; 
 u16 addr;
 }LampAttrSortType;
 

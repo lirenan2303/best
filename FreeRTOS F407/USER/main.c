@@ -8,6 +8,7 @@
 #include "sys_debug.h"
 #include "gsm.h"
 #include "ballast_Comm.h"
+#include "gateway_protocol.h"
 #include "ballast_protocol.h"
 #include "rtc.h"
 #include "delay.h"
@@ -31,6 +32,7 @@ int main(void)
     ElectricInit();
 //    TimePlanInit();
 	  KM_CtrlInit();
+    AllParaInit();
 	  AllTableInit();
 
   //printf("\n==============================\n");

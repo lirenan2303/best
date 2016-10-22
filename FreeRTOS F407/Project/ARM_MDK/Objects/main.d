@@ -50,6 +50,7 @@
 .\objects\main.o: ..\..\USER\sys_debug.h
 .\objects\main.o: ..\..\USER\gsm.h
 .\objects\main.o: ..\..\USER\ballast_Comm.h
+.\objects\main.o: ..\..\USER\gateway_protocol.h
 .\objects\main.o: ..\..\USER\ballast_protocol.h
 .\objects\main.o: ..\..\ZKLib_STM32F4\stm32\rtc.h
 .\objects\main.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
