@@ -71,7 +71,7 @@ const static MessageHandlerMap GPRS_MessageMaps[] =  //二位数组的初始化
 {
 	{GATEPARAM,      HandleGatewayParam},     /*0x01; 网关参数下载*/           
 	{LIGHTPARAM,     HandleLightParam},       /*0x02; 灯参数下载*/  
-	{STRATEGY,       HandleStrategyDownload}, /*0x03; 灯调光控制*/	
+	{STRATEGY,       HandleStrategyDownload}, /*0x03; 灯策略下载*/
 	{DIMMING,        HandleLightDimmer},      /*0x04; 灯调光控制*/
 	{LAMPSWITCH,     HandleLightOnOff},       /*0x05; 灯开关控制*/
 //	{READDATA,       HandleReadBSNData},      /*0x06; 读镇流器数据*/

@@ -9,11 +9,32 @@
 #include <stdio.h>
 #include "uart_debug.h"
 #include "gateway_protocol.h"
+#include "ballast_protocol.h"
 #include "norflash.h"
 #include "common.h"
 #include "lat_longitude.h"
 
 extern TimeTypeDef time;
+
+ErrorStatus unit_addr_check(u16 *addr, u16 *addr_hex)
+{
+	u16 i,j,k,l;
+
+	i = ((*addr>>12) & 0x000f);
+	j = ((*addr>>8) & 0x000f);
+	k = ((*addr>>4) & 0x000f);
+	l = ((*addr) & 0x000f);
+	
+	if(i >9 ) return ERROR;
+	else if(j >9 ) return ERROR;
+	else if(k >9 ) return ERROR;
+	else if(l >9 ) return ERROR;
+	else 
+	{
+		*addr_hex = i*1000+j*100+k*10+l;
+	  return SUCCESS;  
+	}
+}
 
 ErrorStatus Protocol_Check(u8 *buf, u8 *BufData_Size)
 {
@@ -115,14 +136,16 @@ void HandleLightParam(u8 *p)
 {
 	u8 lamp_param_num,data_size=0;
 	u16 WriteBuff[200]={0};
-	u16 i,zigbee_addr;
-	u8 buf_temp[5];
+	u16 i,unit_addr,unit_addr_hex=0;
+	u8 buf_temp[200],ctrl_code,n=0,j;
+	
 
 	buf_temp[0] = *(p+16);
 	buf_temp[1] = *(p+17);
 	buf_temp[2] = *(p+18);
 	buf_temp[3] = *(p+19);
 	buf_temp[4] = *(p+15);
+	ctrl_code = *(p+15);
 	
 	if(!Protocol_Check(p, &data_size))
 	{
@@ -145,28 +168,33 @@ void HandleLightParam(u8 *p)
 	{
 		for(i=0;i<lamp_param_num;i++)
 		{
-		  zigbee_addr =  chr2hex(WriteBuff[17*i])<<4;
-		  zigbee_addr = (chr2hex(WriteBuff[17*i+1])+zigbee_addr)<<4;
-		  zigbee_addr = (chr2hex(WriteBuff[17*i+2])+zigbee_addr)<<4;
-		  zigbee_addr =  chr2hex(WriteBuff[17*i+3])+zigbee_addr;
+		  unit_addr =  chr2hex(WriteBuff[17*i])<<4;
+		  unit_addr = (chr2hex(WriteBuff[17*i+1])+unit_addr)<<4;
+		  unit_addr = (chr2hex(WriteBuff[17*i+2])+unit_addr)<<4;
+		  unit_addr =  chr2hex(WriteBuff[17*i+3])+unit_addr;
 			
-			if(zigbee_addr > 1000)
+			if(!unit_addr_check(&unit_addr, &unit_addr_hex))
+				return;
+			
+			if(unit_addr > MAX_LAMP_NUM)
 			  return;
-			NorFlashWrite(NORFLASH_BALLAST_BASE + zigbee_addr*NORFLASH_SECTOR_SIZE, WriteBuff, 17);
+			NorFlashWrite(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE, WriteBuff, 17);
 		}
 	}
 	else if(*(p+15) == 0x32) //删除多盏灯
 	{
 		for(i=0;i<lamp_param_num;i++)
 		{
-		  zigbee_addr =  chr2hex(WriteBuff[17*i])<<4;
-		  zigbee_addr = (chr2hex(WriteBuff[17*i+1])+zigbee_addr)<<4;
-		  zigbee_addr = (chr2hex(WriteBuff[17*i+2])+zigbee_addr)<<4;
-		  zigbee_addr =  chr2hex(WriteBuff[17*i+3])+zigbee_addr;
+		  unit_addr =  chr2hex(WriteBuff[17*i])<<4;
+		  unit_addr = (chr2hex(WriteBuff[17*i+1])+unit_addr)<<4;
+		  unit_addr = (chr2hex(WriteBuff[17*i+2])+unit_addr)<<4;
+		  unit_addr =  chr2hex(WriteBuff[17*i+3])+unit_addr;
 			
-			if(zigbee_addr > 1000)
+			if(!unit_addr_check(&unit_addr, &unit_addr_hex))
+				return;
+			if(unit_addr > MAX_LAMP_NUM)
 			  return;
-			FSMC_NOR_EraseSector(NORFLASH_BALLAST_BASE + zigbee_addr*NORFLASH_SECTOR_SIZE);
+			FSMC_NOR_EraseSector(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE);
 		}
 	}
 	else if(*(p+15) == 0x33) //更改多盏灯
@@ -174,9 +202,9 @@ void HandleLightParam(u8 *p)
 	}
 	else if(*(p+15) == 0x34) //删除所有灯
 	{
-		for(i=0;i<=1000;i++)
+		for(i=0;i<(MAX_LAMP_NUM+15)/16;i++)
 		{
-			FSMC_NOR_EraseSector(NORFLASH_BALLAST_BASE + i*NORFLASH_SECTOR_SIZE);
+			FSMC_NOR_EraseBlock(NORFLASH_BALLAST_NUM + i*NORFLASH_BLOCK_SIZE);
 		}
 	}
 	else
@@ -185,7 +213,16 @@ void HandleLightParam(u8 *p)
 		return;
 	}
 	
-	Protocol_Response(0x82, 5, buf_temp);
+	for(i=0;i<lamp_param_num;i++)
+	{
+		for(j=0;j<4;j++)
+		{
+			buf_temp[n] = WriteBuff[17*i+j];
+			n++;
+		}
+	}
+	buf_temp[4*lamp_param_num] = ctrl_code;
+	Protocol_Response(0x82, 4*lamp_param_num+1, buf_temp);
 }
 
 void HandleStrategyDownload(u8 *p)

@@ -9,6 +9,7 @@
 * NOR_FLASH地址映射表
 ********************************************************************************************************/
 
+
 //网关地址、服务器IP、端口号
 #define NORFLASH_ADDR_BASE                    ((u32)0x00000000)  
 #define NORFLASH_MANAGER_ADDR       		    	((u32)0x00001000)
@@ -43,6 +44,8 @@
 
 
 #define NORFLASH_SECTOR_SIZE   				    ((u32)0x00001000)
+#define NORFLASH_BLOCK_SIZE   				    ((u32)0x00010000)
+
 //#define NORFLASH_MANAGEM_BASE  				    ((u32)0x00001000)//网关参数-经纬度、上传数据时间间隔
 //#define NORFLASH_ONOFFTIME1   				    ((u32)0x00003000)//开关灯时间1
 //#define NORFLASH_ONOFFTIME2   				    ((u32)0x00004000)//开关灯时间2

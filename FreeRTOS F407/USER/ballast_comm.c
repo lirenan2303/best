@@ -30,21 +30,11 @@ typedef struct
 }BallastMessage;
 
 
-const static MessageHandlerMap Ballast_MessageMaps[] =  //二位数组的初始化
+const static UnitMessageHandlerMap Ballast_MessageMaps[] =  //二位数组的初始化
 {
-	{GATEPARAM,      HandleGatewayParam},     /*0x01; 网关参数下载*/           
-//	{LIGHTPARAM,     HandleLightParam},       /*0x02; 灯参数下载*/              
-//	{DIMMING,        HandleLightDimmer},      /*0x04; 灯调光控制*/
-//	{LAMPSWITCH,     HandleLightOnOff},       /*0x05; 灯开关控制*/
-//	{READDATA,       HandleReadBSNData},      /*0x06; 读镇流器数据*/
-//	{DATAQUERY,      HandleGWDataQuery},      /*0x08; 网关数据查询*/           		    
-//	{VERSIONQUERY,   HandleGWVersQuery},      /*0x0C; 查网关软件版本号*/      
-//	{SETPARAMLIMIT,  HandleSetParamDog},      /*0x21; 设置光强度区域和时间域划分点参数*/
-//	{STRATEGYDOWN,   HandleStrategy},         /*0x22; 策略下载*/
-//	{GATEUPGRADE,    HandleGWUpgrade},        /*0x37; 网关远程升级*/
-//	{TIMEADJUST,     HandleAdjustTime},       /*0x42; 校时*/                     
-//	{LUXVALUE,       HandleLuxGather},        /*0x43; 接收到光照度强度值*/		
-//	{RESTART,        HandleRestart},          /*0x3F; 设备复位*/               
+  {UNITLIGHTPARAM,   HandleUnitLightParam},     /*0x82; 灯参数下载*/   	
+	{UNITSTRATEGY,     HandleUnitStrategy},       /*0x83; 灯策略下载*/
+  {UNITREADDATA,     HandleUnitReadData},       /*0x86; 读镇流器数据*/   	
 };
 
 BallastMessage BallastComm1RxData;
@@ -220,10 +210,10 @@ static void vBallastComm1Task(void *parameter)
 	
 	for(;;)
 	{
-		if(xQueueReceive(BallastComm1Queue, &message, configTICK_RATE_HZ) == pdTRUE)
+		if(xQueueReceive(BallastComm1Queue, &message, configTICK_RATE_HZ) == pdTRUE)//zigbee查询最大等待时间
 		{
 			protocol_type = (chr2hex(message[5])<<4 | chr2hex(message[6]));
-			const MessageHandlerMap *map = Ballast_MessageMaps;
+			const UnitMessageHandlerMap *map = Ballast_MessageMaps;
 			for(; map->type != PROTOCOL_NULL; ++map)
 			{
 				if (protocol_type == map->type) 
@@ -232,6 +222,10 @@ static void vBallastComm1Task(void *parameter)
 					break;
 				}
 			}
+		}
+		else
+		{
+			
 		}
 	}
 }

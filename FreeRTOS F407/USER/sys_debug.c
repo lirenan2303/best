@@ -44,10 +44,13 @@ static inline void DebugRxDataInput(DebugMessage *temp, char dat)
 
 void printf_str(char *str)
 {
+	u8 i;
 	if(xSemaphoreTake(printf_semaphore, configTICK_RATE_HZ * 5) == pdTRUE)
 	{
 		RS485_SEND_SEL
+		for(i=0;i<100;i++);
 		printf("%s",str);
+		for(i=0;i<100;i++);
 		RS485_RECEIVE_SEL
 		
 		xSemaphoreGive(printf_semaphore);
@@ -56,14 +59,18 @@ void printf_str(char *str)
 
 void printf_buff(u8 *buf, u16 buf_size)
 {
+	u8 i;
+	
 	if(xSemaphoreTake(printf_semaphore, configTICK_RATE_HZ * 5) == pdTRUE)
 	{
 		RS485_SEND_SEL
+		for(i=0;i<100;i++);
 		printf("%.*s", buf_size, buf); 
 		if(buf_size != 1)
 		{
 			printf("\r\n");
 		}
+		for(i=0;i<100;i++);
 		RS485_RECEIVE_SEL
 		
 		xSemaphoreGive(printf_semaphore);
