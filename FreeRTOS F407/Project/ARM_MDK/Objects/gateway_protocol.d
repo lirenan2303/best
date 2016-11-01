@@ -54,6 +54,7 @@
 .\objects\gateway_protocol.o: ..\..\ZKLib_STM32F4\stm32\uart_debug.h
 .\objects\gateway_protocol.o: ..\..\USER\gateway_protocol.h
 .\objects\gateway_protocol.o: ..\..\USER\ballast_protocol.h
+.\objects\gateway_protocol.o: ..\..\USER\table_process.h
 .\objects\gateway_protocol.o: ..\..\ZKLib_STM32F4\stm32\norflash.h
 .\objects\gateway_protocol.o: ..\..\ZKLib_STM32F4\stm32\fsmc_nor.h
 .\objects\gateway_protocol.o: ..\..\USER\common.h

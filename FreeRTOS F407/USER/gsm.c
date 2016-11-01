@@ -70,15 +70,15 @@ FrameTypeList FrameType_Flag;
 const static MessageHandlerMap GPRS_MessageMaps[] =  //二位数组的初始化
 {
 	{GATEPARAM,      HandleGatewayParam},     /*0x01; 网关参数下载*/           
-	{LIGHTPARAM,     HandleLightParam},       /*0x02; 灯参数下载*/  
-	{STRATEGY,       HandleStrategyDownload}, /*0x03; 灯策略下载*/
-	{DIMMING,        HandleLightDimmer},      /*0x04; 灯调光控制*/
-	{LAMPSWITCH,     HandleLightOnOff},       /*0x05; 灯开关控制*/
+	{LAMPPARAM,      HandleLampParam},        /*0x02; 灯参数下载*/  
+	{LAMPSTRATEGY,   HandleLampStrategy},     /*0x03; 灯策略下载*/
+	{LAMPDIMMING,    HandleLampDimmer},       /*0x04; 灯调光控制*/
+	{LAMPONOFF,      HandleLampOnOff},        /*0x05; 灯开关控制*/
 //	{READDATA,       HandleReadBSNData},      /*0x06; 读镇流器数据*/
 //	{DATAQUERY,      HandleGWDataQuery},      /*0x08; 网关数据查询*/           		    
 //	{VERSIONQUERY,   HandleGWVersQuery},      /*0x0C; 查网关软件版本号*/      
 //	{SETPARAMLIMIT,  HandleSetParamDog},      /*0x21; 设置光强度区域和时间域划分点参数*/
-//	{STRATEGYDOWN,   HandleStrategy},         /*0x22; 策略下载*/
+	{TUNNELSTRATEGY, HandleTunnelStrategy},   /*0x22; 策略下载*/
 //	{GATEUPGRADE,    HandleGWUpgrade},        /*0x37; 网关远程升级*/
 //	{TIMEADJUST,     HandleAdjustTime},       /*0x42; 校时*/                     
 //	{LUXVALUE,       HandleLuxGather},        /*0x43; 接收到光照度强度值*/		

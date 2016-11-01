@@ -539,6 +539,11 @@
               <FilePath>..\..\USER\ballast_protocol.c</FilePath>
             </File>
             <File>
+              <FileName>table_process.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\USER\table_process.c</FilePath>
+            </File>
+            <File>
               <FileName>common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\USER\common.c</FilePath>

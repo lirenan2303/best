@@ -21,6 +21,7 @@
 ".\objects\sys_debug.o"
 ".\objects\gateway_protocol.o"
 ".\objects\ballast_protocol.o"
+".\objects\table_process.o"
 ".\objects\common.o"
 ".\objects\km_ctrl.o"
 ".\objects\lat_longitude.o"

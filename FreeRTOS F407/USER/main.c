@@ -10,6 +10,7 @@
 #include "ballast_Comm.h"
 #include "gateway_protocol.h"
 #include "ballast_protocol.h"
+#include "table_process.h"
 #include "rtc.h"
 #include "delay.h"
 #include "km_ctrl.h"

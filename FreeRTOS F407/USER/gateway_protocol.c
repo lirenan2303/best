@@ -10,6 +10,7 @@
 #include "uart_debug.h"
 #include "gateway_protocol.h"
 #include "ballast_protocol.h"
+#include "table_process.h"
 #include "norflash.h"
 #include "common.h"
 #include "lat_longitude.h"
@@ -34,6 +35,21 @@ ErrorStatus unit_addr_check(u16 *addr, u16 *addr_hex)
 		*addr_hex = i*1000+j*100+k*10+l;
 	  return SUCCESS;  
 	}
+}
+
+ErrorStatus GatewayAddrCheck(u8 *addr_buf)
+{
+	u16 ManagemAddr[10]={0};
+	u8  BroadcastAddr[]={0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39};
+	
+	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_ADDR, (u16 *)&ManagemAddr, 10);
+	
+	if(strncmp((char*)addr_buf, (char*)ManagemAddr , 10) == 0)
+		return SUCCESS;
+  else if(strncmp((char*)addr_buf, (char*)BroadcastAddr , 10) == 0)
+		return SUCCESS;
+	else
+		return ERROR;
 }
 
 ErrorStatus Protocol_Check(u8 *buf, u8 *BufData_Size)
@@ -91,7 +107,7 @@ void Protocol_Response(u8 Function,u8 DataLength,u8 *databuff)
 	SimSendData(buf, DataLength+18);
 }
 
-void zigbee_config(u8 *buf)
+void zigbee_config(void)
 {
 	
 }
@@ -100,6 +116,9 @@ void HandleGatewayParam(u8 *p)
 {
 	u8 data_size=0;
 	u16 WriteBuff[200]={0};
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
 	
 	if(!Protocol_Check(p, &data_size))
 	{
@@ -113,7 +132,7 @@ void HandleGatewayParam(u8 *p)
 	{
 		NorFlashWrite(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_PARA1_BASE, WriteBuff, data_size);
 		rise_set();
-		zigbee_config(p);
+		zigbee_config();
 	}
 	else if(*(p+15) == 0x31)  //数据域为开灯偏移、关灯偏移
 	{
@@ -132,7 +151,7 @@ void HandleGatewayParam(u8 *p)
 	Protocol_Response(0x81, 1, p+15);	
 }
 
-void HandleLightParam(u8 *p)
+void HandleLampParam(u8 *p)
 {
 	u8 lamp_param_num,data_size=0;
 	u16 WriteBuff[200]={0};
@@ -146,6 +165,9 @@ void HandleLightParam(u8 *p)
 	buf_temp[3] = *(p+19);
 	buf_temp[4] = *(p+15);
 	ctrl_code = *(p+15);
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
 	
 	if(!Protocol_Check(p, &data_size))
 	{
@@ -225,19 +247,37 @@ void HandleLightParam(u8 *p)
 	Protocol_Response(0x82, 4*lamp_param_num+1, buf_temp);
 }
 
-void HandleStrategyDownload(u8 *p)
+void HandleLampStrategy(u8 *p)
 {
 	
 }
 
-void HandleLightDimmer(u8 *p)
+void HandleLampDimmer(u8 *p)
 {
 	
 }
 
-void HandleLightOnOff(u8 *p)
+void HandleLampOnOff(u8 *p)
 {
 	
+}
+
+void HandleTunnelStrategy(u8 *p)
+{
+	u8 data_size=0;
+	u16 WriteBuff[20]={0};
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	MemStorage_Convert(p+15, data_size, WriteBuff);
+	TunnelStrategyRun(WriteBuff);
+	NorFlashWrite(NORFLASH_GATEWAY_STRATEGY_BASE, WriteBuff, data_size);
+	
+	Protocol_Response(0xA2, 0, NULL);	
 }
 
 void AllParaInit(void)

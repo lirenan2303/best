@@ -5,17 +5,17 @@ typedef enum
 {
 	ACKERROR = 0,           /*从站应答异常*/
 	GATEPARAM = 0x01,       /*网关参数下载*/
-	LIGHTPARAM = 0x02,      /*灯参数下载*/
-	STRATEGY = 0x03,        /*灯策略下载*/
-	DIMMING = 0x04,         /*灯调光控制*/
-	LAMPSWITCH = 0x05,      /*灯开关控制*/
+	LAMPPARAM = 0x02,       /*灯参数下载*/
+	LAMPSTRATEGY = 0x03,    /*灯策略下载*/
+	LAMPDIMMING = 0x04,     /*灯调光控制*/
+	LAMPONOFF = 0x05,       /*灯开关控制*/
 	READDATA = 0x06,        /*读镇流器数据*/
 	LOOPCONTROL = 0x07,     /*网关回路控制*/
 	DATAQUERY = 0x08,       /*网关数据查询*/
 	VERSIONQUERY = 0x0C,    /*网关软件版本号查询*/ 
   ELECTRICGATHER = 0x0E,  /*电量采集软件版本号查询*/	
 	SETPARAMLIMIT = 0x21,   /*设置光强度段和时间段划分点参数*/
-	STRATEGYDOWN = 0x22,    /*隧道内网关策略下载*/
+	TUNNELSTRATEGY = 0x22,  /*隧道内网关策略下载*/
 	GATEUPGRADE = 0x37,     /*网关远程升级*/
 	TIMEADJUST = 0x42,      /*校时*/
 	LUXVALUE = 0x43,        /*接收到光强度值*/
@@ -30,10 +30,11 @@ typedef struct
 } MessageHandlerMap;
 
 void HandleGatewayParam(u8 *p);
-void HandleLightParam(u8 *p);
-void HandleStrategyDownload(u8 *p);
-void HandleLightDimmer(u8 *p);
-void HandleLightOnOff(u8 *p);
+void HandleLampParam(u8 *p);
+void HandleLampStrategy(u8 *p);
+void HandleLampDimmer(u8 *p);
+void HandleLampOnOff(u8 *p);
+void HandleTunnelStrategy(u8 *p);
 
 void AllParaInit(void);
 

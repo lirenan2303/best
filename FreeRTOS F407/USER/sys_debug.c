@@ -135,7 +135,7 @@ static void SetWGAddr(void)
 		printf_str("\r\nE.ÍË³ö");
 		printf_str("\r\n>");
 		if(xQueueReceive(uartDebugQueue,message,portMAX_DELAY) == pdTRUE)
-		{	
+		{
 			if(strcmp(message,"E\r") == 0)
 			{
 			  break;
