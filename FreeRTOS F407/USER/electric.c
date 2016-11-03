@@ -12,7 +12,7 @@
 #include "common.h"
 #include "gateway_protocol.h"
 
-#define ELECTRIC_TASK_STACK_SIZE		(configMINIMAL_STACK_SIZE + 1024)
+#define ELECTRIC_TASK_STACK_SIZE		(configMINIMAL_STACK_SIZE + 1024*1)
 #define ELECTRIC_BUFF_SIZE  100
 
 xSemaphoreHandle EleTx_semaphore;
@@ -241,5 +241,5 @@ void ElectricInit(void)
 	EleRxTxDataInit();
 	vSemaphoreCreateBinary(EleTx_semaphore);
   ElectricQueue = xQueueCreate(8, sizeof(ElectricMessage));	
-	xTaskCreate(vElectTask, "ElectTask", ELECTRIC_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, NULL);
+	xTaskCreate(vElectTask, "ElectTask", ELECTRIC_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
 }

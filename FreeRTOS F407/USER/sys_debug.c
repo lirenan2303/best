@@ -10,7 +10,7 @@
 #include "norflash.h"
 #include "gsm.h"
 
-#define DEBUG_TASK_STACK_SIZE		( configMINIMAL_STACK_SIZE + 1024)
+#define DEBUG_TASK_STACK_SIZE		(configMINIMAL_STACK_SIZE + 1024*1)
 
 #define DEBUG_BUFF_SIZE  50
 
@@ -305,7 +305,7 @@ static void UartDebugCreateTask(void)
 {
 	printf_semaphore = xSemaphoreCreateMutex();
 	uartDebugQueue = xQueueCreate(10, DEBUG_BUFF_SIZE);
-  xTaskCreate(vUartDebugTask, "UartDebugTask", DEBUG_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
+  xTaskCreate(vUartDebugTask, "UartDebugTask", DEBUG_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
 }
 
 void UartDebugInit(void)

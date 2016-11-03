@@ -14,7 +14,7 @@
 #include "gateway_protocol.h"
 
 
-#define ZIGBEE_TASK_STACK_SIZE		     (configMINIMAL_STACK_SIZE + 1024)
+#define ZIGBEE_TASK_STACK_SIZE		     (configMINIMAL_STACK_SIZE + 1024*2)
 #define BALLAST_BUFF_SIZE   100
 
 #define  BALLAST_COMM1      UART4
@@ -236,5 +236,5 @@ void BallastCommInit(void)
 	BallastComm1RxTxDataInit();
 	vSemaphoreCreateBinary(ballastComm1Tx_semaphore);
 	BallastComm1Queue = xQueueCreate(30, sizeof(BallastComm1RxData.Buff));
-	xTaskCreate(vBallastComm1Task, "BallastComm1Task", ZIGBEE_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
+	xTaskCreate(vBallastComm1Task, "BallastComm1Task", ZIGBEE_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
 }

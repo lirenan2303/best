@@ -175,22 +175,25 @@ void NetTimeCentury(char *p)
 	}
 }
 
-void ReadRTC_Time(TimeTypeDef* TimeStruct)
+void ReadRTC_Time(uint32_t rtc_format, TimeTypeDef* TimeStruct)
 {
 	RTC_DateTypeDef RTC_DateTypeInitStructure;
   RTC_TimeTypeDef RTC_TimeTypeInitStructure;
 	
 	if(xSemaphoreTake(RTC_SystemRunningSemaphore, configTICK_RATE_HZ * 5) == pdTRUE)
 	{
-		RTC_GetDate(RTC_Format_BIN,&RTC_DateTypeInitStructure);
-		RTC_GetTime(RTC_Format_BIN,&RTC_TimeTypeInitStructure);
+		RTC_GetDate(rtc_format,&RTC_DateTypeInitStructure);
+		RTC_GetTime(rtc_format,&RTC_TimeTypeInitStructure);
 		
 		TimeStruct->tm_sec = RTC_TimeTypeInitStructure.RTC_Seconds;
 	  TimeStruct->tm_min = RTC_TimeTypeInitStructure.RTC_Minutes;
 	  TimeStruct->tm_hour = RTC_TimeTypeInitStructure.RTC_Hours;
 	  TimeStruct->tm_mday = RTC_DateTypeInitStructure.RTC_Date;
 	  TimeStruct->tm_mon = RTC_DateTypeInitStructure.RTC_Month;
-	  TimeStruct->tm_year = RTC_DateTypeInitStructure.RTC_Year + RTC_ReadBackupRegister(RTC_BKP_DR1)*100;
+		if(rtc_format == RTC_Format_BIN)
+	    TimeStruct->tm_year = RTC_DateTypeInitStructure.RTC_Year + RTC_ReadBackupRegister(RTC_BKP_DR1)*100;
+		else if(rtc_format == RTC_Format_BCD)
+		  TimeStruct->tm_year = RTC_DateTypeInitStructure.RTC_Year + (ByteToBcd2(RTC_ReadBackupRegister(RTC_BKP_DR1))<<8);
 	  TimeStruct->tm_wday = RTC_DateTypeInitStructure.RTC_WeekDay;
 		
 		xSemaphoreGive(RTC_SystemRunningSemaphore);

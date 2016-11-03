@@ -51,6 +51,21 @@ void NorFlashEraseSector(uint32_t addr)
   }
 }
 
+void NorFlashEraseBlock(uint32_t addr)
+{
+	NOR_Status status = NOR_ONGOING;
+	
+  if (xSemaphoreTake(norflash_semaphore, configTICK_RATE_HZ * 5) == pdTRUE) 
+  {
+		status = FSMC_NOR_EraseBlock(addr);
+		if(status != NOR_SUCCESS)
+		{
+			 printf_str("\r\nNOR_FLASH Erase Block Error!!!");
+		}
+		xSemaphoreGive(norflash_semaphore);
+  }
+}
+
 void NorFlashEraseChip(void) 
 {
 	NOR_Status status = NOR_ONGOING;

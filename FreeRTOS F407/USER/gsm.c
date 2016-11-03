@@ -553,7 +553,7 @@ static void HeartRemainTCPConnect(void)
 	u8 buf[20];
 	u8 *p = buf;
 	
-	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_ADDR, (u16 *)&ManagementAddr, (MANAGER_ADDR_LENGTH + 1)/ 2);
+	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_ADDR, (u16 *)ManagementAddr, (MANAGER_ADDR_LENGTH + 1)/ 2);
 	*p = 0x02;
 	strncpy((char*)(p+1), (char*)ManagementAddr, MANAGER_ADDR_LENGTH);
 	*(p+MANAGER_ADDR_LENGTH+1) = 0x03;
@@ -612,7 +612,7 @@ void GSMInit(void)
 	GsmTx_semaphore = xSemaphoreCreateMutex();
 	GSM_GPRS_queue = xQueueCreate(10, sizeof(GsmRxData.Buff));
 	GSM_AT_queue = xQueueCreate(1, sizeof(GsmRxData.Buff));
-	xTaskCreate(vGSMTask, "GSMTask", GSM_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 8, NULL);
+	xTaskCreate(vGSMTask, "GSMTask", GSM_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, NULL);
 }
 
 /*******************************END OF FILE************************************/

@@ -18,6 +18,6 @@ typedef struct{
 void UpdataNetTime(char *p);
 u8 RtcInit(void);
 void NetTimeCentury(char *p);
-void ReadRTC_Time(TimeTypeDef* TimeStruct);
+void ReadRTC_Time(uint32_t rtc_format, TimeTypeDef* TimeStruct);
 
 #endif

@@ -31,7 +31,7 @@ int main(void)
   	GSMInit();
     BallastCommInit();
     ElectricInit();
-//    TimePlanInit();
+    TimePlanInit();
 	  KM_CtrlInit();
     AllParaInit();
 	  AllTableInit();

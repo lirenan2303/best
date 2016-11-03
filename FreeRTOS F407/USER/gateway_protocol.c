@@ -15,16 +15,36 @@
 #include "common.h"
 #include "lat_longitude.h"
 
+extern LampAttrSortType LampAttrSortTable[MAX_LAMP_NUM];
 extern TimeTypeDef time;
+extern u16 lamp_num;
 
-ErrorStatus unit_addr_check(u16 *addr, u16 *addr_hex)
+void RTC_TimeToChar(u16 *buf)
+{              
+	ReadRTC_Time(RTC_Format_BCD, &time);
+
+	*buf++ = hex2chr((time.tm_year>>4) & 0x0000000f);
+	*buf++ = hex2chr(time.tm_year & 0x0000000f);
+	*buf++ = hex2chr((time.tm_mon>>4) & 0x0000000f);
+	*buf++ = hex2chr(time.tm_mon & 0x0000000f);
+	*buf++ = hex2chr((time.tm_mday>>4) & 0x0000000f);
+	*buf++ = hex2chr(time.tm_mday & 0x0000000f);
+	*buf++ = hex2chr((time.tm_hour>>4) & 0x0000000f);
+	*buf++ = hex2chr(time.tm_hour & 0x0000000f);
+	*buf++ = hex2chr((time.tm_min>>4) & 0x0000000f);
+	*buf++ = hex2chr(time.tm_min & 0x0000000f);
+	*buf++ = hex2chr((time.tm_sec>>4) & 0x0000000f);
+	*buf   = hex2chr(time.tm_sec & 0x0000000f);
+}
+
+ErrorStatus unit_addr_check(u16 addr, u16 *addr_hex)
 {
 	u16 i,j,k,l;
 
-	i = ((*addr>>12) & 0x000f);
-	j = ((*addr>>8) & 0x000f);
-	k = ((*addr>>4) & 0x000f);
-	l = ((*addr) & 0x000f);
+	i = ((addr>>12) & 0x000f);
+	j = ((addr>>8) & 0x000f);
+	k = ((addr>>4) & 0x000f);
+	l = ((addr) & 0x000f);
 	
 	if(i >9 ) return ERROR;
 	else if(j >9 ) return ERROR;
@@ -42,7 +62,7 @@ ErrorStatus GatewayAddrCheck(u8 *addr_buf)
 	u16 ManagemAddr[10]={0};
 	u8  BroadcastAddr[]={0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39};
 	
-	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_ADDR, (u16 *)&ManagemAddr, 10);
+	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_ADDR, ManagemAddr, 10);
 	
 	if(strncmp((char*)addr_buf, (char*)ManagemAddr , 10) == 0)
 		return SUCCESS;
@@ -73,13 +93,13 @@ ErrorStatus Protocol_Check(u8 *buf, u8 *BufData_Size)
 	return state;
 }
 
-void Protocol_Response(u8 Function,u8 DataLength,u8 *databuff)
+void Protocol_Response(u8 Function, u8 *databuff, u8 DataLength)
 {
   u8 i,checksum;
 	u8 buf[250]={0};
 	u16 ManagemAddr[10]={0};
 	
-	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_ADDR, (u16 *)&ManagemAddr, 10);
+	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_ADDR, ManagemAddr, 10);
 
 	buf[0] = 0x02;
   strncpy((char*)(buf+1), (char*)ManagemAddr, 10);
@@ -109,7 +129,6 @@ void Protocol_Response(u8 Function,u8 DataLength,u8 *databuff)
 
 void zigbee_config(void)
 {
-	
 }
 
 void HandleGatewayParam(u8 *p)
@@ -121,10 +140,7 @@ void HandleGatewayParam(u8 *p)
 		return;
 	
 	if(!Protocol_Check(p, &data_size))
-	{
-		Protocol_Response(0xC1, 1, p+15);
 		return;
-	}
 	
 	MemStorage_Convert(p+15, data_size, WriteBuff);
 	
@@ -144,79 +160,82 @@ void HandleGatewayParam(u8 *p)
 	}
 	else
 	{
-	  Protocol_Response(0xC1, 1, p+15);
+	  Protocol_Response(0xC1, p+15, 1);
 		return;
 	}
 	
-	Protocol_Response(0x81, 1, p+15);	
+	Protocol_Response(0x81, p+15, 1);	
 }
 
 void HandleLampParam(u8 *p)
 {
 	u8 lamp_param_num,data_size=0;
-	u16 WriteBuff[200]={0};
-	u16 i,unit_addr,unit_addr_hex=0;
-	u8 buf_temp[200],ctrl_code,n=0,j;
-	
-
-	buf_temp[0] = *(p+16);
-	buf_temp[1] = *(p+17);
-	buf_temp[2] = *(p+18);
-	buf_temp[3] = *(p+19);
-	buf_temp[4] = *(p+15);
-	ctrl_code = *(p+15);
+	u16 WriteBuff[50]={0};
+	u16 unit_addr,unit_addr_hex=0;
+	u8 buf_temp[200],n=0,j;
+	int i;
 	
 	if(!GatewayAddrCheck(p+1))
 		return;
 	
 	if(!Protocol_Check(p, &data_size))
-	{
-		Protocol_Response(0xC2, 5, buf_temp);
 		return;
-	}
+	
 	if((data_size-1)%17 == 0)
 	{
 	  lamp_param_num = (data_size-1)/17;//参数数量
 	}
 	else
-	{
-	  Protocol_Response(0xC2, 5, buf_temp);
 		return;
-	}
-	
-	MemStorage_Convert(p+16, data_size-1, WriteBuff);
-	
+
 	if(*(p+15) == 0x31) //增加多盏灯
 	{
 		for(i=0;i<lamp_param_num;i++)
 		{
-		  unit_addr =  chr2hex(WriteBuff[17*i])<<4;
-		  unit_addr = (chr2hex(WriteBuff[17*i+1])+unit_addr)<<4;
-		  unit_addr = (chr2hex(WriteBuff[17*i+2])+unit_addr)<<4;
-		  unit_addr =  chr2hex(WriteBuff[17*i+3])+unit_addr;
+			WriteBuff[0] = *(p+16+17*i);//地址
+			WriteBuff[1] = *(p+16+17*i+1);
+			WriteBuff[2] = *(p+16+17*i+2);
+			WriteBuff[3] = *(p+16+17*i+3);
 			
-			if(!unit_addr_check(&unit_addr, &unit_addr_hex))
+			unit_addr =  chr2hex(WriteBuff[0])<<4;
+		  unit_addr = (chr2hex(WriteBuff[1])+unit_addr)<<4;
+		  unit_addr = (chr2hex(WriteBuff[2])+unit_addr)<<4;
+		  unit_addr =  chr2hex(WriteBuff[3])+unit_addr;
+			
+			if(!unit_addr_check(unit_addr, &unit_addr_hex))
 				return;
-			
 			if(unit_addr > MAX_LAMP_NUM)
 			  return;
-			NorFlashWrite(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE, WriteBuff, 17);
+			
+	  	RTC_TimeToChar(WriteBuff+4);//灯参数同步标识
+			
+			for(j=0;j<13;j++)//相关数据
+			{
+				WriteBuff[16+j] = *(p+20+17*i+j);
+			}
+			NorFlashWrite(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE, WriteBuff, 29);
 		}
 	}
 	else if(*(p+15) == 0x32) //删除多盏灯
 	{
 		for(i=0;i<lamp_param_num;i++)
 		{
-		  unit_addr =  chr2hex(WriteBuff[17*i])<<4;
-		  unit_addr = (chr2hex(WriteBuff[17*i+1])+unit_addr)<<4;
-		  unit_addr = (chr2hex(WriteBuff[17*i+2])+unit_addr)<<4;
-		  unit_addr =  chr2hex(WriteBuff[17*i+3])+unit_addr;
+		  WriteBuff[0] = *(p+16+17*i);//地址
+			WriteBuff[1] = *(p+16+17*i+1);
+			WriteBuff[2] = *(p+16+17*i+2);
+			WriteBuff[3] = *(p+16+17*i+3);
 			
-			if(!unit_addr_check(&unit_addr, &unit_addr_hex))
+			unit_addr =  chr2hex(WriteBuff[0])<<4;
+		  unit_addr = (chr2hex(WriteBuff[1])+unit_addr)<<4;
+		  unit_addr = (chr2hex(WriteBuff[2])+unit_addr)<<4;
+		  unit_addr =  chr2hex(WriteBuff[3])+unit_addr;
+			
+			if(!unit_addr_check(unit_addr, &unit_addr_hex))
 				return;
 			if(unit_addr > MAX_LAMP_NUM)
 			  return;
-			FSMC_NOR_EraseSector(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE);
+			
+			NorFlashEraseSector(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE);
 		}
 	}
 	else if(*(p+15) == 0x33) //更改多盏灯
@@ -226,12 +245,12 @@ void HandleLampParam(u8 *p)
 	{
 		for(i=0;i<(MAX_LAMP_NUM+15)/16;i++)
 		{
-			FSMC_NOR_EraseBlock(NORFLASH_BALLAST_NUM + i*NORFLASH_BLOCK_SIZE);
+			NorFlashEraseBlock(NORFLASH_BALLAST_NUM + i*NORFLASH_BLOCK_SIZE);
 		}
 	}
 	else
 	{
-		Protocol_Response(0xC2, 5, buf_temp);
+		Protocol_Response(0xC2, buf_temp, 5);
 		return;
 	}
 	
@@ -239,17 +258,44 @@ void HandleLampParam(u8 *p)
 	{
 		for(j=0;j<4;j++)
 		{
-			buf_temp[n] = WriteBuff[17*i+j];
+			buf_temp[n] = *(p+16+17*i+j);
 			n++;
 		}
 	}
-	buf_temp[4*lamp_param_num] = ctrl_code;
-	Protocol_Response(0x82, 4*lamp_param_num+1, buf_temp);
+	buf_temp[4*lamp_param_num] = *(p+15);
+	Protocol_Response(0x82, buf_temp, 4*lamp_param_num+1);
 }
 
 void HandleLampStrategy(u8 *p)
 {
+	u8 data_size=0;
+	u16 WriteBuff[200]={0};
+	u16 i,unit_addr_hex;
+	u8 buf_temp[10];
 	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+		return;
+	
+	if((*(p+15) == 0x41) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))
+	{
+		RTC_TimeToChar(WriteBuff+29);//灯参数同步标识
+		MemStorage_Convert(p+23, data_size-8, WriteBuff+29+12);
+		
+		for(i=0;i<lamp_num;i++)
+		{
+			unit_addr_check(LampAttrSortTable[i].addr, &unit_addr_hex);
+			
+			NorFlashRead(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE, WriteBuff, 29);//读出灯参数
+			NorFlashWrite(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE, WriteBuff, 29+12+data_size-8);//写入灯参数和策略
+		}
+	}
+	
+	strncpy((char*)buf_temp, (char*)p+15, 10);
+	
+	Protocol_Response(0x83, buf_temp, 10);
 }
 
 void HandleLampDimmer(u8 *p)
@@ -277,12 +323,12 @@ void HandleTunnelStrategy(u8 *p)
 	TunnelStrategyRun(WriteBuff);
 	NorFlashWrite(NORFLASH_GATEWAY_STRATEGY_BASE, WriteBuff, data_size);
 	
-	Protocol_Response(0xA2, 0, NULL);	
+	Protocol_Response(0xA2, NULL, 0);	
 }
 
 void AllParaInit(void)
 {
-	ReadRTC_Time(&time);
+	ReadRTC_Time(RTC_Format_BIN, &time);
 	rise_set();
 }
 

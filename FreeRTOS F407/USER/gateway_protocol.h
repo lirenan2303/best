@@ -25,6 +25,27 @@ typedef enum
 
 typedef struct
 {
+	u16 L1_VolHigh;
+	u16 L2_VolHigh;
+	u16 L3_VolHigh;
+	u16 L1_VolLow;
+	u16 L2_VolLow;
+	u16 L3_VolLow;
+	
+	u16 L1_CurLow;
+	u16 L2_CurLow;
+	u16 L3_CurLow;
+	u16 Zero_CurLow;
+	u16 L1_CurHigh;
+	u16 L2_CurHigh;
+	u16 L3_CurHigh;
+	u16 Zero_CurHigh;
+	
+	u16 Error_Num;
+}AlarmParmTypeDef; 
+
+typedef struct
+{
 	ProtocolType type;
 	void (*handlerFunc)(u8 *); //(*指针变量名)(形参列表)(指针强制类型转化)
 } MessageHandlerMap;
