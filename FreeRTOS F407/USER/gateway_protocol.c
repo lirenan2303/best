@@ -171,7 +171,7 @@ void HandleLampParam(u8 *p)
 {
 	u8 lamp_param_num,data_size=0;
 	u16 WriteBuff[50]={0};
-	u16 unit_addr,unit_addr_hex=0;
+	u16 unit_addr_bcd,unit_addr_hex=0;
 	u8 buf_temp[200],n=0,j;
 	int i;
 	
@@ -197,14 +197,14 @@ void HandleLampParam(u8 *p)
 			WriteBuff[2] = *(p+16+17*i+2);
 			WriteBuff[3] = *(p+16+17*i+3);
 			
-			unit_addr =  chr2hex(WriteBuff[0])<<4;
-		  unit_addr = (chr2hex(WriteBuff[1])+unit_addr)<<4;
-		  unit_addr = (chr2hex(WriteBuff[2])+unit_addr)<<4;
-		  unit_addr =  chr2hex(WriteBuff[3])+unit_addr;
+			unit_addr_bcd =  chr2hex(WriteBuff[0])<<4;
+		  unit_addr_bcd = (chr2hex(WriteBuff[1])+unit_addr_bcd)<<4;
+		  unit_addr_bcd = (chr2hex(WriteBuff[2])+unit_addr_bcd)<<4;
+		  unit_addr_bcd =  chr2hex(WriteBuff[3])+unit_addr_bcd;
 			
-			if(!unit_addr_check(unit_addr, &unit_addr_hex))
+			if(!unit_addr_check(unit_addr_bcd, &unit_addr_hex))
 				return;
-			if(unit_addr > MAX_LAMP_NUM)
+			if(unit_addr_hex > MAX_LAMP_NUM)
 			  return;
 			
 	  	RTC_TimeToChar(WriteBuff+4);//灯参数同步标识
@@ -225,14 +225,14 @@ void HandleLampParam(u8 *p)
 			WriteBuff[2] = *(p+16+17*i+2);
 			WriteBuff[3] = *(p+16+17*i+3);
 			
-			unit_addr =  chr2hex(WriteBuff[0])<<4;
-		  unit_addr = (chr2hex(WriteBuff[1])+unit_addr)<<4;
-		  unit_addr = (chr2hex(WriteBuff[2])+unit_addr)<<4;
-		  unit_addr =  chr2hex(WriteBuff[3])+unit_addr;
+			unit_addr_bcd =  chr2hex(WriteBuff[0])<<4;
+		  unit_addr_bcd = (chr2hex(WriteBuff[1])+unit_addr_bcd)<<4;
+		  unit_addr_bcd = (chr2hex(WriteBuff[2])+unit_addr_bcd)<<4;
+		  unit_addr_bcd =  chr2hex(WriteBuff[3])+unit_addr_bcd;
 			
-			if(!unit_addr_check(unit_addr, &unit_addr_hex))
+			if(!unit_addr_check(unit_addr_bcd, &unit_addr_hex))
 				return;
-			if(unit_addr > MAX_LAMP_NUM)
+			if(unit_addr_hex > MAX_LAMP_NUM)
 			  return;
 			
 			NorFlashEraseSector(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE);
@@ -300,12 +300,91 @@ void HandleLampStrategy(u8 *p)
 
 void HandleLampDimmer(u8 *p)
 {
+	u8 data_size=0;
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+}
+
+void unit_turn_on(u8 branch, u8 data)
+{
+	
+}
+
+void unit_turn_off(u8 branch, u8 data)
+{
 	
 }
 
 void HandleLampOnOff(u8 *p)
 {
+	u8 data_size=0;
+	u8 branch_num,segment1_num,segment2_num;
+	u8 i,j;
+	u8 buf_temp[30];
+	u16 unit_addr_bcd;
 	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	if((*(p+15) == 0x41) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))//网关开关灯
+	{
+		if(*(p+19) == 0x30)
+			unit_turn_on(ALL_BRANCH, ALL_SEGMENT);
+		else if(*(p+19) == 0x31)
+			unit_turn_off(ALL_BRANCH, ALL_SEGMENT);
+	}
+	else if(*(p+15) == 0x38)//回路属性开关灯
+	{
+		branch_num = chr2hex(*(p+16));
+		segment1_num = chr2hex(*(p+17));
+		segment2_num = chr2hex(*(p+18));
+		for(i=0;i<branch_num;i++)
+		{
+			for(j=0;j<segment1_num;j++)
+			{
+				if(*(p+19) == 0x30)
+			    unit_turn_on(chr2hex(*(p+20+i)), chr2hex(*(p+20+branch_num+j)));
+		    else if(*(p+19) == 0x31)
+			    unit_turn_off(chr2hex(*(p+20+i)), chr2hex(*(p+20+branch_num+j)));
+			}
+			
+			for(j=0;j<segment2_num;j++)
+			{
+				if(*(p+19) == 0x30)
+			    unit_turn_on(chr2hex(*(p+20+i)), chr2hex(*(p+20+branch_num+segment1_num+j)));
+		    else if(*(p+19) == 0x31)
+			    unit_turn_off(chr2hex(*(p+20+i)), chr2hex(*(p+20+branch_num+segment1_num+j)));
+			}
+		}
+	}
+	else if((*(p+15) == 0x42) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))//单灯开关灯
+	{
+	  unit_addr_bcd =  chr2hex(*(p+20))<<4;
+		unit_addr_bcd = (chr2hex(*(p+21))+unit_addr_bcd)<<4;
+		unit_addr_bcd = (chr2hex(*(p+22))+unit_addr_bcd)<<4;
+		unit_addr_bcd =  chr2hex(*(p+23))+unit_addr_bcd;
+		
+		if(*(p+19) == 0x30)
+			unit_turn_on(RANDOM, unit_addr_bcd);
+	  else if(*(p+19) == 0x31)
+		  unit_turn_off(RANDOM, unit_addr_bcd);
+	}
+	else 
+	{
+		return;
+	}
+	
+	strncpy((char*)buf_temp, (char*)p+15, 5);
+	
+	Protocol_Response(0x85, buf_temp, 5);
 }
 
 void HandleTunnelStrategy(u8 *p)

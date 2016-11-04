@@ -1,6 +1,10 @@
 #ifndef __GATEWAY_PROTOCOL_H
 #define __GATEWAY_PROTOCOL_H
 
+#define ALL_BRANCH  0xFF
+#define ALL_SEGMENT 0xFF
+#define RANDOM      0x00
+
 typedef enum
 {
 	ACKERROR = 0,           /*¥”’æ”¶¥“Ï≥£*/
