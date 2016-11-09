@@ -74,7 +74,7 @@ const static MessageHandlerMap GPRS_MessageMaps[] =  //二位数组的初始化
 	{LAMPSTRATEGY,   HandleLampStrategy},     /*0x03; 灯策略下载*/
 	{LAMPDIMMING,    HandleLampDimmer},       /*0x04; 灯调光控制*/
 	{LAMPONOFF,      HandleLampOnOff},        /*0x05; 灯开关控制*/
-//	{READDATA,       HandleReadBSNData},      /*0x06; 读镇流器数据*/
+	{READDATA,       HandleReadBSNData},      /*0x06; 读镇流器数据*/
 //	{DATAQUERY,      HandleGWDataQuery},      /*0x08; 网关数据查询*/           		    
 //	{VERSIONQUERY,   HandleGWVersQuery},      /*0x0C; 查网关软件版本号*/      
 //	{SETPARAMLIMIT,  HandleSetParamDog},      /*0x21; 设置光强度区域和时间域划分点参数*/
@@ -605,7 +605,7 @@ static void vGSMTask(void *parameter)
 	}
 }
 
-void GSMInit(void) 
+void GSMInit(void)
 {
   GSMInitHardware();
 	GsmRxTxDataInit();

@@ -60,6 +60,7 @@ void HandleLampStrategy(u8 *p);
 void HandleLampDimmer(u8 *p);
 void HandleLampOnOff(u8 *p);
 void HandleTunnelStrategy(u8 *p);
+void HandleReadBSNData(u8 *p);
 
 void AllParaInit(void);
 

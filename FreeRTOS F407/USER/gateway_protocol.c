@@ -16,11 +16,13 @@
 #include "lat_longitude.h"
 
 extern LampAttrSortType LampAttrSortTable[MAX_LAMP_NUM];
+extern LampRunCtrlType LampRunCtrlTable[MAX_LAMP_NUM];
+extern u16 GSM_SendAddrTable[MAX_LAMP_NUM];
 extern TimeTypeDef time;
 extern u16 lamp_num;
 
 void RTC_TimeToChar(u16 *buf)
-{              
+{
 	ReadRTC_Time(RTC_Format_BCD, &time);
 
 	*buf++ = hex2chr((time.tm_year>>4) & 0x0000000f);
@@ -53,7 +55,11 @@ ErrorStatus unit_addr_check(u16 addr, u16 *addr_hex)
 	else 
 	{
 		*addr_hex = i*1000+j*100+k*10+l;
-	  return SUCCESS;  
+		
+		if(*addr_hex < 1000)
+	    return SUCCESS;  
+		else 
+			return ERROR;
 	}
 }
 
@@ -298,9 +304,139 @@ void HandleLampStrategy(u8 *p)
 	Protocol_Response(0x83, buf_temp, 10);
 }
 
+void unit_ctrl(u8 branch, u8 segment, u16 addr, u8 cmd, u8 data)
+{
+	u16 unit_addr_hex;
+	u16 index1,index2;
+	u8 enter=0;
+	u16 i,n=0;
+	
+	if((branch == ALL_BRANCH) && (segment == ALL_SEGMENT))
+	{
+		for(i=0;i<lamp_num;i++)
+		{
+      unit_addr_hex = Bcd2ToByte(LampAttrSortTable[i].addr>>8)*100 + Bcd2ToByte(LampAttrSortTable[i].addr);
+			
+			if(cmd == LAMPDIMMING)
+			{
+				LampRunCtrlTable[unit_addr_hex].run_state = DIMMING_RUN;
+				LampRunCtrlTable[unit_addr_hex].dimming_value = data;
+			}
+			else if(cmd == LAMPONOFF)
+			{
+				if(data == 0x30)
+				{
+					if(LampRunCtrlTable[unit_addr_hex].dimming_value != 0)
+						LampRunCtrlTable[unit_addr_hex].run_state = DIMMING_RUN;
+					else
+						LampRunCtrlTable[unit_addr_hex].run_state = MAINRUN_FULL;
+				}
+				else if(data == 0x31)
+				{
+					LampRunCtrlTable[unit_addr_hex].run_state = CHOLSE_SOFTWARE;
+				}
+		  }
+			else if(cmd == READDATA)
+			{
+				GSM_SendAddrTable[n++] = LampAttrSortTable[i].addr;
+			}
+			else
+				return;
+		}
+	}
+	else if((branch == RANDOM) && (segment == RANDOM))
+	{
+	  if(!unit_addr_check(addr, &unit_addr_hex))
+			return;
+		
+		if(cmd == LAMPDIMMING)
+		{
+			LampRunCtrlTable[unit_addr_hex].run_state = DIMMING_RUN;
+			LampRunCtrlTable[unit_addr_hex].dimming_value = data;
+		}
+		else if(cmd == LAMPONOFF)
+		{
+			if(data == 0x30)
+			{
+				if(LampRunCtrlTable[unit_addr_hex].dimming_value != 0)
+					LampRunCtrlTable[unit_addr_hex].run_state = DIMMING_RUN;
+				else
+					LampRunCtrlTable[unit_addr_hex].run_state = MAINRUN_FULL;
+			}
+			else if(data == 0x31)
+				LampRunCtrlTable[unit_addr_hex].run_state = CHOLSE_SOFTWARE;
+	  }
+		else if(cmd == READDATA)
+		{
+		  GSM_SendAddrTable[n++] = LampAttrSortTable[i].addr;
+		}
+		else 
+			return;
+	}
+	else
+	{
+		i = 0;
+		
+		while(1)//地址查找
+		{
+			if((LampAttrSortTable[i].branch == branch) && (LampAttrSortTable[i].segment == segment) && (enter == 0))
+			{
+				index1 = i;
+				enter = 1;
+			}
+			else if((enter == 1) && ((LampAttrSortTable[i].branch != branch) || (LampAttrSortTable[i].segment != segment)))
+			{
+				index2 = i-1;
+				break;
+			}
+			
+			i++;
+			
+			if(i >= MAX_LAMP_NUM)
+			{
+				index2 = i-1;
+				break;
+			}
+		}
+		
+		for(i=index1;i<=index2;i++)//状态控制
+		{
+			unit_addr_hex = Bcd2ToByte(LampAttrSortTable[i].addr>>8)*100 + Bcd2ToByte(LampAttrSortTable[i].addr);
+			
+			if(cmd == LAMPDIMMING)
+		  {
+				LampRunCtrlTable[unit_addr_hex].run_state = DIMMING_RUN;
+				LampRunCtrlTable[unit_addr_hex].dimming_value = data;
+		  }
+			else if(cmd == LAMPONOFF)
+			{
+				if(data == 0x30)
+				{
+					if(LampRunCtrlTable[unit_addr_hex].dimming_value != 0)
+						LampRunCtrlTable[unit_addr_hex].run_state = DIMMING_RUN;
+					else
+						LampRunCtrlTable[unit_addr_hex].run_state = MAINRUN_FULL;
+				}
+				else if(data == 0x31)
+					LampRunCtrlTable[unit_addr_hex].run_state = CHOLSE_SOFTWARE;
+		  }
+			else if(cmd == READDATA)
+		  {
+				GSM_SendAddrTable[n++] = LampAttrSortTable[i].addr;
+		  }
+			else
+				return;
+		}
+	}
+}
+
 void HandleLampDimmer(u8 *p)
 {
 	u8 data_size=0;
+	u8 branch_num,segment1_num,segment2_num,data;
+	u8 i,j;
+	u8 buf_temp[30];
+	u16 unit_addr_bcd;
 	
 	if(!GatewayAddrCheck(p+1))
 		return;
@@ -308,19 +444,107 @@ void HandleLampDimmer(u8 *p)
 	if(!Protocol_Check(p, &data_size))
     return;
 	
-}
-
-void unit_turn_on(u8 branch, u8 data)
-{
+	data = chr2hex(*(p+19))<<4 | chr2hex(*(p+20));
 	
-}
-
-void unit_turn_off(u8 branch, u8 data)
-{
+	if((*(p+15) == 0x41) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))//网关调光
+	{
+	  unit_ctrl(ALL_BRANCH, ALL_SEGMENT, 0, LAMPDIMMING, data);
+	}
+	else if(*(p+15) == 0x39)//回路属性调光
+	{
+		branch_num = chr2hex(*(p+16));
+		segment1_num = chr2hex(*(p+17));
+		segment2_num = chr2hex(*(p+18));
+		for(i=0;i<branch_num;i++)
+		{
+			for(j=0;j<segment1_num;j++)
+			{
+			  unit_ctrl(chr2hex(*(p+21+i)), chr2hex(*(p+21+branch_num+j)), 0, LAMPDIMMING, data);
+			}
+			
+			for(j=0;j<segment2_num;j++)
+			{
+			  unit_ctrl(chr2hex(*(p+21+i)), chr2hex(*(p+21+branch_num+segment1_num+j))|0x10, 0, LAMPDIMMING, data);
+			}
+		}
+	}
+	else if((*(p+15) == 0x42) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))//单灯调光
+	{
+	  unit_addr_bcd =  chr2hex(*(p+21))<<4;
+		unit_addr_bcd = (chr2hex(*(p+22))+unit_addr_bcd)<<4;
+		unit_addr_bcd = (chr2hex(*(p+23))+unit_addr_bcd)<<4;
+		unit_addr_bcd =  chr2hex(*(p+24))+unit_addr_bcd;
+		
+		unit_ctrl(RANDOM, RANDOM , unit_addr_bcd, LAMPDIMMING, data);
+	}
+	else 
+	{
+		return;
+	}
 	
+	strncpy((char*)buf_temp, (char*)p+15, 6);
+	
+	Protocol_Response(0x84, buf_temp, 6);
 }
 
 void HandleLampOnOff(u8 *p)
+{
+	u8 data_size=0;
+	u8 branch_num,segment1_num,segment2_num,data;
+	u8 i,j;
+	u8 buf_temp[30];
+	u16 unit_addr_bcd;
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	data = *(p+19);
+	
+	if((*(p+15) == 0x41) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))//网关开关灯
+	{
+	  unit_ctrl(ALL_BRANCH, ALL_SEGMENT, 0, LAMPONOFF, data);
+	}
+	else if(*(p+15) == 0x39)//回路属性开关灯
+	{
+		branch_num = chr2hex(*(p+16));
+		segment1_num = chr2hex(*(p+17));
+		segment2_num = chr2hex(*(p+18));
+		for(i=0;i<branch_num;i++)
+		{
+			for(j=0;j<segment1_num;j++)
+			{
+			  unit_ctrl(chr2hex(*(p+20+i)), chr2hex(*(p+20+branch_num+j)), 0, LAMPONOFF, data);
+			}
+			
+			for(j=0;j<segment2_num;j++)
+			{
+			  unit_ctrl(chr2hex(*(p+20+i)), chr2hex(*(p+20+branch_num+segment1_num+j))|0x10, 0, LAMPONOFF, data);
+			}
+		}
+	}
+	else if((*(p+15) == 0x42) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))//单灯开关灯
+	{
+	  unit_addr_bcd =  chr2hex(*(p+20))<<4;
+		unit_addr_bcd = (chr2hex(*(p+21))+unit_addr_bcd)<<4;
+		unit_addr_bcd = (chr2hex(*(p+22))+unit_addr_bcd)<<4;
+		unit_addr_bcd =  chr2hex(*(p+23))+unit_addr_bcd;
+		
+		unit_ctrl(RANDOM, RANDOM , unit_addr_bcd, LAMPONOFF, data);
+	}
+	else 
+	{
+		return;
+	}
+	
+	strncpy((char*)buf_temp, (char*)p+15, 5);
+	
+	Protocol_Response(0x85, buf_temp, 5);
+}
+
+void HandleReadBSNData(u8 *p)
 {
 	u8 data_size=0;
 	u8 branch_num,segment1_num,segment2_num;
@@ -334,14 +558,11 @@ void HandleLampOnOff(u8 *p)
 	if(!Protocol_Check(p, &data_size))
     return;
 	
-	if((*(p+15) == 0x41) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))//网关开关灯
+	if((*(p+15) == 0x41) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))//读网关下所有灯数据
 	{
-		if(*(p+19) == 0x30)
-			unit_turn_on(ALL_BRANCH, ALL_SEGMENT);
-		else if(*(p+19) == 0x31)
-			unit_turn_off(ALL_BRANCH, ALL_SEGMENT);
+		unit_ctrl(ALL_BRANCH, ALL_SEGMENT, 0, READDATA, 0);
 	}
-	else if(*(p+15) == 0x38)//回路属性开关灯
+	else if(*(p+15) == 0x39)//回路属性镇流器数据
 	{
 		branch_num = chr2hex(*(p+16));
 		segment1_num = chr2hex(*(p+17));
@@ -350,41 +571,32 @@ void HandleLampOnOff(u8 *p)
 		{
 			for(j=0;j<segment1_num;j++)
 			{
-				if(*(p+19) == 0x30)
-			    unit_turn_on(chr2hex(*(p+20+i)), chr2hex(*(p+20+branch_num+j)));
-		    else if(*(p+19) == 0x31)
-			    unit_turn_off(chr2hex(*(p+20+i)), chr2hex(*(p+20+branch_num+j)));
+			  unit_ctrl(chr2hex(*(p+19+i)), chr2hex(*(p+19+branch_num+j)), 0, READDATA, 0);
 			}
 			
 			for(j=0;j<segment2_num;j++)
 			{
-				if(*(p+19) == 0x30)
-			    unit_turn_on(chr2hex(*(p+20+i)), chr2hex(*(p+20+branch_num+segment1_num+j)));
-		    else if(*(p+19) == 0x31)
-			    unit_turn_off(chr2hex(*(p+20+i)), chr2hex(*(p+20+branch_num+segment1_num+j)));
+			  unit_ctrl(chr2hex(*(p+19+i)), chr2hex(*(p+19+branch_num+segment1_num+j))|0x10, 0, READDATA, 0);
 			}
 		}
 	}
-	else if((*(p+15) == 0x42) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))//单灯开关灯
+	else if((*(p+15) == 0x42) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))//单灯镇流器数据
 	{
-	  unit_addr_bcd =  chr2hex(*(p+20))<<4;
+	  unit_addr_bcd =  chr2hex(*(p+19))<<4;
+		unit_addr_bcd = (chr2hex(*(p+20))+unit_addr_bcd)<<4;
 		unit_addr_bcd = (chr2hex(*(p+21))+unit_addr_bcd)<<4;
-		unit_addr_bcd = (chr2hex(*(p+22))+unit_addr_bcd)<<4;
-		unit_addr_bcd =  chr2hex(*(p+23))+unit_addr_bcd;
+		unit_addr_bcd =  chr2hex(*(p+22))+unit_addr_bcd;
 		
-		if(*(p+19) == 0x30)
-			unit_turn_on(RANDOM, unit_addr_bcd);
-	  else if(*(p+19) == 0x31)
-		  unit_turn_off(RANDOM, unit_addr_bcd);
+		unit_ctrl(RANDOM, RANDOM , unit_addr_bcd, READDATA, 0);
 	}
 	else 
 	{
 		return;
 	}
 	
-	strncpy((char*)buf_temp, (char*)p+15, 5);
+	strncpy((char*)buf_temp, (char*)p+15, 4);
 	
-	Protocol_Response(0x85, buf_temp, 5);
+	Protocol_Response(0x86, buf_temp, 4);
 }
 
 void HandleTunnelStrategy(u8 *p)

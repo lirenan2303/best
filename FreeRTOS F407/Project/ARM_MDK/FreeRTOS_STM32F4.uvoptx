@@ -239,6 +239,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>time,0x10</ItemText>
         </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>GSM_SendAddrTable</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow1>
         <Mm>
