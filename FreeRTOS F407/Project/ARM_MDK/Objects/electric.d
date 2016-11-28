@@ -51,5 +51,10 @@
 .\objects\electric.o: ..\..\FreeRTOS\Source\include\semphr.h
 .\objects\electric.o: ..\..\USER\electric.h
 .\objects\electric.o: ..\..\ZKLib_STM32F4\stm32\uart_debug.h
+.\objects\electric.o: ..\..\ZKLib_STM32F4\stm32\rtc.h
+.\objects\electric.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\electric.o: ..\..\USER\common.h
+.\objects\electric.o: ..\..\ZKLib_STM32F4\stm32\norflash.h
+.\objects\electric.o: ..\..\ZKLib_STM32F4\stm32\fsmc_nor.h
 .\objects\electric.o: ..\..\USER\gateway_protocol.h
+.\objects\electric.o: ..\..\USER\sys_debug.h

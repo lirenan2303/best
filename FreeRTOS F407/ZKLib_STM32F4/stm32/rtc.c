@@ -11,9 +11,8 @@
 #include "delay.h"
 #include "common.h"
 
-static SemaphoreHandle_t RTC_SystemRunningSemaphore;
+SemaphoreHandle_t RTC_SystemRunningSemaphore;
 NVIC_InitTypeDef   NVIC_InitStructure;
-TimeTypeDef time;
 
 //void RTC_WKUP_IRQHandler(void)
 //{
@@ -104,7 +103,7 @@ u8 CaculateWeekDay(int y,int m, int d) //基姆拉尔森公式
     case 3: return 4;
     case 4: return 5;
     case 5: return 6; 
-    case 6: return 7;
+    case 6: return 7;//星期日
 		default:return 0;
   }
 }

@@ -13,19 +13,30 @@ typedef enum
 	LAMPSTRATEGY = 0x03,    /*灯策略下载*/
 	LAMPDIMMING = 0x04,     /*灯调光控制*/
 	LAMPONOFF = 0x05,       /*灯开关控制*/
-	READDATA = 0x06,        /*读镇流器数据*/
-	LOOPCONTROL = 0x07,     /*网关回路控制*/
+	READLAMPDATA = 0x06,    /*读镇流器数据*/
+	BRANCHCTRL = 0x07,      /*网关回路控制*/
 	DATAQUERY = 0x08,       /*网关数据查询*/
+	TIMEADJUST = 0x0B,      /*校时*/
 	VERSIONQUERY = 0x0C,    /*网关软件版本号查询*/ 
-  ELECTRICGATHER = 0x0E,  /*电量采集软件版本号查询*/	
+  ELECVERSION = 0x0E,     /*电量采集软件版本号查询*/	
+	GWADDRQUERY = 0x11,     /*网关地址查询*/
+	SETSERVERIPPORT = 0x14, /*设置服务器IP和端口*/
+	GATEUPGRADE = 0x15,     /*网关远程升级*/
+	GPRS_QUALITY = 0x17,    /*gprs信号强度*/
 	SETPARAMLIMIT = 0x21,   /*设置光强度段和时间段划分点参数*/
 	TUNNELSTRATEGY = 0x22,  /*隧道内网关策略下载*/
-	GATEUPGRADE = 0x37,     /*网关远程升级*/
-	TIMEADJUST = 0x42,      /*校时*/
 	LUXVALUE = 0x43,        /*接收到光强度值*/
 	RESTART = 0x3F,         /*设备复位*/
-	PROTOCOL_NULL,          /*保留*/
-}ProtocolType;
+	WGPROTOCOL_NULL,        /*保留*/
+}WGProtocolType;
+
+
+typedef struct
+{
+	unsigned char system_reset_flag;
+	unsigned char gsm_reset_flag;
+}FlagTypeDef;
+
 
 typedef struct
 {
@@ -50,10 +61,14 @@ typedef struct
 
 typedef struct
 {
-	ProtocolType type;
+	WGProtocolType type;
 	void (*handlerFunc)(u8 *); //(*指针变量名)(形参列表)(指针强制类型转化)
-} MessageHandlerMap;
+} WGMessageHandlerMap;
 
+void RTC_TimeToChar(u16 *buf);
+ErrorStatus GatewayAddrCheck(u8 *addr_buf);
+ErrorStatus Protocol_Check(u8 *buf, u8 *BufData_Size);
+void GPRS_Protocol_Response(u8 Function, u8 *databuff, u8 DataLength);
 void HandleGatewayParam(u8 *p);
 void HandleLampParam(u8 *p);
 void HandleLampStrategy(u8 *p);
@@ -61,6 +76,16 @@ void HandleLampDimmer(u8 *p);
 void HandleLampOnOff(u8 *p);
 void HandleTunnelStrategy(u8 *p);
 void HandleReadBSNData(u8 *p);
+void HandleBranchOnOff(u8 *p);
+void HandleGWDataQuery(u8 *p);
+void HandleGWVersQuery(u8 *p);
+void HandleElecVersQuery(u8 *p);
+void HandleGWAddrQuery(u8 *p);
+void HandleSetIPPort(u8 *p);
+void HandleSignalQuality(u8 *p);
+void HandleRestart(u8 *p);
+void HandleAdjustTime(u8 *p);
+void HandleGWUpgrade(u8 *P);
 
 void AllParaInit(void);
 

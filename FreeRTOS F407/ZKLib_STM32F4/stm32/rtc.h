@@ -15,6 +15,7 @@ typedef struct{
 	int tm_wday;
 }TimeTypeDef;
 
+u8 CaculateWeekDay(int y,int m, int d);
 void UpdataNetTime(char *p);
 u8 RtcInit(void);
 void NetTimeCentury(char *p);

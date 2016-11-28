@@ -5,11 +5,7 @@ typedef enum
 {
 	UNITLIGHTPARAM = 0x82,      /*灯参数下载*/
 	UNITSTRATEGY = 0x83,        /*灯策略下载*/
-//	DIMMING = 0x04,         /*灯调光控制*/
-//	LAMPSWITCH = 0x05,      /*灯开关控制*/
 	UNITREADDATA = 0x86,        /*读镇流器数据*/
-//	UNITUPDATA = 0X2A,  /*镇流器远程升级*/
-//	TIMEADJUST = 0x42,      /*校时*/
  	UNITPROTOCOL_NULL,          /*保留*/
 }UnitProtocolType;
 

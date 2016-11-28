@@ -214,7 +214,7 @@ static void vBallastComm1Task(void *parameter)
 		{
 			protocol_type = (chr2hex(message[5])<<4 | chr2hex(message[6]));
 			const UnitMessageHandlerMap *map = Ballast_MessageMaps;
-			for(; map->type != PROTOCOL_NULL; ++map)
+			for(; map->type != UNITPROTOCOL_NULL; ++map)
 			{
 				if (protocol_type == map->type) 
 				{

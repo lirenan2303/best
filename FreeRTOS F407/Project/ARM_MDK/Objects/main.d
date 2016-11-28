@@ -8,6 +8,7 @@
 .\objects\main.o: ..\..\FreeRTOS\Source\include\deprecated_definitions.h
 .\objects\main.o: ..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h
 .\objects\main.o: ..\..\FreeRTOS\Source\include\mpu_wrappers.h
+.\objects\main.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\main.o: ..\..\FreeRTOS\Source\include\task.h
 .\objects\main.o: ..\..\FreeRTOS\Source\include\list.h
 .\objects\main.o: ..\..\Libraries\FWLIB\inc\misc.h

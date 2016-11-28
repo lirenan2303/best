@@ -98,3 +98,13 @@ void MemStorage_Convert(u8 *msg, u16 cvt_size, u16 *write_buf)
 	}
 }
 
+void ConvertToByte(u16 *write_buf, u16 cvt_size, u8 *msg)
+{
+  u8 i;
+	
+	for(i=0;i<cvt_size;i++)
+	{
+	  *(msg+i) = *(write_buf+i);
+	}
+}
+

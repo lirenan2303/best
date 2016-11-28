@@ -31,11 +31,9 @@
 #define  GPIO_GPRS_PW_EN    GPIOC
 #define  PIN_GPRS_PW_EN     GPIO_Pin_0
 
-#define  GSM_BUFF_SIZE      200
-
 SemaphoreHandle_t    GsmTx_semaphore;
 static xQueueHandle  GSM_GPRS_queue;
-static xQueueHandle  GSM_AT_queue;
+xQueueHandle  GSM_AT_queue;
 
 volatile ErrorStatus GPRS_ConnectState = ERROR;
 WG_ServerParameterType   WG_ServerParameter;
@@ -67,22 +65,25 @@ GsmMessage GsmRxData;
 
 FrameTypeList FrameType_Flag;
 
-const static MessageHandlerMap GPRS_MessageMaps[] =  //二位数组的初始化
+const static WGMessageHandlerMap GPRS_MessageMaps[] =  //二位数组的初始化
 {
-	{GATEPARAM,      HandleGatewayParam},     /*0x01; 网关参数下载*/           
-	{LAMPPARAM,      HandleLampParam},        /*0x02; 灯参数下载*/  
-	{LAMPSTRATEGY,   HandleLampStrategy},     /*0x03; 灯策略下载*/
-	{LAMPDIMMING,    HandleLampDimmer},       /*0x04; 灯调光控制*/
-	{LAMPONOFF,      HandleLampOnOff},        /*0x05; 灯开关控制*/
-	{READDATA,       HandleReadBSNData},      /*0x06; 读镇流器数据*/
-//	{DATAQUERY,      HandleGWDataQuery},      /*0x08; 网关数据查询*/           		    
-//	{VERSIONQUERY,   HandleGWVersQuery},      /*0x0C; 查网关软件版本号*/      
-//	{SETPARAMLIMIT,  HandleSetParamDog},      /*0x21; 设置光强度区域和时间域划分点参数*/
-	{TUNNELSTRATEGY, HandleTunnelStrategy},   /*0x22; 策略下载*/
-//	{GATEUPGRADE,    HandleGWUpgrade},        /*0x37; 网关远程升级*/
-//	{TIMEADJUST,     HandleAdjustTime},       /*0x42; 校时*/                     
-//	{LUXVALUE,       HandleLuxGather},        /*0x43; 接收到光照度强度值*/		
-//	{RESTART,        HandleRestart},          /*0x3F; 设备复位*/               
+	{GATEPARAM,        HandleGatewayParam},     /*0x01; 网关参数下载*/           
+	{LAMPPARAM,        HandleLampParam},        /*0x02; 灯参数下载*/  
+	{LAMPSTRATEGY,     HandleLampStrategy},     /*0x03; 灯策略下载*/
+	{LAMPDIMMING,      HandleLampDimmer},       /*0x04; 灯调光控制*/
+	{LAMPONOFF,        HandleLampOnOff},        /*0x05; 灯开关控制*/
+	{READLAMPDATA,     HandleReadBSNData},      /*0x06; 读镇流器数据*/
+	{BRANCHCTRL,       HandleBranchOnOff},      /*0x07; 网关回路控制*/
+	{DATAQUERY,        HandleGWDataQuery},      /*0x08; 网关数据查询*/
+	{TIMEADJUST,       HandleAdjustTime},       /*0x0B; 校时*/
+	{VERSIONQUERY,     HandleGWVersQuery},      /*0x0C; 查网关软件版本号*/ 
+  {ELECVERSION,      HandleElecVersQuery},    /*0x0E; 查电量板软件版本号*/	
+	{GWADDRQUERY,      HandleGWAddrQuery},      /*0x11; 查网关地址*/
+	{SETSERVERIPPORT,  HandleSetIPPort},        /*0x14; 设置目标服务器IP和端口*/
+	{GATEUPGRADE,      HandleGWUpgrade},        /*0x15; 网关远程升级*/
+	{GPRS_QUALITY,     HandleSignalQuality},    /*0x17; gprs信号强度*/
+	{TUNNELSTRATEGY,   HandleTunnelStrategy},   /*0x22; 隧道策略下载*/                    
+	{RESTART,          HandleRestart},          /*0x3F; 设备复位*/               
 };
  
 static void GSM_USART_Init(void)
@@ -135,7 +136,6 @@ static void GSM_CtrlPinInit(void)
 	GPIO_InitTypeDef GPIO_InitStructure;
 	/****************GSM电源引脚*******************/
 	GPIO_ResetBits(GPIO_GPRS_PW_EN, PIN_GPRS_PW_EN);
-//	GPIO_SetBits(GPIO_GPRS_PW_EN, PIN_GPRS_PW_EN);
 	
   GPIO_InitStructure.GPIO_Pin = PIN_GPRS_PW_EN; 
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
@@ -143,6 +143,13 @@ static void GSM_CtrlPinInit(void)
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; 
 	GPIO_Init(GPIO_GPRS_PW_EN,&GPIO_InitStructure);
+	
+	GPIO_InitStructure.GPIO_Pin = Pin_GPRS_Reset;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;	
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; 
+	GPIO_Init(GPIO_GPRS_Reset,&GPIO_InitStructure);
 }
 
 static void GSM_TX_DMA_Init(void) 
@@ -362,7 +369,7 @@ ErrorStatus SendMsgToSim(char*cmd, char *ack, u32 waittime)
 			{
 				if(strstr(message, ack) != NULL)
 				{
-					if((strcmp(ack, "+CCLK: ") == 0))
+					if(strcmp(ack, "+CCLK: ") == 0)
 					{
 						UpdataNetTime(message);
 					}
@@ -573,12 +580,14 @@ static void vGSMTask(void *parameter)
 	u8 message[sizeof(GsmRxData.Buff)];
 	u8 protocol_type;
 	portTickType lastT = 0;
+	u8 reset_flag = 0x31;
 	
 	for(;;)
 	{
 		while(!GsmStartConnect());
 		GPRS_ConnectState = SUCCESS;
-
+		
+		GPRS_Protocol_Response(RESTART|0x80, &reset_flag, 1);
 		break;
 	}
 	
@@ -587,8 +596,8 @@ static void vGSMTask(void *parameter)
 		if(xQueueReceive(GSM_GPRS_queue, message, configTICK_RATE_HZ/10) == pdTRUE)
 		{
 			protocol_type = (chr2hex(message[11])<<4 | chr2hex(message[12]));
-			const MessageHandlerMap *map = GPRS_MessageMaps;
-			for(; map->type != PROTOCOL_NULL; ++map)
+			const WGMessageHandlerMap *map = GPRS_MessageMaps;
+			for(; map->type != WGPROTOCOL_NULL; ++map)
 			{
 				if (protocol_type == map->type) 
 				{

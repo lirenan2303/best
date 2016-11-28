@@ -96,6 +96,7 @@ void NorFlashRead(u32 addr, u16 *ram, int len);
 bool NorFlashMutexLock(uint32_t time);
 void NorFlashMutexUnlock(void);
 void MemStorage_Convert(u8 *msg, u16 cvt_size, u16 *write_buf);
+void ConvertToByte(u16 *write_buf, u16 cvt_size, u8 *msg);
 
 
 #endif

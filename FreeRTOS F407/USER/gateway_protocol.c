@@ -2,27 +2,35 @@
 #include "stm32f4xx_dma.h"
 #include "FreeRTOS.h"
 #include "queue.h"
+#include "semphr.h"
 #include "task.h"
 #include "gsm.h"
 #include "rtc.h"
 #include <string.h>
 #include <stdio.h>
 #include "uart_debug.h"
+#include "electric.h"
 #include "gateway_protocol.h"
 #include "ballast_protocol.h"
 #include "table_process.h"
 #include "norflash.h"
 #include "common.h"
 #include "lat_longitude.h"
+#include "km_ctrl.h"
 
+extern SemaphoreHandle_t RTC_SystemRunningSemaphore;
 extern LampAttrSortType LampAttrSortTable[MAX_LAMP_NUM];
 extern LampRunCtrlType LampRunCtrlTable[MAX_LAMP_NUM];
-extern u16 GSM_SendAddrTable[MAX_LAMP_NUM];
+extern const char Sofeware_Version[];
 extern TimeTypeDef time;
 extern u16 lamp_num;
+extern xQueueHandle  GSMSendAddrQueue;
+extern xQueueHandle  GSM_AT_queue;
+extern xQueueHandle KMCtrlQueue;
 
 void RTC_TimeToChar(u16 *buf)
 {
+	TimeTypeDef time;
 	ReadRTC_Time(RTC_Format_BCD, &time);
 
 	*buf++ = hex2chr((time.tm_year>>4) & 0x0000000f);
@@ -48,11 +56,11 @@ ErrorStatus unit_addr_check(u16 addr, u16 *addr_hex)
 	k = ((addr>>4) & 0x000f);
 	l = ((addr) & 0x000f);
 	
-	if(i >9 ) return ERROR;
-	else if(j >9 ) return ERROR;
-	else if(k >9 ) return ERROR;
-	else if(l >9 ) return ERROR;
-	else 
+	if(i >9) return ERROR;
+	else if(j >9) return ERROR;
+	else if(k >9) return ERROR;
+	else if(l >9) return ERROR;
+	else
 	{
 		*addr_hex = i*1000+j*100+k*10+l;
 		
@@ -99,7 +107,7 @@ ErrorStatus Protocol_Check(u8 *buf, u8 *BufData_Size)
 	return state;
 }
 
-void Protocol_Response(u8 Function, u8 *databuff, u8 DataLength)
+void GPRS_Protocol_Response(u8 Function, u8 *databuff, u8 DataLength)
 {
   u8 i,checksum;
 	u8 buf[250]={0};
@@ -166,11 +174,11 @@ void HandleGatewayParam(u8 *p)
 	}
 	else
 	{
-	  Protocol_Response(0xC1, p+15, 1);
+	  GPRS_Protocol_Response(GATEPARAM|0xC0, p+15, 1);
 		return;
 	}
 	
-	Protocol_Response(0x81, p+15, 1);	
+	GPRS_Protocol_Response(GATEPARAM|0x80, p+15, 1);	
 }
 
 void HandleLampParam(u8 *p)
@@ -256,7 +264,7 @@ void HandleLampParam(u8 *p)
 	}
 	else
 	{
-		Protocol_Response(0xC2, buf_temp, 5);
+		GPRS_Protocol_Response(LAMPPARAM|0xC0, buf_temp, 5);
 		return;
 	}
 	
@@ -269,7 +277,7 @@ void HandleLampParam(u8 *p)
 		}
 	}
 	buf_temp[4*lamp_param_num] = *(p+15);
-	Protocol_Response(0x82, buf_temp, 4*lamp_param_num+1);
+	GPRS_Protocol_Response(LAMPPARAM|0xC0, buf_temp, 4*lamp_param_num+1);
 }
 
 void HandleLampStrategy(u8 *p)
@@ -301,7 +309,7 @@ void HandleLampStrategy(u8 *p)
 	
 	strncpy((char*)buf_temp, (char*)p+15, 10);
 	
-	Protocol_Response(0x83, buf_temp, 10);
+	GPRS_Protocol_Response(LAMPSTRATEGY|0x80, buf_temp, 10);
 }
 
 void unit_ctrl(u8 branch, u8 segment, u16 addr, u8 cmd, u8 data)
@@ -309,7 +317,7 @@ void unit_ctrl(u8 branch, u8 segment, u16 addr, u8 cmd, u8 data)
 	u16 unit_addr_hex;
 	u16 index1,index2;
 	u8 enter=0;
-	u16 i,n=0;
+	u16 i;
 	
 	if((branch == ALL_BRANCH) && (segment == ALL_SEGMENT))
 	{
@@ -336,9 +344,10 @@ void unit_ctrl(u8 branch, u8 segment, u16 addr, u8 cmd, u8 data)
 					LampRunCtrlTable[unit_addr_hex].run_state = CHOLSE_SOFTWARE;
 				}
 		  }
-			else if(cmd == READDATA)
+			else if(cmd == READLAMPDATA)
 			{
-				GSM_SendAddrTable[n++] = LampAttrSortTable[i].addr;
+//				GSM_SendAddrTable[n++] = LampAttrSortTable[i].addr;
+				xQueueSend(GSMSendAddrQueue, &LampAttrSortTable[i].addr, configTICK_RATE_HZ);
 			}
 			else
 				return;
@@ -366,9 +375,10 @@ void unit_ctrl(u8 branch, u8 segment, u16 addr, u8 cmd, u8 data)
 			else if(data == 0x31)
 				LampRunCtrlTable[unit_addr_hex].run_state = CHOLSE_SOFTWARE;
 	  }
-		else if(cmd == READDATA)
+		else if(cmd == READLAMPDATA)
 		{
-		  GSM_SendAddrTable[n++] = LampAttrSortTable[i].addr;
+//		  GSM_SendAddrTable[n++] = LampAttrSortTable[i].addr;
+			xQueueSend(GSMSendAddrQueue, &LampAttrSortTable[i].addr, configTICK_RATE_HZ);
 		}
 		else 
 			return;
@@ -420,9 +430,10 @@ void unit_ctrl(u8 branch, u8 segment, u16 addr, u8 cmd, u8 data)
 				else if(data == 0x31)
 					LampRunCtrlTable[unit_addr_hex].run_state = CHOLSE_SOFTWARE;
 		  }
-			else if(cmd == READDATA)
+			else if(cmd == READLAMPDATA)
 		  {
-				GSM_SendAddrTable[n++] = LampAttrSortTable[i].addr;
+//				GSM_SendAddrTable[n++] = LampAttrSortTable[i].addr;
+				xQueueSend(GSMSendAddrQueue, &LampAttrSortTable[i].addr, configTICK_RATE_HZ);
 		  }
 			else
 				return;
@@ -484,7 +495,7 @@ void HandleLampDimmer(u8 *p)
 	
 	strncpy((char*)buf_temp, (char*)p+15, 6);
 	
-	Protocol_Response(0x84, buf_temp, 6);
+	GPRS_Protocol_Response(LAMPDIMMING|0x80, buf_temp, 6);
 }
 
 void HandleLampOnOff(u8 *p)
@@ -541,7 +552,7 @@ void HandleLampOnOff(u8 *p)
 	
 	strncpy((char*)buf_temp, (char*)p+15, 5);
 	
-	Protocol_Response(0x85, buf_temp, 5);
+	GPRS_Protocol_Response(LAMPONOFF|0x80, buf_temp, 5);
 }
 
 void HandleReadBSNData(u8 *p)
@@ -560,7 +571,7 @@ void HandleReadBSNData(u8 *p)
 	
 	if((*(p+15) == 0x41) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))//读网关下所有灯数据
 	{
-		unit_ctrl(ALL_BRANCH, ALL_SEGMENT, 0, READDATA, 0);
+		unit_ctrl(ALL_BRANCH, ALL_SEGMENT, 0, READLAMPDATA, 0);
 	}
 	else if(*(p+15) == 0x39)//回路属性镇流器数据
 	{
@@ -571,12 +582,12 @@ void HandleReadBSNData(u8 *p)
 		{
 			for(j=0;j<segment1_num;j++)
 			{
-			  unit_ctrl(chr2hex(*(p+19+i)), chr2hex(*(p+19+branch_num+j)), 0, READDATA, 0);
+			  unit_ctrl(chr2hex(*(p+19+i)), chr2hex(*(p+19+branch_num+j)), 0, READLAMPDATA, 0);
 			}
 			
 			for(j=0;j<segment2_num;j++)
 			{
-			  unit_ctrl(chr2hex(*(p+19+i)), chr2hex(*(p+19+branch_num+segment1_num+j))|0x10, 0, READDATA, 0);
+			  unit_ctrl(chr2hex(*(p+19+i)), chr2hex(*(p+19+branch_num+segment1_num+j))|0x10, 0, READLAMPDATA, 0);
 			}
 		}
 	}
@@ -587,7 +598,7 @@ void HandleReadBSNData(u8 *p)
 		unit_addr_bcd = (chr2hex(*(p+21))+unit_addr_bcd)<<4;
 		unit_addr_bcd =  chr2hex(*(p+22))+unit_addr_bcd;
 		
-		unit_ctrl(RANDOM, RANDOM , unit_addr_bcd, READDATA, 0);
+		unit_ctrl(RANDOM, RANDOM , unit_addr_bcd, READLAMPDATA, 0);
 	}
 	else 
 	{
@@ -596,7 +607,196 @@ void HandleReadBSNData(u8 *p)
 	
 	strncpy((char*)buf_temp, (char*)p+15, 4);
 	
-	Protocol_Response(0x86, buf_temp, 4);
+	GPRS_Protocol_Response(READLAMPDATA|0x80, buf_temp, 4);
+}
+
+void HandleBranchOnOff(u8 *p)
+{
+	u8 data_size=0;
+	u8 *buf;
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	if(*(p+15) == 0x30)
+	{
+		buf = p+15;
+		xQueueSend(KMCtrlQueue, buf, configTICK_RATE_HZ);
+	}
+}
+
+void HandleGWDataQuery(u8 *p)
+{
+	u8 data_size=0;
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	EleDMA_TxBuff((char*)p, data_size+18);
+}
+
+void HandleAdjustTime(u8 *p)
+{
+	RTC_DateTypeDef RTC_DateTypeInitStructure;
+  RTC_TimeTypeDef RTC_TimeTypeInitStructure;
+  u8 data_size=0;
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	RTC_DateTypeInitStructure.RTC_Year = Bcd2ToByte(chr2hex(*(p+15))<<4 | chr2hex(*(p+16)));
+	RTC_DateTypeInitStructure.RTC_Month = Bcd2ToByte(chr2hex(*(p+17))<<4 | chr2hex(*(p+18)));
+	RTC_DateTypeInitStructure.RTC_Date = Bcd2ToByte(chr2hex(*(p+19))<<4 | chr2hex(*(p+20)));
+  RTC_TimeTypeInitStructure.RTC_Hours = Bcd2ToByte(chr2hex(*(p+21))<<4 | chr2hex(*(p+22)));
+	RTC_TimeTypeInitStructure.RTC_Minutes = Bcd2ToByte(chr2hex(*(p+23))<<4 | chr2hex(*(p+24)));
+	RTC_TimeTypeInitStructure.RTC_Seconds = Bcd2ToByte(chr2hex(*(p+25))<<4 | chr2hex(*(p+26)));
+	
+	RTC_DateTypeInitStructure.RTC_WeekDay = CaculateWeekDay(((u16)RTC_DateTypeInitStructure.RTC_Year + RTC_ReadBackupRegister(RTC_BKP_DR1)*100), 
+	                                        RTC_DateTypeInitStructure.RTC_Month, RTC_DateTypeInitStructure.RTC_Date);
+	
+	if(xSemaphoreTake(RTC_SystemRunningSemaphore, configTICK_RATE_HZ * 5) == pdTRUE)
+	{
+	  RTC_SetTime(RTC_Format_BIN,&RTC_TimeTypeInitStructure);
+		RTC_SetDate(RTC_Format_BIN,&RTC_DateTypeInitStructure);
+		
+		vTaskDelay(1);
+		xSemaphoreGive(RTC_SystemRunningSemaphore);
+	}
+}
+
+void HandleGWVersQuery(u8 *p)
+{
+	u8 data_size=0;
+	char buf[20];
+	char buf_temp[5];
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	sscanf(Sofeware_Version, "%*[^:]:%s", buf);
+	sscanf(buf,"V%c.%c%c", &buf_temp[0], &buf_temp[1], &buf_temp[2]);
+	
+	GPRS_Protocol_Response(VERSIONQUERY|0x80, (u8*)buf_temp, 3);
+}
+
+void HandleElecVersQuery(u8 *p)
+{
+	u8 data_size=0;
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	EleDMA_TxBuff((char*)p, data_size+18);
+}
+
+void HandleGWAddrQuery(u8 *p)
+{
+	u8 data_size=0;
+	u8 buf_temp[5];
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	strncpy((char*)buf_temp, (char*)p+15, 4);
+	GPRS_Protocol_Response(GWADDRQUERY|0x80, buf_temp, 4);
+}
+
+void HandleSetIPPort(u8 *p)
+{
+	WG_ServerParameterType   DebugWG_ServerPara;
+	char message[30];
+	char buff[30] = {0};
+	char endchar = 0;
+	short buf[4] = {0};
+	int port = 0;
+	u8 data_size=0;
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	strncpy((char*)message, (char*)p+15, data_size);
+	if(6 == sscanf(message,"%hd.%hd.%hd.%hd,%d%c",&buf[0],&buf[1],&buf[2],&buf[3],&port,&endchar))
+	{
+		if((0<=buf[0] && buf[0]<=255) && (0<=buf[1] && buf[1]<=255) && 
+			 (0<=buf[2] && buf[2]<=255) && (0<=buf[3] && buf[3]<=255) &&
+			 (0<=port   && port<=65535) && (endchar == ';'))
+		{
+			sscanf(message, "%[^,]", DebugWG_ServerPara.serverIP);//存储IP地址及端口按照字符类型存储
+			sscanf(message, "%*[^,],%[^;]", DebugWG_ServerPara.serverPORT); 
+			strncpy(buff, (char*)DebugWG_ServerPara.serverIP, sizeof(DebugWG_ServerPara.serverIP));
+			strncpy(buff+16, (char*)DebugWG_ServerPara.serverPORT, sizeof(DebugWG_ServerPara.serverPORT));
+			
+			NorFlashWrite(NORFLASH_ADDR_BASE + NORFLASH_IP1_PORT1, (u16*)buff, sizeof(buff)/2);
+		}
+		else
+			return;
+	}
+	
+	GPRS_Protocol_Response(SETSERVERIPPORT|0x80, NULL, 0);
+	
+	vTaskDelay(configTICK_RATE_HZ);
+	NVIC_SystemReset();
+}
+
+void HandleGWUpgrade(u8 *P)
+{
+	
+}
+
+void HandleSignalQuality(u8 *p)
+{
+	u8 data_size;
+	char at_csq[] = "AT+CSQ\r\n";
+	char message[GSM_BUFF_SIZE];
+	u8 buf_temp[5];
+	int signel_value,error_rate;
+	
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	SwitchToCommand();
+	GsmDMA_TxBuff(at_csq, strlen(at_csq));
+	
+	if(xQueueReceive(GSM_AT_queue, &message, configTICK_RATE_HZ) == pdTRUE)
+	{
+		if(strstr(message, "+CSQ:") != NULL)
+		{
+			sscanf(message,"+CSQ: %d,%d", &signel_value, &error_rate);
+		}
+	}
+	
+	SwitchToData();
+	buf_temp[0] = hex2chr(signel_value & 0x0F);
+	buf_temp[1] = hex2chr((signel_value>>4) & 0x0F);
+	buf_temp[2] = hex2chr(error_rate & 0x0F);
+	buf_temp[3] = hex2chr((error_rate>>4) & 0x0F);
+	
+	GPRS_Protocol_Response(GPRS_QUALITY|0x80, buf_temp, 4);//信号强度表示方法
 }
 
 void HandleTunnelStrategy(u8 *p)
@@ -614,11 +814,46 @@ void HandleTunnelStrategy(u8 *p)
 	TunnelStrategyRun(WriteBuff);
 	NorFlashWrite(NORFLASH_GATEWAY_STRATEGY_BASE, WriteBuff, data_size);
 	
-	Protocol_Response(0xA2, NULL, 0);	
+	GPRS_Protocol_Response(TUNNELSTRATEGY|0x80, NULL, 0);	
+}
+
+
+void HandleRestart(u8 *p)
+{
+	u8 data_size=0;
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	vTaskDelay(configTICK_RATE_HZ);
+	
+	if(*(p+15) == 0x31)
+	{
+		NVIC_SystemReset();
+	}
+	else if(*(p+15) == 0x32)
+	{
+		if(GsmStartConnect() == SUCCESS)
+		{
+			GPRS_Protocol_Response(RESTART|0x80, p+15, 1);
+		}
+		else
+		{
+			NVIC_SystemReset();
+		}
+	}
+	else if(*(p+15) == 0x33)
+	{
+		EleDMA_TxBuff((char*)p, data_size+18);
+	}
 }
 
 void AllParaInit(void)
 {
+	TimeTypeDef time;
 	ReadRTC_Time(RTC_Format_BIN, &time);
 	rise_set();
 }

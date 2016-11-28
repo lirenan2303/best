@@ -44,6 +44,7 @@
 .\objects\gateway_protocol.o: ..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h
 .\objects\gateway_protocol.o: ..\..\FreeRTOS\Source\include\mpu_wrappers.h
 .\objects\gateway_protocol.o: ..\..\FreeRTOS\Source\include\queue.h
+.\objects\gateway_protocol.o: ..\..\FreeRTOS\Source\include\semphr.h
 .\objects\gateway_protocol.o: ..\..\FreeRTOS\Source\include\task.h
 .\objects\gateway_protocol.o: ..\..\FreeRTOS\Source\include\list.h
 .\objects\gateway_protocol.o: ..\..\USER\gsm.h
@@ -52,6 +53,7 @@
 .\objects\gateway_protocol.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\gateway_protocol.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\gateway_protocol.o: ..\..\ZKLib_STM32F4\stm32\uart_debug.h
+.\objects\gateway_protocol.o: ..\..\USER\electric.h
 .\objects\gateway_protocol.o: ..\..\USER\gateway_protocol.h
 .\objects\gateway_protocol.o: ..\..\USER\ballast_protocol.h
 .\objects\gateway_protocol.o: ..\..\USER\table_process.h
@@ -59,3 +61,4 @@
 .\objects\gateway_protocol.o: ..\..\ZKLib_STM32F4\stm32\fsmc_nor.h
 .\objects\gateway_protocol.o: ..\..\USER\common.h
 .\objects\gateway_protocol.o: ..\..\USER\lat_longitude.h
+.\objects\gateway_protocol.o: ..\..\USER\km_ctrl.h

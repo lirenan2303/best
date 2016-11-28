@@ -9,37 +9,31 @@
 #include "semphr.h"
 #include "electric.h"
 #include "uart_debug.h"
+#include "rtc.h"
 #include "common.h"
+#include "norflash.h"
 #include "gateway_protocol.h"
+#include "sys_debug.h"
 
 #define ELECTRIC_TASK_STACK_SIZE		(configMINIMAL_STACK_SIZE + 1024*1)
-#define ELECTRIC_BUFF_SIZE  100
+#define ELECTRIC_BUFF_SIZE  200
 
-xSemaphoreHandle EleTx_semaphore;
+SemaphoreHandle_t    EleTx_semaphore;
 static xQueueHandle ElectricQueue;
+extern u16 lamp_num;
 
 typedef struct 
 {
 	u8 index;
 	u8 length;
-  u8 Buff[100];
+  u8 Buff[ELECTRIC_BUFF_SIZE];
 }ElectricMessage;
 
-const static MessageHandlerMap Electric_MessageMaps[] =  //二位数组的初始化
+const static ElecMessageHandlerMap Electric_MessageMaps[] =  //二位数组的初始化
 {
-	{GATEPARAM,      HandleGatewayParam},     /*0x01; 网关参数下载*/           
-//	{LIGHTPARAM,     HandleLightParam},       /*0x02; 灯参数下载*/              
-//	{DIMMING,        HandleLightDimmer},      /*0x04; 灯调光控制*/
-//	{LAMPSWITCH,     HandleLightOnOff},       /*0x05; 灯开关控制*/
-//	{READDATA,       HandleReadBSNData},      /*0x06; 读镇流器数据*/
-//	{DATAQUERY,      HandleGWDataQuery},      /*0x08; 网关数据查询*/           		    
-//	{VERSIONQUERY,   HandleGWVersQuery},      /*0x0C; 查网关软件版本号*/      
-//	{SETPARAMLIMIT,  HandleSetParamDog},      /*0x21; 设置光强度区域和时间域划分点参数*/
-//	{STRATEGYDOWN,   HandleStrategy},         /*0x22; 策略下载*/
-//	{GATEUPGRADE,    HandleGWUpgrade},        /*0x37; 网关远程升级*/
-//	{TIMEADJUST,     HandleAdjustTime},       /*0x42; 校时*/                     
-//	{LUXVALUE,       HandleLuxGather},        /*0x43; 接收到光照度强度值*/		
-//	{RESTART,        HandleRestart},          /*0x3F; 设备复位*/               
+	{ELECQUERYACK,      ElecHandleGWDataQuery},       /*0x08; 网关数据查询*/
+	{ELECSOFTQUERYACK,  ElecHandleSoftVerQuery},      /*0x0E; 查电量采集软件版本号*/
+	{ELEFTPUPDATAACK,   ElecHandleFTPUpdata},         /*0x1E; 电量采集模块远程升级*/	                 
 };
 
 
@@ -165,6 +159,7 @@ void USART1_IRQHandler(void)
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
 	{
     data = USART_ReceiveData(USART1);
+		printf_buff(&data, 1);//调试
 	  if(data == 0x02)
 		{
 			ElectricRxDataClear(&EleRxData);
@@ -204,11 +199,54 @@ void EleDMA_TxBuff(char *buf, u8 buf_size)
   }
 }
 
-
 static void ElectrolHardwareInit(void)
 {
 	ElectricUartInit();
 	Electric_TX_DMA_Init();
+}
+
+void ElecHandleGWDataQuery(u8 *p)
+{
+	u8 data_size=0;
+	u16 WriteBuff[20];
+	u16 lamp_num_bcd;
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	NorFlashRead(NORFLASH_MANAGER_PARA1_BASE + NORFLASH_MANAGER_ID_OFFSET, WriteBuff, 6); 
+  ConvertToByte(WriteBuff, 6, p+134);
+	
+	lamp_num_bcd = ByteToBcd2(lamp_num>>8)*256 + ByteToBcd2((u8)lamp_num);
+	*(p+140) = hex2chr((lamp_num_bcd>>12) & 0x000F);
+	*(p+141) = hex2chr((lamp_num_bcd>>8) & 0x000F);
+	*(p+142) = hex2chr((lamp_num_bcd>>4) & 0x000F);
+	*(p+143) = hex2chr((lamp_num_bcd) & 0x000F);
+	
+	RTC_TimeToChar(WriteBuff);
+  ConvertToByte(WriteBuff, 12, p+144);
+	
+	GPRS_Protocol_Response(ELECQUERYACK, p+15, data_size);
+}
+
+void ElecHandleSoftVerQuery(u8 *p)
+{
+	u8 data_size;
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!Protocol_Check(p, &data_size))
+    return;
+	
+	GPRS_Protocol_Response(ELECSOFTQUERYACK, p+15, 3);
+}
+
+void ElecHandleFTPUpdata(u8 *p)
+{
 }
 
 static void vElectTask(void *parameter)
@@ -220,9 +258,9 @@ static void vElectTask(void *parameter)
 	{
 		if(xQueueReceive(ElectricQueue, &message, configTICK_RATE_HZ / 10) == pdTRUE)
 		{
-			protocol_type = (chr2hex(message[5])<<4 | chr2hex(message[6]));
-			const MessageHandlerMap *map = Electric_MessageMaps;
-			for(; map->type != PROTOCOL_NULL; ++map)
+			protocol_type = (chr2hex(message[11])<<4 | chr2hex(message[12]));
+			const ElecMessageHandlerMap *map = Electric_MessageMaps;
+			for(; map->type != ELECPROTOCOL_NULL; ++map)
 			{
 				if (protocol_type == map->type) 
 				{
@@ -239,7 +277,7 @@ void ElectricInit(void)
 {
   ElectrolHardwareInit();
 	EleRxTxDataInit();
-	vSemaphoreCreateBinary(EleTx_semaphore);
-  ElectricQueue = xQueueCreate(8, sizeof(ElectricMessage));	
+	EleTx_semaphore = xSemaphoreCreateMutex();
+  ElectricQueue = xQueueCreate(10, sizeof(EleRxData.Buff));	
 	xTaskCreate(vElectTask, "ElectTask", ELECTRIC_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
 }
