@@ -6,8 +6,15 @@ typedef struct {
 	char  serverPORT[6];
 }WG_ServerParameterType;
 
+typedef enum
+{
+	COMMAND_MODE   = 0x00,   
+	DATA_MODE = 0x01,   
+}GSM_TranModeType;
+
 #define MANAGER_ADDR_LENGTH  10
-#define  GSM_BUFF_SIZE      200
+#define GSM_BUFF_SIZE        200
+#define GSM_RESTART_TIME     100
 
 void GSMInit(void); 
 ErrorStatus GsmStartConnect(void);

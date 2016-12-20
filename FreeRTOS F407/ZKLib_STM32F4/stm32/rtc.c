@@ -79,7 +79,6 @@ u8 RtcInit(void)
 		RTC_WriteBackupRegister(RTC_BKP_DR2,32);	//时区备份
 	}
 	
-//  RTC_Set_WakeUp(RTC_WakeUpClock_CK_SPRE_16bits,0);
 	return true;
 }
 
@@ -122,10 +121,10 @@ void UpdataNetTime(char *p)
     return;
 	
 	Zone_value = temp[6];
-	if(RTC_ReadBackupRegister(RTC_BKP_DR2) != Zone_value)
+	if(RTC_ReadBackupRegister(ZONE_BACKUP) != Zone_value)
 	{
 	  PWR_BackupAccessCmd(ENABLE);	//使能后备寄存器访问 
-	  RTC_WriteBackupRegister(RTC_BKP_DR2,Zone_value);	//时区备份
+	  RTC_WriteBackupRegister(ZONE_BACKUP,Zone_value);	//时区备份
 	}
 
 	RTC_DateTypeInitStructure.RTC_Year = Bcd2ToByte(chr2hex(buf[1])<<4 | chr2hex(buf[2]));
@@ -166,10 +165,10 @@ void NetTimeCentury(char *p)
 	{
 	  YearCentury = Bcd2ToByte(chr2hex(buf[0])<<4 | chr2hex(buf[1]));
 		
-		if(RTC_ReadBackupRegister(RTC_BKP_DR1) != YearCentury)
+		if(RTC_ReadBackupRegister(CENTURY_BACKUP) != YearCentury)
 		{
 			PWR_BackupAccessCmd(ENABLE);	//使能后备寄存器访问 
-			RTC_WriteBackupRegister(RTC_BKP_DR1,YearCentury);	//世纪备份
+			RTC_WriteBackupRegister(CENTURY_BACKUP,YearCentury);	//世纪备份
 		}
 	}
 }
@@ -184,17 +183,30 @@ void ReadRTC_Time(uint32_t rtc_format, TimeTypeDef* TimeStruct)
 		RTC_GetDate(rtc_format,&RTC_DateTypeInitStructure);
 		RTC_GetTime(rtc_format,&RTC_TimeTypeInitStructure);
 		
-		TimeStruct->tm_sec = RTC_TimeTypeInitStructure.RTC_Seconds;
-	  TimeStruct->tm_min = RTC_TimeTypeInitStructure.RTC_Minutes;
-	  TimeStruct->tm_hour = RTC_TimeTypeInitStructure.RTC_Hours;
-	  TimeStruct->tm_mday = RTC_DateTypeInitStructure.RTC_Date;
-	  TimeStruct->tm_mon = RTC_DateTypeInitStructure.RTC_Month;
+		TimeStruct->sec = RTC_TimeTypeInitStructure.RTC_Seconds;
+	  TimeStruct->min = RTC_TimeTypeInitStructure.RTC_Minutes;
+	  TimeStruct->hour = RTC_TimeTypeInitStructure.RTC_Hours;
+	  TimeStruct->day = RTC_DateTypeInitStructure.RTC_Date;
+	  TimeStruct->mon = RTC_DateTypeInitStructure.RTC_Month;
 		if(rtc_format == RTC_Format_BIN)
-	    TimeStruct->tm_year = RTC_DateTypeInitStructure.RTC_Year + RTC_ReadBackupRegister(RTC_BKP_DR1)*100;
+	    TimeStruct->year = RTC_DateTypeInitStructure.RTC_Year + RTC_ReadBackupRegister(CENTURY_BACKUP)*100;
 		else if(rtc_format == RTC_Format_BCD)
-		  TimeStruct->tm_year = RTC_DateTypeInitStructure.RTC_Year + (ByteToBcd2(RTC_ReadBackupRegister(RTC_BKP_DR1))<<8);
-	  TimeStruct->tm_wday = RTC_DateTypeInitStructure.RTC_WeekDay;
+		  TimeStruct->year = RTC_DateTypeInitStructure.RTC_Year + (ByteToBcd2(RTC_ReadBackupRegister(CENTURY_BACKUP))<<8);
+	  TimeStruct->week = RTC_DateTypeInitStructure.RTC_WeekDay;
 		
 		xSemaphoreGive(RTC_SystemRunningSemaphore);
+	}
+}
+
+void ReadUpload_Time(u32 type, TimeTypeDef *TimeStruct)
+{
+	if(type == RTC_Format_BIN)
+	{
+		TimeStruct->sec = (RTC_ReadBackupRegister(UP_TIME_BACKUP)&0x000000FF);
+	  TimeStruct->min = ((RTC_ReadBackupRegister(UP_TIME_BACKUP)>>8)&0x000000FF);
+	  TimeStruct->hour = (RTC_ReadBackupRegister(UP_TIME_BACKUP)>>16);
+	  TimeStruct->day = (RTC_ReadBackupRegister(UP_DATE_BACKUP)&0x000000FF);
+	  TimeStruct->mon = ((RTC_ReadBackupRegister(UP_DATE_BACKUP)>>8)&0x000000FF);
+	  TimeStruct->year = (RTC_ReadBackupRegister(UP_DATE_BACKUP)>>16);
 	}
 }

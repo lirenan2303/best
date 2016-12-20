@@ -12,6 +12,7 @@
 #include "common.h"
 #include "ballast_protocol.h"
 #include "gateway_protocol.h"
+#include "table_process.h"
 
 
 #define ZIGBEE_TASK_STACK_SIZE		     (configMINIMAL_STACK_SIZE + 1024*2)
@@ -21,6 +22,12 @@
 
 xSemaphoreHandle ballastComm1Tx_semaphore;
 static xQueueHandle  BallastComm1Queue;
+extern LampAttrSortType LampAttrSortTable[MAX_LAMP_NUM];
+extern LampRunCtrlType LampRunCtrlTable[MAX_LAMP_NUM];
+extern LampBuffType LampAddr;
+extern xQueueHandle  LampQueryAddrQueue;
+extern xQueueHandle  GPRSSendAddrQueue;
+u8 UnitWaitFlag = UNIT_QUERY_START;
 
 typedef struct
 {
@@ -32,9 +39,10 @@ typedef struct
 
 const static UnitMessageHandlerMap Ballast_MessageMaps[] =  //¶þÎ»Êý×éµÄ³õÊ¼»¯
 {
-  {UNITLIGHTPARAM,   HandleUnitLightParam},     /*0x82; µÆ²ÎÊýÏÂÔØ*/   	
-	{UNITSTRATEGY,     HandleUnitStrategy},       /*0x83; µÆ²ßÂÔÏÂÔØ*/
-  {UNITREADDATA,     HandleUnitReadData},       /*0x86; ¶ÁÕòÁ÷Æ÷Êý¾Ý*/   	
+  {UNITPARAMBACK,        HandleUnitLightParamReply},     /*0x82; µÆ²ÎÊýÏÂÔØ*/   	
+	{UNITSTRATEGYBACK,     HandleUnitStrategyReply},       /*0x83; µÆ²ßÂÔÏÂÔØ*/
+  {UNITREADDATABACK,     HandleUnitReadDataReply},       /*0x86; ¶ÁÕòÁ÷Æ÷Êý¾Ý*/  
+  {UNITPROTOCOL_NULL,    NULL},                          /*±£Áô*/  
 };
 
 BallastMessage BallastComm1RxData;
@@ -96,7 +104,7 @@ static void Ballast_TX_DMA_Init(void)
   /* ÅäÖÃ DMA Stream */
   DMA_InitStructure.DMA_Channel = DMA_Channel_4;  //Í¨µÀÑ¡Ôñ
   DMA_InitStructure.DMA_PeripheralBaseAddr = (u32)&UART4->DR;//DMAÍâÉèµØÖ·
-  DMA_InitStructure.DMA_Memory0BaseAddr = (u32)&BallastComm1RxData.Buff;//DMA ´æ´¢Æ÷0µØÖ·
+  DMA_InitStructure.DMA_Memory0BaseAddr = (u32)&BallastComm1TxData.Buff;//DMA ´æ´¢Æ÷0µØÖ·
   DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;//´æ´¢Æ÷µ½ÍâÉèÄ£Ê½
   DMA_InitStructure.DMA_BufferSize = 0x00;//Êý¾Ý´«ÊäÁ¿
   DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;//ÍâÉè·ÇÔöÁ¿Ä£Ê½
@@ -182,7 +190,7 @@ void DMA1_Stream4_IRQHandler(void)//GSM_DMA·¢ËÍÖÐ¶Ï
 }
 
 
-void BallastComm1DMA_TxBuff(u8 *buf, u8 buf_size)
+void UnitComm1DMA_TxBuff(u8 *buf, u8 buf_size)
 {
 	if(xSemaphoreTake(ballastComm1Tx_semaphore, configTICK_RATE_HZ * 5) == pdTRUE) 
   {
@@ -202,33 +210,121 @@ static void BallastComm1InitHardware(void)
 	Ballast_TX_DMA_Init();
 }
 
-
 static void vBallastComm1Task(void *parameter)
 {
 	u8 message[sizeof(BallastComm1RxData.Buff)];
-	u8 protocol_type;
+	u8 protocol_type,i;
+	u8 wait_count = 0;
+	u16 AddrBCD,unit_addr_hex;
 	
 	for(;;)
 	{
-		if(xQueueReceive(BallastComm1Queue, &message, configTICK_RATE_HZ) == pdTRUE)//zigbee²éÑ¯×î´óµÈ´ýÊ±¼ä
+		while(1)//±»¶¯ÂÖÑ¯
 		{
-			protocol_type = (chr2hex(message[5])<<4 | chr2hex(message[6]));
-			const UnitMessageHandlerMap *map = Ballast_MessageMaps;
-			for(; map->type != UNITPROTOCOL_NULL; ++map)
+			if(uxQueueMessagesWaiting(LampQueryAddrQueue) == 0)
+        break;
+			else
 			{
-				if (protocol_type == map->type) 
+				if(xQueueReceive(LampQueryAddrQueue, &AddrBCD, 0) == pdTRUE)//Íø¹ØÂÖÑ¯Ö¸¶¨µØÖ·µ¥µÆÆ
 				{
-					map->handlerFunc(message);
-					break;
+					ReadUnitData(AddrBCD);
+				}
+				for(i=0;i<=3;i++)
+				{
+					if(i == 3)
+					{
+				    clear_unit_buff(CONNECT_FAIL, AddrBCD);
+						break;
+					}
+					if(xQueueReceive(BallastComm1Queue, &message, 1000/portTICK_RATE_MS) == pdTRUE)//µÈ´ý1s
+					{
+						protocol_type = (chr2hex(message[5])<<4 | chr2hex(message[6]));
+						const UnitMessageHandlerMap *map = Ballast_MessageMaps;
+						for(; map->type != UNITPROTOCOL_NULL; ++map)
+						{
+							if (protocol_type == map->type) 
+							{
+								map->handlerFunc(message);
+								break;
+							}
+						}
+					}
+					else
+					{
+						unit_addr_hex = Bcd2ToByte(LampAttrSortTable[i].addr>>8)*100 + Bcd2ToByte(LampAttrSortTable[i].addr & 0x00FF);
+						
+						if(LampRunCtrlTable[unit_addr_hex].run_state == HARDWARE_CLOSE)
+						{
+							clear_unit_buff(HARDWARE_CLOSE, LampAttrSortTable[i].addr);
+							break;
+						}
+						else
+						  ReadUnitData(AddrBCD);
+					}
+				}
+			  xQueueSend(GPRSSendAddrQueue, &AddrBCD, configTICK_RATE_HZ);//µØÖ·´«ËÍÖÁgprsµØÖ·¶ÓÁÐ
+		  }
+		}
+		
+		while(1)//Ö÷¶¯ÂÖÑ¯
+		{
+			if(uxQueueMessagesWaiting(LampQueryAddrQueue) != 0)
+        break;
+      else
+      {
+				if(xQueueReceive(BallastComm1Queue, &message, 100/portTICK_RATE_MS) == pdTRUE)//µÈ´ý100ms
+				{
+					protocol_type = (chr2hex(message[5])<<4 | chr2hex(message[6]));
+					const UnitMessageHandlerMap *map = Ballast_MessageMaps;
+					for(; map->type != UNITPROTOCOL_NULL; ++map)
+					{
+						if(protocol_type == map->type) 
+						{
+							map->handlerFunc(message);
+							break;
+						}
+					}
+				}
+				else
+				{
+					wait_count++;
+					
+					if(((UnitWaitFlag == UNIT_QUERY_START) || (UnitWaitFlag == WAIT_READDATA_REPLY)) && (wait_count < 3*10))
+					{
+						if(wait_count%10 == 0)
+						{
+							unit_addr_hex = Bcd2ToByte(LampAttrSortTable[LampAddr.index].addr>>8)*100 + Bcd2ToByte(LampAttrSortTable[LampAddr.index].addr & 0x00FF);
+							if(LampRunCtrlTable[unit_addr_hex].run_state == HARDWARE_CLOSE)
+							{
+								wait_count = 0;
+								QueryNextAddr();
+							}
+							else
+							 ReadUnitData(LampAttrSortTable[LampAddr.index].addr);
+					  }
+					}
+					else if((UnitWaitFlag == WAIT_PARAM_REPLY) && (wait_count < 2*10))
+					{
+						return;
+					}
+					else if((UnitWaitFlag == WAIT_STRATEGY_REPLY) && (wait_count < 5*10))
+					{
+						return;
+					}
+					else
+					{
+						if((UnitWaitFlag == UNIT_QUERY_START) || (UnitWaitFlag == WAIT_READDATA_REPLY))
+						wait_count = 0;
+						clear_unit_buff(CONNECT_FAIL, LampAttrSortTable[LampAddr.index].addr);//Í¨ÐÅÊ§°ÜÊý¾Ý¸üÐÂ
+						QueryNextAddr();
+					}
 				}
 			}
 		}
-		else
-		{
-			
-		}
 	}
 }
+
+TaskHandle_t xBallastComm1Task;
 
 void BallastCommInit(void)
 {
@@ -236,5 +332,5 @@ void BallastCommInit(void)
 	BallastComm1RxTxDataInit();
 	vSemaphoreCreateBinary(ballastComm1Tx_semaphore);
 	BallastComm1Queue = xQueueCreate(30, sizeof(BallastComm1RxData.Buff));
-	xTaskCreate(vBallastComm1Task, "BallastComm1Task", ZIGBEE_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
+	xTaskCreate(vBallastComm1Task, "BallastComm1Task", ZIGBEE_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, &xBallastComm1Task);
 }

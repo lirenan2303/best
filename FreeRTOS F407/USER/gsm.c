@@ -31,13 +31,14 @@
 #define  GPIO_GPRS_PW_EN    GPIOC
 #define  PIN_GPRS_PW_EN     GPIO_Pin_0
 
+TaskHandle_t xGSMTaskHandle;
 SemaphoreHandle_t    GsmTx_semaphore;
-static xQueueHandle  GSM_GPRS_queue;
+xQueueHandle  GSM_GPRS_queue;
+extern xQueueHandle  GPRSSendAddrQueue;
 xQueueHandle  GSM_AT_queue;
 
-volatile ErrorStatus GPRS_ConnectState = ERROR;
 WG_ServerParameterType   WG_ServerParameter;
-u8 ManagementAddr[MANAGER_ADDR_LENGTH] = {0};
+static portTickType Heart_lastT = 0;
 
 typedef enum
 {
@@ -81,9 +82,10 @@ const static WGMessageHandlerMap GPRS_MessageMaps[] =  //二位数组的初始化
 	{GWADDRQUERY,      HandleGWAddrQuery},      /*0x11; 查网关地址*/
 	{SETSERVERIPPORT,  HandleSetIPPort},        /*0x14; 设置目标服务器IP和端口*/
 	{GATEUPGRADE,      HandleGWUpgrade},        /*0x15; 网关远程升级*/
-	{GPRS_QUALITY,     HandleSignalQuality},    /*0x17; gprs信号强度*/
+	{GPRSQUALITY,      HandleSignalQuality},    /*0x17; gprs信号强度*/
 	{TUNNELSTRATEGY,   HandleTunnelStrategy},   /*0x22; 隧道策略下载*/                    
-	{RESTART,          HandleRestart},          /*0x3F; 设备复位*/               
+	{RESTART,          HandleRestart},          /*0x3F; 设备复位*/    
+  {WGPROTOCOL_NULL,  NULL},                   /*保留*/  	
 };
  
 static void GSM_USART_Init(void)
@@ -306,6 +308,10 @@ void GsmDMA_TxBuff(char *buf, u8 buf_size)
 				
 		DMA_Cmd(DMA1_Stream3, ENABLE);                          //开启DMA传输 
 	}
+	else
+	{
+		NVIC_SystemReset();
+	}
 }
 
 void DMA1_Stream3_IRQHandler(void)
@@ -329,13 +335,13 @@ ErrorStatus RelinkTCP(void)
 	
 	sprintf(buf, "AT+CIPSTART=\"TCP\",\"%s\",\"%s\"\r\n", WG_ServerParameter.serverIP, WG_ServerParameter.serverPORT);
 	
-	if(!SendMsgToSim(buf, "OK", configTICK_RATE_HZ * 10))//连接服务器
+	if(!SendMsgToSim(buf, "OK", configTICK_RATE_HZ * 5))//连接服务器
 	{
 		printf_str("\r\n无法连接服务器IP端口\r\n");
 		return ERROR;
 	}
 	
-	if(!SendMsgToSim(NULL, "\r\nCONNECT\r\n", configTICK_RATE_HZ * 20))
+	if(!SendMsgToSim(NULL, "\r\nCONNECT\r\n", configTICK_RATE_HZ * 10))
 	{
 		printf_str("\r\n无法连接服务器IP端口\r\n");
 		return ERROR;
@@ -344,49 +350,54 @@ ErrorStatus RelinkTCP(void)
 	return SUCCESS;
 }
 
-ErrorStatus SendMsgToSim(char*cmd, char *ack, u32 waittime)
+ErrorStatus SendMsgToSim(char *cmd, char *ack, u32 waittime)//发送at指令到gsm模块
 {
-	ErrorStatus GSM_MsgState = ERROR;
 	portTickType startT = 0;
 	char message[sizeof(GsmRxData.Buff)];
-	
-	startT = xTaskGetTickCount();
-  
-	while(xTaskGetTickCount() - startT < waittime)
+	u8 count=0;
+
+	while(count < 3)
 	{
+		count ++;
 		if(cmd != NULL)
 		{
 			GsmDMA_TxBuff(cmd, strlen(cmd));
 		}
 		if(ack == NULL)
 		{
-			GSM_MsgState = SUCCESS;
-			break;
+			return SUCCESS;
 		}
 		else
 		{
-			if(xQueueReceive(GSM_AT_queue, &message, waittime/2) == pdTRUE)
+			startT = xTaskGetTickCount();
+			while(xTaskGetTickCount() - startT < waittime)
 			{
-				if(strstr(message, ack) != NULL)
+				if(xQueueReceive(GSM_AT_queue, &message, waittime) == pdTRUE)
 				{
-					if(strcmp(ack, "+CCLK: ") == 0)
+					if(strstr(message, ack) != NULL)
 					{
-						UpdataNetTime(message);
+						if(strcmp(ack, "+CCLK: ") == 0)
+						{
+							UpdataNetTime(message);
+						}
+						else if(strstr(message, "+CSQ:") != NULL)
+						{
+							CSQ_Reply(message);
+						}
+						return SUCCESS;
 					}
-					GSM_MsgState = SUCCESS;
-					break;
-				}
-				else if(strstr((char*)message, "*PSUTTZ: ") != NULL)
-				{
-					NetTimeCentury(message);
+					else if(strstr((char*)message, "*PSUTTZ: ") != NULL)
+					{
+						NetTimeCentury(message);
+					}
 				}
 			}
 		}
 	}
-	return GSM_MsgState;
+	return ERROR;
 }
 
-void SimSendData(u8 *buf,u8 buf_size)
+void SimSendData(u8 *buf,u8 buf_size)//发送gprs数据到服务器
 {
 	char message[sizeof(GsmRxData.Buff)];
 	
@@ -402,27 +413,35 @@ void SimSendData(u8 *buf,u8 buf_size)
 		}
 	}
   GsmDMA_TxBuff((char*)buf,buf_size);
+	
+	Heart_lastT = xTaskGetTickCount();
 }
 
 ErrorStatus SwitchToCommand(void)
 {
-	vTaskDelay(configTICK_RATE_HZ);
-	if(!SendMsgToSim("+++", "OK", configTICK_RATE_HZ * 8))
+	if(xSemaphoreTake(GsmTx_semaphore, configTICK_RATE_HZ * 5) == pdTRUE)
+	{
+	  xSemaphoreGive(GsmTx_semaphore);
+	}
+	
+	vTaskDelay(1500/portTICK_RATE_MS);
+	if(!SendMsgToSim("+++", "OK", configTICK_RATE_HZ * 5))
 	{
 		printf_str("命令模式切换失败\r");
 		return ERROR;
 	}
-	vTaskDelay(configTICK_RATE_HZ);
 	return SUCCESS;
 }
 
 ErrorStatus SwitchToData(void)
 {
+	vTaskDelay(500/portTICK_RATE_MS);
+	
 	if(!SendMsgToSim("ATO\r\n", "CONNECT", configTICK_RATE_HZ * 5))
 	{
 		printf_str("数据模式切换失败\r");
 		return ERROR;
-	}	
+	}
 	return SUCCESS;
 }
 
@@ -434,7 +453,7 @@ static void GSM_ModuleStart(void)
 	 	vTaskDelay(configTICK_RATE_HZ * 3 / 2);
 		GPIO_SetBits(GPIO_GPRS_PW_EN, PIN_GPRS_PW_EN);
 		
-		if(!SendMsgToSim(NULL, "NORMAL POWER DOWN", configTICK_RATE_HZ * 10))//GSM关闭正常
+		if(!SendMsgToSim(NULL, "NORMAL POWER DOWN", configTICK_RATE_HZ * 5))//GSM关闭正常
 		{
 			continue;
 		}
@@ -446,7 +465,7 @@ static void GSM_ModuleStart(void)
 		vTaskDelay(configTICK_RATE_HZ * 3 / 2);
 		GPIO_ResetBits(GPIO_GPRS_PW_EN, PIN_GPRS_PW_EN);
 		
-		if(SendMsgToSim(NULL, "SMS Ready", configTICK_RATE_HZ * 30))//等待SMS准备完成
+		if(SendMsgToSim(NULL, "SMS Ready", configTICK_RATE_HZ * 15))//等待SMS准备完成
 	  {
 			break;
 	  }
@@ -496,13 +515,13 @@ ErrorStatus GsmStartConnect(void)
 		return ERROR;
 	}
 	
-	if(!SendMsgToSim("AT+CPIN?\r\n", "+CPIN: READY", configTICK_RATE_HZ * 4))//查询SIM卡是否READY
+	if(!SendMsgToSim("AT+CPIN?\r\n", "+CPIN: READY", configTICK_RATE_HZ * 2))//查询SIM卡是否READY
 	{
 		printf_str("\r\nSIM卡READY异常！\r\n");
 		return ERROR;
 	}
 	
-	vTaskDelay(configTICK_RATE_HZ );	
+	vTaskDelay(configTICK_RATE_HZ);	
 	
 	if(!SendMsgToSim("AT+CREG?\r\n", "+CREG: 0,1", configTICK_RATE_HZ))//查询GSM网络注册信息
 	{
@@ -510,15 +529,15 @@ ErrorStatus GsmStartConnect(void)
 		return ERROR;
 	}
 	
-	if(!SendMsgToSim("AT+CGATT=0\r", "OK", configTICK_RATE_HZ * 4)) //gprs分离
+	if(!SendMsgToSim("AT+CGATT=0\r", "OK", configTICK_RATE_HZ * 2)) //gprs分离
 	{
-			printf("\r\nGPRS分离异常\r\n");
-			return ERROR;
+		printf("\r\nGPRS分离异常\r\n");
+		return ERROR;
   }
 	
-	vTaskDelay(configTICK_RATE_HZ * 5);
+	vTaskDelay(configTICK_RATE_HZ * 3);
 	
-	if(!SendMsgToSim("AT+CGATT=1\r\n", "OK", configTICK_RATE_HZ * 15))//启动TCP连接
+	if(!SendMsgToSim("AT+CGATT=1\r\n", "OK", configTICK_RATE_HZ * 10))//启动TCP连接
 	{
 		printf_str("\r\nGPRS附着状态异常！\r\n");
 		return ERROR;
@@ -528,29 +547,17 @@ ErrorStatus GsmStartConnect(void)
 	
 	sprintf(buf, "AT+CIPSTART=\"TCP\",\"%s\",\"%s\"\r\n", WG_ServerParameter.serverIP, WG_ServerParameter.serverPORT);
 	
-	if(!SendMsgToSim(buf, "OK", configTICK_RATE_HZ * 20))//连接服务器
+	if(!SendMsgToSim(buf, "OK", configTICK_RATE_HZ * 10))//连接服务器
 	{
-		printf_str("\r\nTCP格式不正确\r\n");
+		printf_str("\r\nTCP连接异常\r\n");
 		return ERROR;
 	}
 	
-	if(!SendMsgToSim(NULL, "\r\nCONNECT\r\n", configTICK_RATE_HZ * 30))
+	if(!SendMsgToSim(NULL, "\r\nCONNECT\r\n", configTICK_RATE_HZ * 15))
 	{
 		printf_str("\r\n无法连接服务器IP端口\r\n");
 		return ERROR;
 	}
-	
-	vTaskDelay(configTICK_RATE_HZ);
-	
-	SwitchToCommand();
-	
-	if(!SendMsgToSim("AT+CCLK?\r\n", "+CCLK: ", configTICK_RATE_HZ)) //更新网络时间
-	{
-		printf("获取网络时间失败\r\n");
-		return ERROR;
-  }
-	
-	SwitchToData();
 	
 	return SUCCESS;
 }
@@ -559,6 +566,7 @@ static void HeartRemainTCPConnect(void)
 {
 	u8 buf[20];
 	u8 *p = buf;
+	u8 ManagementAddr[MANAGER_ADDR_LENGTH];
 	
 	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_ADDR, (u16 *)ManagementAddr, (MANAGER_ADDR_LENGTH + 1)/ 2);
 	*p = 0x02;
@@ -578,39 +586,111 @@ static void GSMInitHardware(void)
 static void vGSMTask(void *parameter)
 {
 	u8 message[sizeof(GsmRxData.Buff)];
-	u8 protocol_type;
-	portTickType lastT = 0;
-	u8 reset_flag = 0x31;
+	u8 protocol_type,i;
+	u8 num,reset_flag = 0x31;
+	u16 addr[10];
+  portTickType CSQ_TCP_lastT=0;
 	
 	for(;;)
 	{
 		while(!GsmStartConnect());
-		GPRS_ConnectState = SUCCESS;
 		
+		vTaskDelay(configTICK_RATE_HZ);
+		
+		if(!SwitchToCommand())
+		{
+			if(GsmStartConnect() == ERROR)
+			  NVIC_SystemReset();
+		}
+		if(!SendMsgToSim("AT+CCLK?\r\n", "+CCLK: ", configTICK_RATE_HZ))//更新网络时间
+		{
+			if(GsmStartConnect() == ERROR)
+			  NVIC_SystemReset();
+		}
+		if(!SendMsgToSim("AT+CSQ\r\n", "+CSQ:", configTICK_RATE_HZ*2))//查询信号强度
+		{
+			if(GsmStartConnect() == ERROR)
+			  NVIC_SystemReset();
+		}
+
 		GPRS_Protocol_Response(RESTART|0x80, &reset_flag, 1);
 		break;
 	}
 	
 	for(;;)
 	{
-		if(xQueueReceive(GSM_GPRS_queue, message, configTICK_RATE_HZ/10) == pdTRUE)
+		while(1)
 		{
-			protocol_type = (chr2hex(message[11])<<4 | chr2hex(message[12]));
-			const WGMessageHandlerMap *map = GPRS_MessageMaps;
-			for(; map->type != WGPROTOCOL_NULL; ++map)
+			if(uxQueueMessagesWaiting(GPRSSendAddrQueue) == 0)
+				break;
+			else
 			{
-				if (protocol_type == map->type) 
+				num=0;
+				for(i=0;i<3;i++)//一次最多传输3个单灯数据86数据
 				{
-					map->handlerFunc(message);
-					break;
+					if(xQueueReceive(GPRSSendAddrQueue, &addr[i], 1000/portTICK_RATE_MS) == pdFALSE)//最大等待一秒
+					{
+						GPRSSendUnitDataFun(addr, num, 0x86);
+						break;
+					}
+					else
+					{
+						num++;
+						if(num == 3)
+						{
+						  GPRSSendUnitDataFun(addr, num, 0x86);
+						  break;
+						}
+					}
 				}
 			}
 		}
-    if((xTaskGetTickCount() - lastT) >= 30*configTICK_RATE_HZ)
+		
+		while(1)
 		{
-			HeartRemainTCPConnect();
-			lastT = xTaskGetTickCount();
-		}
+			if(uxQueueMessagesWaiting(GPRSSendAddrQueue) != 0)
+				break;
+			else
+			{
+				if(xQueueReceive(GSM_GPRS_queue, message, 500/portTICK_RATE_MS) == pdTRUE)
+				{
+					protocol_type = (chr2hex(message[11])<<4 | chr2hex(message[12]));
+					const WGMessageHandlerMap *map = GPRS_MessageMaps;
+					for(; map->type != WGPROTOCOL_NULL; ++map)
+					{
+						if (protocol_type == map->type) 
+						{
+							map->handlerFunc(message);
+							break;
+						}
+					}
+				}
+				if((xTaskGetTickCount() - Heart_lastT) >= 30*configTICK_RATE_HZ)
+				{
+					HeartRemainTCPConnect();
+					Heart_lastT = xTaskGetTickCount();
+				}
+				if((xTaskGetTickCount() - CSQ_TCP_lastT) >= 1*60*configTICK_RATE_HZ)
+				{
+					if(!SwitchToCommand())
+					{
+						if(GsmStartConnect() == ERROR)
+							NVIC_SystemReset();
+					}
+					if(!SendMsgToSim("AT+CIPSTATUS\r\n", "STATE: CONNECT OK", configTICK_RATE_HZ))//检测TCP连接状况
+					{
+						if(GsmStartConnect() == ERROR)
+							NVIC_SystemReset();
+					}
+					if(!SendMsgToSim("AT+CSQ\r\n", "+CSQ:", configTICK_RATE_HZ*2))//查询信号强度
+					{
+						if(GsmStartConnect() == ERROR)
+							NVIC_SystemReset();
+					}
+					CSQ_TCP_lastT = xTaskGetTickCount();
+				}
+		  }
+	  }
 	}
 }
 
@@ -621,7 +701,7 @@ void GSMInit(void)
 	GsmTx_semaphore = xSemaphoreCreateMutex();
 	GSM_GPRS_queue = xQueueCreate(10, sizeof(GsmRxData.Buff));
 	GSM_AT_queue = xQueueCreate(1, sizeof(GsmRxData.Buff));
-	xTaskCreate(vGSMTask, "GSMTask", GSM_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, NULL);
+	xTaskCreate(vGSMTask, "GSMTask", GSM_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, &xGSMTaskHandle);
 }
 
 /*******************************END OF FILE************************************/

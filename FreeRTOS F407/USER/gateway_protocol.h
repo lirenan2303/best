@@ -1,9 +1,14 @@
 #ifndef __GATEWAY_PROTOCOL_H
 #define __GATEWAY_PROTOCOL_H
 
+#include "stm32f4xx.h"
+
 #define ALL_BRANCH  0xFF
 #define ALL_SEGMENT 0xFF
 #define RANDOM      0x00
+
+#define LAMP_ON     0x30
+#define LAMP_OFF    0x31
 
 typedef enum
 {
@@ -22,7 +27,7 @@ typedef enum
 	GWADDRQUERY = 0x11,     /*网关地址查询*/
 	SETSERVERIPPORT = 0x14, /*设置服务器IP和端口*/
 	GATEUPGRADE = 0x15,     /*网关远程升级*/
-	GPRS_QUALITY = 0x17,    /*gprs信号强度*/
+	GPRSQUALITY = 0x17,     /*gprs信号强度*/
 	SETPARAMLIMIT = 0x21,   /*设置光强度段和时间段划分点参数*/
 	TUNNELSTRATEGY = 0x22,  /*隧道内网关策略下载*/
 	LUXVALUE = 0x43,        /*接收到光强度值*/
@@ -56,7 +61,7 @@ typedef struct
 	u16 L3_CurHigh;
 	u16 Zero_CurHigh;
 	
-	u16 Error_Num;
+	u8 ConnectFail_Num;
 }AlarmParmTypeDef; 
 
 typedef struct
@@ -65,9 +70,11 @@ typedef struct
 	void (*handlerFunc)(u8 *); //(*指针变量名)(形参列表)(指针强制类型转化)
 } WGMessageHandlerMap;
 
+void CSQ_Reply(char *p);
+void branch_state_update(u8 branch, u8 state);
 void RTC_TimeToChar(u16 *buf);
 ErrorStatus GatewayAddrCheck(u8 *addr_buf);
-ErrorStatus Protocol_Check(u8 *buf, u8 *BufData_Size);
+ErrorStatus GPRS_Protocol_Check(u8 *buf, u8 *BufData_Size);
 void GPRS_Protocol_Response(u8 Function, u8 *databuff, u8 DataLength);
 void HandleGatewayParam(u8 *p);
 void HandleLampParam(u8 *p);
@@ -75,6 +82,7 @@ void HandleLampStrategy(u8 *p);
 void HandleLampDimmer(u8 *p);
 void HandleLampOnOff(u8 *p);
 void HandleTunnelStrategy(u8 *p);
+void GPRSSendUnitDataFun(u16 *addr_bcd, u8 num, u16 pro_type);
 void HandleReadBSNData(u8 *p);
 void HandleBranchOnOff(u8 *p);
 void HandleGWDataQuery(u8 *p);

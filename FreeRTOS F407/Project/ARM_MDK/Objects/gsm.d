@@ -1,7 +1,7 @@
 .\objects\gsm.o: ..\..\USER\gsm.c
 .\objects\gsm.o: ..\..\Libraries\stm32f4xx.h
 .\objects\gsm.o: ..\..\Libraries\CORE\core_cm4.h
-.\objects\gsm.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\gsm.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\gsm.o: ..\..\Libraries\CORE\core_cmInstr.h
 .\objects\gsm.o: ..\..\Libraries\CORE\core_cmFunc.h
 .\objects\gsm.o: ..\..\Libraries\CORE\core_cmSimd.h
@@ -36,7 +36,7 @@
 .\objects\gsm.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h
 .\objects\gsm.o: ..\..\FreeRTOS\FreeRTOSConfig.h
 .\objects\gsm.o: ..\..\FreeRTOS\Source\include\FreeRTOS.h
-.\objects\gsm.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\gsm.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\gsm.o: ..\..\FreeRTOS\Source\include\projdefs.h
 .\objects\gsm.o: ..\..\FreeRTOS\Source\include\portable.h
 .\objects\gsm.o: ..\..\FreeRTOS\Source\include\deprecated_definitions.h
@@ -47,11 +47,11 @@
 .\objects\gsm.o: ..\..\FreeRTOS\Source\include\task.h
 .\objects\gsm.o: ..\..\FreeRTOS\Source\include\list.h
 .\objects\gsm.o: ..\..\USER\gsm.h
-.\objects\gsm.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\objects\gsm.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\gsm.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\gsm.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\gsm.o: ..\..\ZKLib_STM32F4\stm32\uart_debug.h
 .\objects\gsm.o: ..\..\ZKLib_STM32F4\stm32\norflash.h
-.\objects\gsm.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\gsm.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\gsm.o: ..\..\ZKLib_STM32F4\stm32\fsmc_nor.h
 .\objects\gsm.o: ..\..\ZKLib_STM32F4\stm32\rtc.h
 .\objects\gsm.o: ..\..\USER\gateway_protocol.h

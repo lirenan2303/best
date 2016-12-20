@@ -1,7 +1,7 @@
 .\objects\ballast_comm.o: ..\..\USER\ballast_comm.c
 .\objects\ballast_comm.o: ..\..\FreeRTOS\Source\include\FreeRTOS.h
-.\objects\ballast_comm.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-.\objects\ballast_comm.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\ballast_comm.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\ballast_comm.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\ballast_comm.o: ..\..\FreeRTOS\FreeRTOSConfig.h
 .\objects\ballast_comm.o: ..\..\FreeRTOS\Source\include\projdefs.h
 .\objects\ballast_comm.o: ..\..\FreeRTOS\Source\include\portable.h
@@ -12,8 +12,8 @@
 .\objects\ballast_comm.o: ..\..\FreeRTOS\Source\include\list.h
 .\objects\ballast_comm.o: ..\..\FreeRTOS\Source\include\queue.h
 .\objects\ballast_comm.o: ..\..\FreeRTOS\Source\include\semphr.h
-.\objects\ballast_comm.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\objects\ballast_comm.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\ballast_comm.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\ballast_comm.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\ballast_comm.o: ..\..\USER\ballast_comm.h
 .\objects\ballast_comm.o: ..\..\Libraries\stm32f4xx.h
 .\objects\ballast_comm.o: ..\..\Libraries\CORE\core_cm4.h
@@ -53,3 +53,4 @@
 .\objects\ballast_comm.o: ..\..\USER\common.h
 .\objects\ballast_comm.o: ..\..\USER\ballast_protocol.h
 .\objects\ballast_comm.o: ..\..\USER\gateway_protocol.h
+.\objects\ballast_comm.o: ..\..\USER\table_process.h

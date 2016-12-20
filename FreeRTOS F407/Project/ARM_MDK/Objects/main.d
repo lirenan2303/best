@@ -1,14 +1,14 @@
 .\objects\main.o: ..\..\USER\main.c
 .\objects\main.o: ..\..\FreeRTOS\Source\include\FreeRTOS.h
-.\objects\main.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-.\objects\main.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\main.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\main.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\main.o: ..\..\FreeRTOS\FreeRTOSConfig.h
 .\objects\main.o: ..\..\FreeRTOS\Source\include\projdefs.h
 .\objects\main.o: ..\..\FreeRTOS\Source\include\portable.h
 .\objects\main.o: ..\..\FreeRTOS\Source\include\deprecated_definitions.h
 .\objects\main.o: ..\..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h
 .\objects\main.o: ..\..\FreeRTOS\Source\include\mpu_wrappers.h
-.\objects\main.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\main.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\main.o: ..\..\FreeRTOS\Source\include\task.h
 .\objects\main.o: ..\..\FreeRTOS\Source\include\list.h
 .\objects\main.o: ..\..\Libraries\FWLIB\inc\misc.h
@@ -55,6 +55,6 @@
 .\objects\main.o: ..\..\USER\ballast_protocol.h
 .\objects\main.o: ..\..\USER\table_process.h
 .\objects\main.o: ..\..\ZKLib_STM32F4\stm32\rtc.h
-.\objects\main.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\main.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\main.o: ..\..\ZKLib_STM32F4\stm32\delay.h
 .\objects\main.o: ..\..\USER\km_ctrl.h

@@ -131,7 +131,7 @@ static void SetWGAddr(void)
 	
 	while(1)
 	{
-	  printf_str("\r\n请输入网关地址：");
+	  printf_str("\r\n请输入网关地址：(例如：0551010001)");
 		printf_str("\r\nE.退出");
 		printf_str("\r\n>");
 		if(xQueueReceive(uartDebugQueue,message,portMAX_DELAY) == pdTRUE)
@@ -142,7 +142,7 @@ static void SetWGAddr(void)
 			}
       else if(strlen(message) == 11)
 			{
-				for(i=0; i<10; i++)
+				for(i=0;i<10;i++)
 				{
 					if(message[i] >= '0' && message[i] <= '9')
 						state = SUCCESS;
@@ -219,10 +219,10 @@ static void GatewaySetDebug(void)
 	while(1)
 	{
 		printf_str("\r\n\r\n请选择设置参数：");
-		printf_str("\r\n      1 设置网关时间    2 设置网关地址    3 设置DNS IP      4 设置服务器IP    5 设置网关经度");
-		printf_str("\r\n      6 设置网关纬度    7 镇流器调光      8 镇流器开关      9 读镇流器数据    A 接触器控制  ");
-		printf_str("\r\n      B 镇流器参数查询  C 镇流器策略查询  D 网关参数查询    F 恢复出厂设置    L 电量数据查询");
-		printf_str("\r\n      R 网关复位信息    E 退出\r\n> ");
+		printf_str("\r\n      1.设置网关时间    2.设置网关地址    3.设置DNS IP      4.设置服务器IP    5.设置网关经度");
+		printf_str("\r\n      6.设置网关纬度    7.镇流器调光      8.镇流器开关      9.读镇流器数据    A.接触器控制  ");
+		printf_str("\r\n      B.镇流器参数查询  C.镇流器策略查询  D.网关参数查询    F.恢复出厂设置    L.电量数据查询");
+		printf_str("\r\n      N.网关复位信息    R.网关重启        E.擦除NORFLASH数据 \r\n> ");
 	
 		if(xQueueReceive(uartDebugQueue,message,portMAX_DELAY) == pdTRUE)
 		{
@@ -239,53 +239,56 @@ static void GatewaySetDebug(void)
 				printf_str("\r\n 输入格式不正确，请重新输入！\r\n");
 			}
 		}
-	 }
-}
-
-static void TaskPrintfDebug(void)
-{
-	
+	}
 }
 
 static void TestModeMain(void)
 {
-	char message[DEBUG_BUFF_SIZE];
-	
-	printf_str("\r\n\r\n调试模式\r\n合肥大明节能科技股份有限公司：");
+	printf_str("\r\n\r\n     调试模式");
+	printf_str("\r\n合肥大明节能科技股份有限公司：");
 	printf_str("\r\n网关软件版本号  ：V");
 	printf_str("\r\n网关地址        ：");
 	printf_str("\r\n网关当前时间    ：");
-	printf_str("\r\nGPS-经度        ：");
-	printf_str("\r\nGPS-纬度        ：");
 	printf_str("\r\n目标服务器IP地址：");
 	printf_str("\r\n目标服务器端口号：");
 	
 	printf_str("\r\n********************************************************");
-	while(1)
+	
+	GatewaySetDebug();
+}
+
+extern TaskHandle_t xBallastComm1Task;
+extern TaskHandle_t xElectTask;
+extern TaskHandle_t xGSMTaskHandle;
+extern TaskHandle_t xTimePlanTask;
+extern TaskHandle_t xKM_vCtrlTask;
+
+void OtherTaskSuspend(void)
+{
+	vTaskSuspend(xBallastComm1Task);
+	vTaskSuspend(xElectTask);
+	vTaskSuspend(xGSMTaskHandle);
+	vTaskSuspend(xTimePlanTask);
+	vTaskSuspend(xKM_vCtrlTask);
+}
+
+void WGConfigCheck(void)
+{
+	u16 ManagemAddr[10]={0};
+	const u16 NorResetDate[] = {0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF};
+	
+	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_ADDR, ManagemAddr, (MANAGER_ADDR_LENGTH + 1) / 2);
+	if(strcmp((char*)NorResetDate, (char*)ManagemAddr) == 0)
 	{
-		printf_str("\r\n请选择调试模式：");
-		printf_str("\r\n1.网关参数设置及查看模式");
-		printf_str("\r\n2.任务打印模式");
-		printf_str("\r\nE.退出");
-		printf_str("\r\n>");
-		
-		if(xQueueReceive(uartDebugQueue,message,portMAX_DELAY) == pdTRUE)
-		{
-			if(strcmp(message,"1\r") == 0)
-				GatewaySetDebug();
-			else if(strcmp(message,"2\r") == 0)
-				TaskPrintfDebug();
-			else 
-			{
-				printf_str("\r\n 输入格式不正确，请重新输入！\r\n");
-			}
-		}
-  }
+    OtherTaskSuspend();
+	}
 }
 
 static void vUartDebugTask(void *parameter)
 {
   char DebugDateBuff[DEBUG_BUFF_SIZE];
+	
+	WGConfigCheck();
 	
 	for(;;)
 	{
@@ -295,6 +298,8 @@ static void vUartDebugTask(void *parameter)
 			{
 				TestModeFlag = 1;
 				vTaskDelay(1);
+				OtherTaskSuspend();
+				
 				TestModeMain();
 			}
 		}

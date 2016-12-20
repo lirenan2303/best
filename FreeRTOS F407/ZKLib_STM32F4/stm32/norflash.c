@@ -8,13 +8,11 @@
 
 static SemaphoreHandle_t norflash_semaphore;
 
-void NorFlashInit(void) 
+void NorFlashInit(void)
 {
-	if( norflash_semaphore == NULL )
-	{
-    FSMC_NOR_Init();
-	  norflash_semaphore = xSemaphoreCreateMutex();
-	}
+  FSMC_NOR_Init();
+	
+	norflash_semaphore = xSemaphoreCreateMutex();
 }
 
 void NorFlashWrite(u32 addr, const u16 *ram, int len)
@@ -108,3 +106,14 @@ void ConvertToByte(u16 *write_buf, u16 cvt_size, u8 *msg)
 	}
 }
 
+DataStateTypeDef NorflashDataCheck(u16*p, u16 size)
+{
+	u16 i;
+	
+	for(i=0;i<size;i++)
+	{
+		if(*(p+i) != 0xFFFF)
+			return NO_EMPTY;
+	}
+	return EMPTY;
+}

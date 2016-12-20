@@ -1,7 +1,7 @@
 .\objects\sys_debug.o: ..\..\USER\sys_debug.c
 .\objects\sys_debug.o: ..\..\Libraries\stm32f4xx.h
 .\objects\sys_debug.o: ..\..\Libraries\CORE\core_cm4.h
-.\objects\sys_debug.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\sys_debug.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\sys_debug.o: ..\..\Libraries\CORE\core_cmInstr.h
 .\objects\sys_debug.o: ..\..\Libraries\CORE\core_cmFunc.h
 .\objects\sys_debug.o: ..\..\Libraries\CORE\core_cmSimd.h
@@ -34,10 +34,10 @@
 .\objects\sys_debug.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h
 .\objects\sys_debug.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h
 .\objects\sys_debug.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h
-.\objects\sys_debug.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\objects\sys_debug.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\sys_debug.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\sys_debug.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\sys_debug.o: ..\..\FreeRTOS\Source\include\FreeRTOS.h
-.\objects\sys_debug.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\sys_debug.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\sys_debug.o: ..\..\FreeRTOS\FreeRTOSConfig.h
 .\objects\sys_debug.o: ..\..\FreeRTOS\Source\include\projdefs.h
 .\objects\sys_debug.o: ..\..\FreeRTOS\Source\include\portable.h
@@ -50,6 +50,6 @@
 .\objects\sys_debug.o: ..\..\FreeRTOS\Source\include\list.h
 .\objects\sys_debug.o: ..\..\USER\sys_debug.h
 .\objects\sys_debug.o: ..\..\ZKLib_STM32F4\stm32\norflash.h
-.\objects\sys_debug.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\sys_debug.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\sys_debug.o: ..\..\ZKLib_STM32F4\stm32\fsmc_nor.h
 .\objects\sys_debug.o: ..\..\USER\gsm.h

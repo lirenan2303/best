@@ -2,7 +2,7 @@
 .\objects\gateway_protocol.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h
 .\objects\gateway_protocol.o: ..\..\Libraries\stm32f4xx.h
 .\objects\gateway_protocol.o: ..\..\Libraries\CORE\core_cm4.h
-.\objects\gateway_protocol.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\gateway_protocol.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\gateway_protocol.o: ..\..\Libraries\CORE\core_cmInstr.h
 .\objects\gateway_protocol.o: ..\..\Libraries\CORE\core_cmFunc.h
 .\objects\gateway_protocol.o: ..\..\Libraries\CORE\core_cmSimd.h
@@ -36,7 +36,7 @@
 .\objects\gateway_protocol.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h
 .\objects\gateway_protocol.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h
 .\objects\gateway_protocol.o: ..\..\FreeRTOS\Source\include\FreeRTOS.h
-.\objects\gateway_protocol.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\gateway_protocol.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\gateway_protocol.o: ..\..\FreeRTOS\FreeRTOSConfig.h
 .\objects\gateway_protocol.o: ..\..\FreeRTOS\Source\include\projdefs.h
 .\objects\gateway_protocol.o: ..\..\FreeRTOS\Source\include\portable.h
@@ -49,9 +49,10 @@
 .\objects\gateway_protocol.o: ..\..\FreeRTOS\Source\include\list.h
 .\objects\gateway_protocol.o: ..\..\USER\gsm.h
 .\objects\gateway_protocol.o: ..\..\ZKLib_STM32F4\stm32\rtc.h
-.\objects\gateway_protocol.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
-.\objects\gateway_protocol.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\objects\gateway_protocol.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\gateway_protocol.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\gateway_protocol.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\gateway_protocol.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\gateway_protocol.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\gateway_protocol.o: ..\..\ZKLib_STM32F4\stm32\uart_debug.h
 .\objects\gateway_protocol.o: ..\..\USER\electric.h
 .\objects\gateway_protocol.o: ..\..\USER\gateway_protocol.h

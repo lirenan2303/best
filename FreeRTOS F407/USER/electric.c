@@ -13,6 +13,7 @@
 #include "common.h"
 #include "norflash.h"
 #include "gateway_protocol.h"
+#include "table_process.h"
 #include "sys_debug.h"
 
 #define ELECTRIC_TASK_STACK_SIZE		(configMINIMAL_STACK_SIZE + 1024*1)
@@ -20,7 +21,7 @@
 
 SemaphoreHandle_t    EleTx_semaphore;
 static xQueueHandle ElectricQueue;
-extern u16 lamp_num;
+extern LampBuffType LampAddr;
 
 typedef struct 
 {
@@ -214,13 +215,13 @@ void ElecHandleGWDataQuery(u8 *p)
 	if(!GatewayAddrCheck(p+1))
 		return;
 	
-	if(!Protocol_Check(p, &data_size))
+	if(!GPRS_Protocol_Check(p, &data_size))
     return;
 	
 	NorFlashRead(NORFLASH_MANAGER_PARA1_BASE + NORFLASH_MANAGER_ID_OFFSET, WriteBuff, 6); 
   ConvertToByte(WriteBuff, 6, p+134);
 	
-	lamp_num_bcd = ByteToBcd2(lamp_num>>8)*256 + ByteToBcd2((u8)lamp_num);
+	lamp_num_bcd = ByteToBcd2(LampAddr.num>>8)*256 + ByteToBcd2((u8)LampAddr.num);
 	*(p+140) = hex2chr((lamp_num_bcd>>12) & 0x000F);
 	*(p+141) = hex2chr((lamp_num_bcd>>8) & 0x000F);
 	*(p+142) = hex2chr((lamp_num_bcd>>4) & 0x000F);
@@ -239,7 +240,7 @@ void ElecHandleSoftVerQuery(u8 *p)
 	if(!GatewayAddrCheck(p+1))
 		return;
 	
-	if(!Protocol_Check(p, &data_size))
+	if(!GPRS_Protocol_Check(p, &data_size))
     return;
 	
 	GPRS_Protocol_Response(ELECSOFTQUERYACK, p+15, 3);
@@ -272,6 +273,7 @@ static void vElectTask(void *parameter)
 	}
 }
 
+TaskHandle_t xElectTask;
 
 void ElectricInit(void)
 {
@@ -279,5 +281,5 @@ void ElectricInit(void)
 	EleRxTxDataInit();
 	EleTx_semaphore = xSemaphoreCreateMutex();
   ElectricQueue = xQueueCreate(10, sizeof(EleRxData.Buff));	
-	xTaskCreate(vElectTask, "ElectTask", ELECTRIC_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
+	xTaskCreate(vElectTask, "ElectTask", ELECTRIC_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &xElectTask);
 }

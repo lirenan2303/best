@@ -2,7 +2,7 @@
 .\objects\electric.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h
 .\objects\electric.o: ..\..\Libraries\stm32f4xx.h
 .\objects\electric.o: ..\..\Libraries\CORE\core_cm4.h
-.\objects\electric.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\electric.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\electric.o: ..\..\Libraries\CORE\core_cmInstr.h
 .\objects\electric.o: ..\..\Libraries\CORE\core_cmFunc.h
 .\objects\electric.o: ..\..\Libraries\CORE\core_cmSimd.h
@@ -35,10 +35,10 @@
 .\objects\electric.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h
 .\objects\electric.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h
 .\objects\electric.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h
-.\objects\electric.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\objects\electric.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\electric.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\electric.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\electric.o: ..\..\FreeRTOS\Source\include\FreeRTOS.h
-.\objects\electric.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\electric.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\electric.o: ..\..\FreeRTOS\FreeRTOSConfig.h
 .\objects\electric.o: ..\..\FreeRTOS\Source\include\projdefs.h
 .\objects\electric.o: ..\..\FreeRTOS\Source\include\portable.h
@@ -52,9 +52,10 @@
 .\objects\electric.o: ..\..\USER\electric.h
 .\objects\electric.o: ..\..\ZKLib_STM32F4\stm32\uart_debug.h
 .\objects\electric.o: ..\..\ZKLib_STM32F4\stm32\rtc.h
-.\objects\electric.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\electric.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\electric.o: ..\..\USER\common.h
 .\objects\electric.o: ..\..\ZKLib_STM32F4\stm32\norflash.h
 .\objects\electric.o: ..\..\ZKLib_STM32F4\stm32\fsmc_nor.h
 .\objects\electric.o: ..\..\USER\gateway_protocol.h
+.\objects\electric.o: ..\..\USER\table_process.h
 .\objects\electric.o: ..\..\USER\sys_debug.h

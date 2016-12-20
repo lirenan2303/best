@@ -1,8 +1,8 @@
 .\objects\rtc.o: ..\..\ZKLib_STM32F4\stm32\rtc.c
-.\objects\rtc.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\rtc.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\rtc.o: ..\..\ZKLib_STM32F4\stm32\rtc.h
-.\objects\rtc.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-.\objects\rtc.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\rtc.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\rtc.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\rtc.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_rtc.h
 .\objects\rtc.o: ..\..\Libraries\stm32f4xx.h
 .\objects\rtc.o: ..\..\Libraries\CORE\core_cm4.h
@@ -39,7 +39,7 @@
 .\objects\rtc.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h
 .\objects\rtc.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h
 .\objects\rtc.o: ..\..\FreeRTOS\Source\include\FreeRTOS.h
-.\objects\rtc.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\rtc.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\rtc.o: ..\..\FreeRTOS\FreeRTOSConfig.h
 .\objects\rtc.o: ..\..\FreeRTOS\Source\include\projdefs.h
 .\objects\rtc.o: ..\..\FreeRTOS\Source\include\portable.h

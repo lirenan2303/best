@@ -1,7 +1,7 @@
 .\objects\norflash.o: ..\..\ZKLib_STM32F4\stm32\norflash.c
 .\objects\norflash.o: ..\..\FreeRTOS\Source\include\FreeRTOS.h
-.\objects\norflash.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-.\objects\norflash.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\norflash.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\norflash.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\norflash.o: ..\..\FreeRTOS\FreeRTOSConfig.h
 .\objects\norflash.o: ..\..\FreeRTOS\Source\include\projdefs.h
 .\objects\norflash.o: ..\..\FreeRTOS\Source\include\portable.h
@@ -48,6 +48,6 @@
 .\objects\norflash.o: ..\..\FreeRTOS\Source\include\semphr.h
 .\objects\norflash.o: ..\..\FreeRTOS\Source\include\queue.h
 .\objects\norflash.o: ..\..\ZKLib_STM32F4\stm32\norflash.h
-.\objects\norflash.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\norflash.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\norflash.o: ..\..\ZKLib_STM32F4\stm32\fsmc_nor.h
 .\objects\norflash.o: ..\..\USER\sys_debug.h

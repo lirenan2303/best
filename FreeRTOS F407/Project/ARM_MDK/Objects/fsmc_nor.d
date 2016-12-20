@@ -2,7 +2,7 @@
 .\objects\fsmc_nor.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h
 .\objects\fsmc_nor.o: ..\..\Libraries\stm32f4xx.h
 .\objects\fsmc_nor.o: ..\..\Libraries\CORE\core_cm4.h
-.\objects\fsmc_nor.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\fsmc_nor.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\fsmc_nor.o: ..\..\Libraries\CORE\core_cmInstr.h
 .\objects\fsmc_nor.o: ..\..\Libraries\CORE\core_cmFunc.h
 .\objects\fsmc_nor.o: ..\..\Libraries\CORE\core_cmSimd.h
@@ -36,4 +36,4 @@
 .\objects\fsmc_nor.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h
 .\objects\fsmc_nor.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h
 .\objects\fsmc_nor.o: ..\..\ZKLib_STM32F4\stm32\fsmc_nor.h
-.\objects\fsmc_nor.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\fsmc_nor.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

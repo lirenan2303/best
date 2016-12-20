@@ -1,10 +1,10 @@
 .\objects\uart_debug.o: ..\..\ZKLib_STM32F4\stm32\uart_debug.c
-.\objects\uart_debug.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\objects\uart_debug.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\uart_debug.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\uart_debug.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\uart_debug.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_gpio.h
 .\objects\uart_debug.o: ..\..\Libraries\stm32f4xx.h
 .\objects\uart_debug.o: ..\..\Libraries\CORE\core_cm4.h
-.\objects\uart_debug.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\uart_debug.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\uart_debug.o: ..\..\Libraries\CORE\core_cmInstr.h
 .\objects\uart_debug.o: ..\..\Libraries\CORE\core_cmFunc.h
 .\objects\uart_debug.o: ..\..\Libraries\CORE\core_cmSimd.h
@@ -38,7 +38,7 @@
 .\objects\uart_debug.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h
 .\objects\uart_debug.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h
 .\objects\uart_debug.o: ..\..\FreeRTOS\Source\include\FreeRTOS.h
-.\objects\uart_debug.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\uart_debug.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\uart_debug.o: ..\..\FreeRTOS\FreeRTOSConfig.h
 .\objects\uart_debug.o: ..\..\FreeRTOS\Source\include\projdefs.h
 .\objects\uart_debug.o: ..\..\FreeRTOS\Source\include\portable.h
