@@ -39,6 +39,8 @@ xQueueHandle  GSM_AT_queue;
 
 WG_ServerParameterType   WG_ServerParameter;
 static portTickType Heart_lastT = 0;
+static portTickType Gsm_sendT = 0;
+
 
 typedef enum
 {
@@ -295,6 +297,10 @@ void GsmDMA_TxBuff(char *buf, u8 buf_size)
 	
 	if(xSemaphoreTake(GsmTx_semaphore, configTICK_RATE_HZ * 5) == pdTRUE)
 	{
+		while(xTaskGetTickCount() - Gsm_sendT <= 200/portTICK_RATE_MS)
+		{
+			vTaskDelay(2/portTICK_RATE_MS);
+		}
 		DMA_ClearFlag(DMA1_Stream3,DMA_FLAG_TCIF3);//清除DMA1_Steam3传输完成标志
 		
 		memcpy(GsmTxData.Buff, buf, buf_size);
@@ -307,6 +313,7 @@ void GsmDMA_TxBuff(char *buf, u8 buf_size)
 		xQueueReceive(GSM_AT_queue, &message, 0);               //开启DMA传输之前清空AT消息队列
 				
 		DMA_Cmd(DMA1_Stream3, ENABLE);                          //开启DMA传输 
+		
 	}
 	else
 	{
@@ -322,6 +329,7 @@ void DMA1_Stream3_IRQHandler(void)
 	{
 		DMA_ClearFlag(DMA1_Stream3,DMA_FLAG_TCIF3);
 		
+		Gsm_sendT = xTaskGetTickCount();
 	  xSemaphoreGiveFromISR(GsmTx_semaphore, &xHigherPriorityTaskWoken);
 		portEND_SWITCHING_ISR( xHigherPriorityTaskWoken);
 	}
@@ -502,7 +510,7 @@ ErrorStatus GsmStartConnect(void)
 		return ERROR;
 	}
 	
-	if(!SendMsgToSim("AT+CIPCCFG=5,2,1024,1\r\n", "\r\nOK\r\n", configTICK_RATE_HZ)) //配置传输参数
+	if(!SendMsgToSim("AT+CIPCCFG=5,2,1024,1\r\n", "\r\nOK\r\n", configTICK_RATE_HZ)) //配置传输参数   间隔200ms
 	{
 	  printf_str("\r\nGSM传输参数配置异常！\r\n");
 		return ERROR;
@@ -645,7 +653,6 @@ static void vGSMTask(void *parameter)
 				}
 			}
 		}
-		
 		while(1)
 		{
 			if(uxQueueMessagesWaiting(GPRSSendAddrQueue) != 0)
@@ -670,7 +677,7 @@ static void vGSMTask(void *parameter)
 					HeartRemainTCPConnect();
 					Heart_lastT = xTaskGetTickCount();
 				}
-				if((xTaskGetTickCount() - CSQ_TCP_lastT) >= 1*60*configTICK_RATE_HZ)
+				if((xTaskGetTickCount() - CSQ_TCP_lastT) >= 55*60*configTICK_RATE_HZ)
 				{
 					if(!SwitchToCommand())
 					{

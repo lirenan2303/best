@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include "uart_debug.h"
 #include "electric.h"
+#include "ballast_comm.h"
 #include "gateway_protocol.h"
 #include "ballast_protocol.h"
 #include "table_process.h"
@@ -30,6 +31,8 @@ extern xQueueHandle  GPRSSendAddrQueue;
 extern xQueueHandle  LampQueryAddrQueue;
 extern xQueueHandle  GSM_AT_queue;
 extern xQueueHandle KMCtrlQueue;
+
+extern TaskHandle_t xBallastComm1Task;
 
 AlarmParmTypeDef AlarmParm;
 
@@ -403,10 +406,11 @@ void HandleLampStrategy(u8 *p)
 void branch_state_update(u8 branch, u8 state)//Ç¿ÖÆ¿ª½Ó´¥Æ÷ ¸üÐÂ»ØÂ·µ¥µÆ×´Ì¬
 {
 	u16 unit_addr_hex;
-	u16 index1 = 0xffff;
-	u16 index2 = 0xffff;
+	u16 index1 = 0xFFFF;
+	u16 index2 = 0xFFFF;
 	u8 enter=0,dimming_value=0;
 	u16 i;
+	u8 repeat_count;
 	
 	while(1)//µØÖ·²éÕÒ
 	{
@@ -436,8 +440,13 @@ void branch_state_update(u8 branch, u8 state)//Ç¿ÖÆ¿ª½Ó´¥Æ÷ ¸üÐÂ»ØÂ·µ¥µÆ×´Ì¬
   for(i=index1;i<=index2;i++)//×´Ì¬¿ØÖÆ
 	{
 		unit_addr_hex = Bcd2ToByte(LampAttrSortTable[i].addr>>8)*100 + Bcd2ToByte(LampAttrSortTable[i].addr & 0X00FF);
-
-		LampRunCtrlTableUpdate(unit_addr_hex, NULL, NULL, &state, &dimming_value);
+		
+		if(state == HARDWARE_CLOSE)
+			repeat_count = 1;
+		else
+			repeat_count = MAX_QUERY_NUM;
+		
+		LampRunCtrlTableUpdate(unit_addr_hex, &repeat_count, NULL, &state, &dimming_value);
 		
 		xQueueSend(LampQueryAddrQueue, &LampAttrSortTable[i].addr, configTICK_RATE_HZ*5);//ÂÖÑ¯ÏàÓ¦µÄzigbeeµØÖ·
 	}
@@ -451,7 +460,7 @@ void unit_ctrl(u8 branch, u8 segment, u16 addr, u8 cmd, u8 data)//Èí¿ª¹Øµ¥µÆ Ö÷¸
 	u8 enter=0;
 	u16 i;
 	
-	vTaskSuspendAll();//¹ÒÆðÈÎÎñµ÷¶ÈÆ÷
+//	vTaskSuspendAll();//¹ÒÆðÈÎÎñµ÷¶ÈÆ÷
 	
 	if((branch == ALL_BRANCH) && (segment == ALL_SEGMENT))
 	{
@@ -520,7 +529,7 @@ void unit_ctrl(u8 branch, u8 segment, u16 addr, u8 cmd, u8 data)//Èí¿ª¹Øµ¥µÆ Ö÷¸
 		else 
 			return;
 		
-		xQueueSend(LampQueryAddrQueue, &LampAttrSortTable[i].addr, configTICK_RATE_HZ*5);//ÂÖÑ¯µ¥µÆÊý¾Ý
+		xQueueSend(LampQueryAddrQueue, &addr, configTICK_RATE_HZ*5);//ÂÖÑ¯µ¥µÆÊý¾Ý
 		if(cmd != READLAMPDATA)
 		{
 			LampRunCtrlTable[unit_addr_hex].run_scheme = MANUAL_RUN;//ÊÖ¶¯¿ØÖÆ±êÖ¾
@@ -590,7 +599,8 @@ void unit_ctrl(u8 branch, u8 segment, u16 addr, u8 cmd, u8 data)//Èí¿ª¹Øµ¥µÆ Ö÷¸
 			}
 		}
 	}
-	xTaskResumeAll ();//»Ö¸´ÈÎÎñµ÷¶ÈÆ÷
+//	vTaskDelay(1000/portTICK_RATE_MS);//ÑÓ³Ù1s²ÉÑùµ¥µÆÊý¾Ý
+//	xTaskResumeAll ();//»Ö¸´ÈÎÎñµ÷¶ÈÆ÷
 }
 
 void HandleLampDimmer(u8 *p)
@@ -600,6 +610,7 @@ void HandleLampDimmer(u8 *p)
 	u8 i,j;
 	u8 buf_temp[30];
 	u16 unit_addr_bcd;
+//	u32 delay_n;
 	
 	if(!GatewayAddrCheck(p+1))
 		return;
@@ -607,7 +618,13 @@ void HandleLampDimmer(u8 *p)
 	if(!GPRS_Protocol_Check(p, &data_size))
     return;
 	
-	CtrlUnitSend(p+15, data_size-18);//ZIGBEE·¢ËÍµ÷¹âÖ¸Áî
+	vTaskSuspend(xBallastComm1Task);
+	vTaskDelay(1000/portTICK_RATE_MS);//ÑÓ³Ù1000ms
+	CtrlUnitSend(p+11, data_size+4);//ZIGBEE·¢ËÍµ÷¹âÖ¸Áî
+	vTaskResume(xBallastComm1Task);
+	
+//	for(delay_n=0;delay_n<0x2800000;delay_n++);//·ÇÇÀÕ¼Ê½
+//	CtrlUnitSend(p+11, data_size+4);//ZIGBEE·¢ËÍµ÷¹âÖ¸Áî
 	
 	data = chr2hex(*(p+19))<<4 | chr2hex(*(p+20));
 	
@@ -624,7 +641,7 @@ void HandleLampDimmer(u8 *p)
 		{
 			for(j=0;j<segment1_num;j++)
 			{
-			  unit_ctrl(chr2hex(*(p+21+i)), chr2hex(*(p+21+branch_num+j)), 0, DIMMING_RUN, data);
+			  unit_ctrl(chr2hex(*(p+21+i)), chr2hex(*(p+21+branch_num+j)), 0, LAMPDIMMING, data);
 			}
 			
 			for(j=0;j<segment2_num;j++)
@@ -658,6 +675,7 @@ void HandleLampOnOff(u8 *p)
 	u8 i,j;
 	u8 buf_temp[30];
 	u16 unit_addr_bcd;
+//	u32 delay_n;
 	
 	if(!GatewayAddrCheck(p+1))
 		return;
@@ -665,7 +683,13 @@ void HandleLampOnOff(u8 *p)
 	if(!GPRS_Protocol_Check(p, &data_size))
     return;
 	
-	CtrlUnitSend(p+15, data_size-18);//ZIGBEE·¢ËÍµ¥µÆ¿ª¹ØÖ¸Áî
+	vTaskSuspend(xBallastComm1Task);
+	vTaskDelay(1000/portTICK_RATE_MS);//ÑÓ³Ù1000ms
+	CtrlUnitSend(p+11, data_size+4);//ZIGBEE·¢ËÍµ¥µÆ¿ª¹ØÖ¸Áî
+	vTaskResume(xBallastComm1Task);
+	
+//	for(delay_n=0;delay_n<0x2800000;delay_n++);//·ÇÇÀÕ¼Ê½
+//	CtrlUnitSend(p+11, data_size+4);//ZIGBEE·¢ËÍµ¥µÆ¿ª¹ØÖ¸Áî
 	
 	data = *(p+19);
 	

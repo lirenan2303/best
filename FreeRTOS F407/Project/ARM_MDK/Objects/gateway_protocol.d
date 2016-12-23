@@ -55,6 +55,7 @@
 .\objects\gateway_protocol.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\gateway_protocol.o: ..\..\ZKLib_STM32F4\stm32\uart_debug.h
 .\objects\gateway_protocol.o: ..\..\USER\electric.h
+.\objects\gateway_protocol.o: ..\..\USER\ballast_comm.h
 .\objects\gateway_protocol.o: ..\..\USER\gateway_protocol.h
 .\objects\gateway_protocol.o: ..\..\USER\ballast_protocol.h
 .\objects\gateway_protocol.o: ..\..\USER\table_process.h

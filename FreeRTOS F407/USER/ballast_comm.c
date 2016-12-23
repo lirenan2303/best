@@ -27,7 +27,8 @@ extern LampRunCtrlType LampRunCtrlTable[MAX_LAMP_NUM];
 extern LampBuffType LampAddr;
 extern xQueueHandle  LampQueryAddrQueue;
 extern xQueueHandle  GPRSSendAddrQueue;
-u8 UnitWaitFlag = UNIT_QUERY_START;
+u8 UnitWaitFlag = WAIT_READDATA_REPLY;
+extern u16 QueryUnitAddrBCD;
 
 typedef struct
 {
@@ -39,9 +40,9 @@ typedef struct
 
 const static UnitMessageHandlerMap Ballast_MessageMaps[] =  //¶þÎ»Êý×éµÄ³õÊ¼»¯
 {
+	{UNITREADDATABACK,     HandleUnitReadDataReply},       /*0x86; ¶ÁÕòÁ÷Æ÷Êý¾Ý*/  
   {UNITPARAMBACK,        HandleUnitLightParamReply},     /*0x82; µÆ²ÎÊýÏÂÔØ*/   	
 	{UNITSTRATEGYBACK,     HandleUnitStrategyReply},       /*0x83; µÆ²ßÂÔÏÂÔØ*/
-  {UNITREADDATABACK,     HandleUnitReadDataReply},       /*0x86; ¶ÁÕòÁ÷Æ÷Êý¾Ý*/  
   {UNITPROTOCOL_NULL,    NULL},                          /*±£Áô*/  
 };
 
@@ -215,7 +216,9 @@ static void vBallastComm1Task(void *parameter)
 	u8 message[sizeof(BallastComm1RxData.Buff)];
 	u8 protocol_type,i;
 	u8 wait_count = 0;
-	u16 AddrBCD,unit_addr_hex;
+	u16 QueueAddrBCD,recv_addr_bcd,unit_addr_hex;
+	
+  vTaskDelay(3000/portTICK_RATE_MS);//ÑÓ³Ù3s²ÉÑùµ¥µÆÊý¾Ý
 	
 	for(;;)
 	{
@@ -225,102 +228,117 @@ static void vBallastComm1Task(void *parameter)
         break;
 			else
 			{
-				if(xQueueReceive(LampQueryAddrQueue, &AddrBCD, 0) == pdTRUE)//Íø¹ØÂÖÑ¯Ö¸¶¨µØÖ·µ¥µÆÆ
+				if(xQueueReceive(LampQueryAddrQueue, &QueueAddrBCD, 0) == pdTRUE)//Íø¹ØÂÖÑ¯Ö¸¶¨µØÖ·µ¥µÆÆ
 				{
-					ReadUnitData(AddrBCD);
+					ReadUnitData(QueueAddrBCD);
+					unit_addr_hex = Bcd2ToByte(QueryUnitAddrBCD>>8)*100 + Bcd2ToByte(QueryUnitAddrBCD & 0x00FF);
 				}
-				for(i=0;i<=3;i++)
+				for(i=1;i<=MAX_QUERY_NUM;i++)
 				{
-					if(i == 3)
-					{
-				    clear_unit_buff(CONNECT_FAIL, AddrBCD);
-						break;
-					}
 					if(xQueueReceive(BallastComm1Queue, &message, 1000/portTICK_RATE_MS) == pdTRUE)//µÈ´ý1s
+					{
+						recv_addr_bcd =  chr2hex(message[1])<<4;
+						recv_addr_bcd = (chr2hex(message[2])+recv_addr_bcd)<<4;
+						recv_addr_bcd = (chr2hex(message[3])+recv_addr_bcd)<<4;
+						recv_addr_bcd =  chr2hex(message[4])+recv_addr_bcd;
+						
+					  if(recv_addr_bcd == QueryUnitAddrBCD)
+						{
+						  protocol_type = (chr2hex(message[5])<<4 | chr2hex(message[6]));
+							if(protocol_type == 0x86)
+							{
+								HandleUnitReadDataReply(message);
+								break;
+							}
+					  }
+					}
+					else
+					{
+						if(i == LampRunCtrlTable[unit_addr_hex].query_num)
+						{
+							if(LampRunCtrlTable[unit_addr_hex].run_state != HARDWARE_CLOSE)
+							{
+								clear_unit_buff(CONNECT_FAIL, QueueAddrBCD);
+								break;
+							}
+						}
+						else
+						  ReadUnitData(QueueAddrBCD);
+					}
+				}
+//			  xQueueSend(GPRSSendAddrQueue, &QueueAddrBCD, configTICK_RATE_HZ);//µØÖ·´«ËÍÖÁgprsµØÖ·¶ÓÁÐ
+		  }
+		}
+		
+		ReadUnitData(LampAttrSortTable[LampAddr.index].addr);//Ìø×ªÊ±²É¼¯Ò»´Îµ¥µÆÊý¾Ý
+		
+		while(1)//Ö÷¶¯ÂÖÑ¯
+		{
+			if(uxQueueMessagesWaiting(LampQueryAddrQueue) != 0)
+			{
+				vTaskDelay(3000/portTICK_RATE_MS);//ÑÓ³Ù3s±»¶¯²ÉÑùµ¥µÆÊý¾Ý
+			  break;
+			}
+      else
+      {
+				if(xQueueReceive(BallastComm1Queue, &message, 100/portTICK_RATE_MS) == pdTRUE)//µÈ´ý100ms
+				{
+					recv_addr_bcd =  chr2hex(message[1])<<4;
+					recv_addr_bcd = (chr2hex(message[2])+recv_addr_bcd)<<4;
+					recv_addr_bcd = (chr2hex(message[3])+recv_addr_bcd)<<4;
+					recv_addr_bcd =  chr2hex(message[4])+recv_addr_bcd;
+					
+					if(recv_addr_bcd == QueryUnitAddrBCD)
 					{
 						protocol_type = (chr2hex(message[5])<<4 | chr2hex(message[6]));
 						const UnitMessageHandlerMap *map = Ballast_MessageMaps;
 						for(; map->type != UNITPROTOCOL_NULL; ++map)
 						{
-							if (protocol_type == map->type) 
+							if(protocol_type == map->type) 
 							{
 								map->handlerFunc(message);
 								break;
 							}
 						}
-					}
-					else
-					{
-						unit_addr_hex = Bcd2ToByte(LampAttrSortTable[i].addr>>8)*100 + Bcd2ToByte(LampAttrSortTable[i].addr & 0x00FF);
-						
-						if(LampRunCtrlTable[unit_addr_hex].run_state == HARDWARE_CLOSE)
-						{
-							clear_unit_buff(HARDWARE_CLOSE, LampAttrSortTable[i].addr);
-							break;
-						}
-						else
-						  ReadUnitData(AddrBCD);
-					}
-				}
-			  xQueueSend(GPRSSendAddrQueue, &AddrBCD, configTICK_RATE_HZ);//µØÖ·´«ËÍÖÁgprsµØÖ·¶ÓÁÐ
-		  }
-		}
-		
-		while(1)//Ö÷¶¯ÂÖÑ¯
-		{
-			if(uxQueueMessagesWaiting(LampQueryAddrQueue) != 0)
-        break;
-      else
-      {
-				if(xQueueReceive(BallastComm1Queue, &message, 100/portTICK_RATE_MS) == pdTRUE)//µÈ´ý100ms
-				{
-					protocol_type = (chr2hex(message[5])<<4 | chr2hex(message[6]));
-					const UnitMessageHandlerMap *map = Ballast_MessageMaps;
-					for(; map->type != UNITPROTOCOL_NULL; ++map)
-					{
-						if(protocol_type == map->type) 
-						{
-							map->handlerFunc(message);
-							break;
-						}
-					}
-				}
+						QueryNextAddr();
+						wait_count = 0;
+				  }
+			  }
 				else
 				{
 					wait_count++;
 					
-					if(((UnitWaitFlag == UNIT_QUERY_START) || (UnitWaitFlag == WAIT_READDATA_REPLY)) && (wait_count < 3*10))
+					unit_addr_hex = Bcd2ToByte(QueryUnitAddrBCD>>8)*100 + Bcd2ToByte(QueryUnitAddrBCD & 0x00FF);
+					
+					if((UnitWaitFlag == WAIT_READDATA_REPLY) && (wait_count < LampRunCtrlTable[unit_addr_hex].query_num*10))
 					{
 						if(wait_count%10 == 0)
 						{
-							unit_addr_hex = Bcd2ToByte(LampAttrSortTable[LampAddr.index].addr>>8)*100 + Bcd2ToByte(LampAttrSortTable[LampAddr.index].addr & 0x00FF);
-							if(LampRunCtrlTable[unit_addr_hex].run_state == HARDWARE_CLOSE)
-							{
-								wait_count = 0;
-								QueryNextAddr();
-							}
-							else
-							 ReadUnitData(LampAttrSortTable[LampAddr.index].addr);
+						  ReadUnitData(LampAttrSortTable[LampAddr.index].addr);
 					  }
 					}
-					else if((UnitWaitFlag == WAIT_PARAM_REPLY) && (wait_count < 2*10))
+					else if((UnitWaitFlag == WAIT_PARAM_REPLY) && (wait_count <= 20))
 					{
-						return;
 					}
-					else if((UnitWaitFlag == WAIT_STRATEGY_REPLY) && (wait_count < 5*10))
+					else if((UnitWaitFlag == WAIT_STRATEGY_REPLY) && (wait_count <= 40))
 					{
-						return;
 					}
 					else
 					{
-						if((UnitWaitFlag == UNIT_QUERY_START) || (UnitWaitFlag == WAIT_READDATA_REPLY))
+						if(UnitWaitFlag == WAIT_READDATA_REPLY)
+						{
+						  clear_unit_buff(CONNECT_FAIL, LampAttrSortTable[LampAddr.index].addr);//Í¨ÐÅÊ§°ÜÊý¾Ý¸üÐÂ
+							
+							if(LampRunCtrlTable[unit_addr_hex].query_num > 1)
+							  LampRunCtrlTable[unit_addr_hex].query_num--;
+						}
 						wait_count = 0;
-						clear_unit_buff(CONNECT_FAIL, LampAttrSortTable[LampAddr.index].addr);//Í¨ÐÅÊ§°ÜÊý¾Ý¸üÐÂ
 						QueryNextAddr();
 					}
 				}
 			}
 		}
+		xQueueReceive(BallastComm1Queue, &message, 1000/portTICK_RATE_MS);//Çå¿ÕÒ»´ÎÖ÷¶¯ÂÖÑ¯·µ»ØµÄµ¥µÆÊý¾Ý
 	}
 }
 

@@ -85,7 +85,7 @@ void LampTimeReload(void)
 	buf[9] = 0x31;
 	buf[10] = 0x32;
 	
-	ReadRTC_Time(RTC_Format_BIN, &time); //Ê±¼äÐ£Ñé
+	ReadRTC_Time(RTC_Format_BCD, &time); //Ê±¼äÐ£Ñé
 	
 	buf[11] = hex2chr((time.mon>>4) & 0x0F);
 	buf[12] = hex2chr(time.mon & 0x0F);
@@ -109,12 +109,12 @@ void LampTimeReload(void)
 	buf[27] = hex2chr((ByteToBcd2(sun_rise_set.set_min)>>4) & 0x0F);
 	buf[28] = hex2chr(ByteToBcd2(sun_rise_set.set_min) & 0x0F);
 	
-  checksum = BCC_CheckSum(buf+2, 27-2);
-	buf[28] = hex2chr((checksum>>4)&0x0f);
-  buf[29] = hex2chr( checksum&0x0f    );
-	buf[30] = 0x03;
+  checksum = BCC_CheckSum(buf+2, 27);
+	buf[29] = hex2chr((checksum>>4)&0x0f);
+  buf[30] = hex2chr( checksum&0x0f    );
+	buf[31] = 0x03;
 	
-	UnitComm1DMA_TxBuff(buf, 31);
+	UnitComm1DMA_TxBuff(buf, 32);
 }
 
 void LampParamReload(u16 unit_addr_bcd)
@@ -125,8 +125,6 @@ void LampParamReload(u16 unit_addr_bcd)
 	u8 checksum;
 	
 	vTaskDelay(10/portTICK_RATE_MS);//ÑÓ³Ù10ms 
-	
-	UnitWaitFlag = WAIT_PARAM_REPLY;
 	
 	unit_addr_hex = Bcd2ToByte(unit_addr_bcd>>8)*100 + Bcd2ToByte(unit_addr_bcd & 0x00FF);
 	NorFlashRead(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE, ReadBuff, PARAM_SIZE/2);//¶Á³öµÆ²ÎÊý
@@ -144,14 +142,15 @@ void LampParamReload(u16 unit_addr_bcd)
 	buf[9] = 0x32;
 	buf[10] = 0x35;
 	
-  ConvertToByte(ReadBuff, 25 , buf+11);//²ÎÊýÍ¬²½±êÊ¶
+  ConvertToByte(ReadBuff+4, 25 , buf+11);//²ÎÊýÍ¬²½±êÊ¶
 	
 	checksum = BCC_CheckSum(buf+2, 34);
-	buf[28] = hex2chr((checksum>>4)&0x0f);
-  buf[29] = hex2chr( checksum&0x0f    );
-	buf[30] = 0x03;
+	buf[36] = hex2chr((checksum>>4)&0x0f);
+  buf[37] = hex2chr( checksum&0x0f    );
+	buf[38] = 0x03;
 	
-	UnitComm1DMA_TxBuff(buf, 25);
+	UnitWaitFlag = WAIT_PARAM_REPLY;
+	UnitComm1DMA_TxBuff(buf, 39);
 }
 
 void LampStrategyReload(u16 unit_addr_bcd)
@@ -162,8 +161,6 @@ void LampStrategyReload(u16 unit_addr_bcd)
 	u8 checksum,i;
 	
 	vTaskDelay(10/portTICK_RATE_MS);//ÑÓ³Ù10ms 
-	
-	UnitWaitFlag = WAIT_STRATEGY_REPLY;
 	
 	unit_addr_hex = Bcd2ToByte(unit_addr_bcd>>8)*100 + Bcd2ToByte(unit_addr_bcd & 0x00FF);
 	NorFlashRead(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE + STRATEGY_UNIT_BASE, ReadBuff, DAY_STRATEGY_SIZE/2);//¶Á³öµÆ²ÎÊý
@@ -199,6 +196,7 @@ void LampStrategyReload(u16 unit_addr_bcd)
   buf[10+data_size+1] = hex2chr( checksum&0x0f  );
 	buf[10+data_size+2] = 0x03;
 	
+	UnitWaitFlag = WAIT_STRATEGY_REPLY;
 	UnitComm1DMA_TxBuff(buf, 10+data_size+2+1);
 }
 
@@ -210,8 +208,6 @@ void ReadUnitData(u16 unit_addr_bcd)
 	
 	u8 buf[50];
 	u8 checksum;
-	
-	UnitWaitFlag = WAIT_READDATA_REPLY;
 	
 	buf[0] = (u8)(unit_addr_bcd>>8);
 	buf[1] = (u8)(unit_addr_bcd & 0x00FF);
@@ -234,6 +230,7 @@ void ReadUnitData(u16 unit_addr_bcd)
   buf[12] = hex2chr( checksum & 0x0F  );
 	buf[13] = 0x03;
 	
+	UnitWaitFlag = WAIT_READDATA_REPLY;
 	UnitComm1DMA_TxBuff(buf, 14);
 }
 
@@ -246,12 +243,12 @@ void CtrlUnitSend(u8 *p, u8 size)
 	
 	buf[2] = 0x02;
 	
-	buf[3] = 0xFF;
-	buf[4] = 0xFF;
-	buf[5] = 0xFF;
-	buf[6] = 0xFF;
+	buf[3] = 0x46;
+	buf[4] = 0x46;
+	buf[5] = 0x46;
+	buf[6] = 0x46;
 	
-  strncpy((char*)p, (char*)buf+7, size);
+  strncpy((char*)buf+7, (char*)p, size);
 	
 	checksum = BCC_CheckSum(buf+2, size+5);
 	buf[7+size] = hex2chr((checksum>>4)&0x0F);
@@ -269,7 +266,7 @@ void UnitDimmmingCtrl(u16 unit_addr_bcd, u8 dimming_value)
 	buf[1] = hex2chr(UNITDIMMING & 0x000F);
 	
 	buf[2] = 0x30;
-	buf[3] = 0x41;
+	buf[3] = 0x39;
 	
 	buf[4] = 0x42;
 	buf[5] = 0x30;
@@ -295,7 +292,7 @@ void UnitOnOffCtrl(u16 unit_addr_bcd, u8 cmd)
 	buf[1] = hex2chr(UNITONOFF & 0x000F);
 	
 	buf[2] = 0x30;
-	buf[3] = 0x41;
+	buf[3] = 0x39;
 	
 	buf[4] = 0x42;
 	buf[5] = 0x30;
@@ -320,7 +317,7 @@ void CtrlBackRun(u16 unit_addr_bcd)
 	buf[1] = hex2chr(UNITCTRLBACK & 0x000F);
 	
 	buf[2] = 0x30;
-	buf[3] = 0x41;
+	buf[3] = 0x39;
 	
 	buf[4] = 0x42;
 	buf[5] = 0x30;
@@ -337,30 +334,30 @@ void CtrlBackRun(u16 unit_addr_bcd)
 
 void HandleUnitLightParamReply(u8 *p)
 {
-	u16 addr_bcd;
-	
-	addr_bcd =  chr2hex(*(p+1))<<4;
-	addr_bcd = (chr2hex(*(p+2))+addr_bcd)<<4;
-	addr_bcd = (chr2hex(*(p+3))+addr_bcd)<<4;
-	addr_bcd =  chr2hex(*(p+4))+addr_bcd;
-	
-	vTaskDelay(1000/portTICK_RATE_MS);
-	
-	ReadUnitData(addr_bcd);//¶Áµ¥µÆÊý¾Ý
+//	u16 addr_bcd;
+//	
+//	addr_bcd =  chr2hex(*(p+1))<<4;
+//	addr_bcd = (chr2hex(*(p+2))+addr_bcd)<<4;
+//	addr_bcd = (chr2hex(*(p+3))+addr_bcd)<<4;
+//	addr_bcd =  chr2hex(*(p+4))+addr_bcd;
+//	
+//	vTaskDelay(1000/portTICK_RATE_MS);
+//	
+//	ReadUnitData(addr_bcd);//¶Áµ¥µÆÊý¾Ý
 }
 
 void HandleUnitStrategyReply(u8 *p)
 {
-	u16 addr_bcd;
-	
-	addr_bcd =  chr2hex(*(p+1))<<4;
-	addr_bcd = (chr2hex(*(p+2))+addr_bcd)<<4;
-	addr_bcd = (chr2hex(*(p+3))+addr_bcd)<<4;
-	addr_bcd =  chr2hex(*(p+4))+addr_bcd;
-	
-	vTaskDelay(1000/portTICK_RATE_MS);
-	
-	ReadUnitData(addr_bcd);//¶Áµ¥µÆÊý¾Ý
+//	u16 addr_bcd;
+//	
+//	addr_bcd =  chr2hex(*(p+1))<<4;
+//	addr_bcd = (chr2hex(*(p+2))+addr_bcd)<<4;
+//	addr_bcd = (chr2hex(*(p+3))+addr_bcd)<<4;
+//	addr_bcd =  chr2hex(*(p+4))+addr_bcd;
+//	
+//	vTaskDelay(1000/portTICK_RATE_MS);
+//	
+//	ReadUnitData(addr_bcd);//¶Áµ¥µÆÊý¾Ý
 }
 
 void clear_unit_buff(u8 state, u16 unit_addr_bcd)//¹Ø±ÕÓ² »ò µ¥µÆÍ¨ÐÅÊ§Áª  Êý¾ÝÇå¿Õª
@@ -423,9 +420,9 @@ void unit_state_ctrl(u16 unit_addr_bcd, u8 now_state, u8 ctrl_state)
 		else if(ctrl_state == MAINRUN_FULL)
 		{
 			if(run_state == DIMMING_RUN)
-			  CtrlBackRun(unit_addr_hex);
+			  CtrlBackRun(unit_addr_bcd);
 			else if(run_state == SOFTWARE_CLOSE)
-				UnitOnOffCtrl(unit_addr_hex, 0x30);
+				UnitOnOffCtrl(unit_addr_bcd, 0x30);
 		}
 	}
 }
@@ -460,8 +457,7 @@ void HandleUnitReadDataReply(u8 *p)
 	
 	unit_addr_hex = Bcd2ToByte(lamp_data.addr_bcd>>8)*100 + Bcd2ToByte(lamp_data.addr_bcd & 0x00FF);
 	
-	if(lamp_data.addr_bcd != QueryUnitAddrBCD)
-		return;
+	LampRunCtrlTable[unit_addr_hex].query_num = MAX_QUERY_NUM;//¸üÐÂÂÖÑ¯´ÎÊý
 	
 	if((LAMP_DATA_TEMP_SIZE+12+12+6) >= data_size)
 	{
@@ -478,13 +474,8 @@ void HandleUnitReadDataReply(u8 *p)
 			
 		taskEXIT_CRITICAL();//ÍË³öÁÙ½çÇø
 	}
-			
-	last_lamp_data.addr_bcd =  chr2hex(LastBuff[1])<<4;
-	last_lamp_data.addr_bcd = (chr2hex(LastBuff[2])+last_lamp_data.power)<<4;
-	last_lamp_data.addr_bcd = (chr2hex(LastBuff[3])+last_lamp_data.power)<<4;
-	last_lamp_data.addr_bcd =  chr2hex(LastBuff[4])+last_lamp_data.power;
 	
-	last_lamp_data.state = (chr2hex(LastBuff[1])<<4 | chr2hex(LastBuff[2]));//ÉÏÒ»´ÎµÄ×´Ì¬
+	last_lamp_data.state = (chr2hex(LastBuff[6])<<4 | chr2hex(LastBuff[7]));//ÉÏÒ»´ÎµÄ×´Ì¬
 		
 	last_lamp_data.power =  chr2hex(LastBuff[16])<<4;
 	last_lamp_data.power = (chr2hex(LastBuff[17])+last_lamp_data.power)<<4;
@@ -494,14 +485,14 @@ void HandleUnitReadDataReply(u8 *p)
 	now_power_hex = Bcd2ToByte(lamp_data.power>>8)*100 + Bcd2ToByte(lamp_data.power & 0x00FF);
 	last_power_hex = Bcd2ToByte(last_lamp_data.power>>8)*100 + Bcd2ToByte(last_lamp_data.power & 0x00FF);
 	
-  if((lamp_data.state != last_lamp_data.state) || (abs(now_power_hex - last_power_hex) > 5))
+  if((lamp_data.state != last_lamp_data.state) || (abs(now_power_hex - last_power_hex) > 5*10))
 	{
 		xQueueSend(GPRSSendAddrQueue, &lamp_data.addr_bcd, configTICK_RATE_HZ*5);
 	}
 	
 	unit_state_ctrl(lamp_data.addr_bcd, lamp_data.state, LampRunCtrlTable[unit_addr_hex].run_state);//ÅÐ¶Ïµ¥µÆÔËÐÐ×´Ì¬ÊÇ·ñÏàÍ¬
 	
-	ReadRTC_Time(RTC_Format_BIN, &time); //Ê±¼äÐ£Ñé
+	ReadRTC_Time(RTC_Format_BCD, &time); //Ê±¼äÐ£Ñé
 	buf[0] = hex2chr((time.mon>>4) & 0x0F);
 	buf[1] = hex2chr(time.mon & 0x0F);
 	buf[2] = hex2chr((time.day>>4) & 0x0F);
@@ -518,27 +509,28 @@ void HandleUnitReadDataReply(u8 *p)
 	}
 	
 	NorFlashRead(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE + PARAM_TIME_FALG_OFFSET, NorReadBuff, 12);//¶Á³öµÆ²ÎÊý
-	for(i=0;i<12;i++)
+	if(NorflashDataCheck(NorReadBuff, 12) != EMPTY)
 	{
-		if(NorReadBuff[i] != *(p+43+i))
+		for(i=0;i<12;i++)
 		{
-			LampParamReload(lamp_data.addr_bcd);
-			return;
+			if(NorReadBuff[i] != *(p+43+i))
+			{
+				LampParamReload(lamp_data.addr_bcd);
+				return;
+			}
 		}
-	}
 	
-	NorFlashRead(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE + STRATEGY_TIME_FALG_OFFSET, NorReadBuff, 12);//¶Á³öµÆ²ßÂÔ
-	for(i=0;i<12;i++)
-	{
-		if(NorReadBuff[i] == 0xFF)//Î´ÏÂÔØµ¥µÆ²ßÂÔ
-			break;
-		
-		if(NorReadBuff[i] != *(p+55+i))
+		NorFlashRead(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE + STRATEGY_TIME_FALG_OFFSET, NorReadBuff, 12);//¶Á³öµÆ²ßÂÔ
+		if(NorflashDataCheck(NorReadBuff, 12) != EMPTY)
 		{
-			LampStrategyReload(unit_addr_hex);
-			return;
+			for(i=0;i<12;i++)
+			{
+				if(NorReadBuff[i] != *(p+55+i))
+				{
+					LampStrategyReload(unit_addr_hex);
+					return;
+				}
+			}
 		}
-	}
-	
-	QueryNextAddr();
+  }
 }

@@ -112,8 +112,8 @@ DataStateTypeDef NorflashDataCheck(u16*p, u16 size)
 	
 	for(i=0;i<size;i++)
 	{
-		if(*(p+i) != 0xFFFF)
-			return NO_EMPTY;
+		if(*(p+i) == 0xFFFF)
+			return EMPTY;
 	}
-	return EMPTY;
+	return NO_EMPTY;
 }

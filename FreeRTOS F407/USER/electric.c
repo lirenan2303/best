@@ -222,6 +222,7 @@ void ElecHandleGWDataQuery(u8 *p)
   ConvertToByte(WriteBuff, 6, p+134);
 	
 	lamp_num_bcd = ByteToBcd2(LampAddr.num>>8)*256 + ByteToBcd2((u8)LampAddr.num);
+	
 	*(p+140) = hex2chr((lamp_num_bcd>>12) & 0x000F);
 	*(p+141) = hex2chr((lamp_num_bcd>>8) & 0x000F);
 	*(p+142) = hex2chr((lamp_num_bcd>>4) & 0x000F);
