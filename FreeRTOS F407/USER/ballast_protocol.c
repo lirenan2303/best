@@ -14,17 +14,26 @@
 #include "norflash.h"
 #include "common.h"
 #include "ballast_protocol.h"
+#include "gateway_protocol.h"
 #include "table_process.h"
 #include "lat_longitude.h"
+#include "electric.h"
 
 extern u8 LampDataTempBuff[MAX_LAMP_NUM][LAMP_DATA_TEMP_SIZE];
 extern LampAttrSortType LampAttrSortTable[MAX_LAMP_NUM];
 extern LampRunCtrlType LampRunCtrlTable[MAX_LAMP_NUM];
 extern xQueueHandle  GPRSSendAddrQueue;
+extern xQueueHandle  GSM_GPRS_queue;
 extern LampBuffType LampAddr;
 extern SUN_RISE_SET  sun_rise_set;
 extern u8 UnitWaitFlag;
+extern u8 UnitQueryState;
+extern AlarmParmTypeDef AlarmParm;
 u16 QueryUnitAddrBCD;
+static u16 CommErrorBuff_1[20]={0},CommErrorAddr[20]={0};
+extern WG_AlarmFlagDef WG_AlarmFlag;
+static u8 UnitErrorNum = 0;
+static u32 UnitQueryCount=0,LastAlarmTime=0;
 
 ErrorStatus Lamp_Protocol_Check(u8 *buf, u8 *BufData_Size)
 {
@@ -47,8 +56,131 @@ ErrorStatus Lamp_Protocol_Check(u8 *buf, u8 *BufData_Size)
 	return state;
 }
 
+void unit_comm_fail_check(void)
+{
+	u8 WG_query[]= {0x02,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x30,0x38,0x30,0x31,0x30,0x33,0x42,0x03};
+	u16 unit_addr_hex,i;
+	u16 index=0xFFFF,num=0,start_index=0;
+	u8 n,j,error_state=0,serv_state = ERROR,unit_state;
+	u8 UnitBuff[LAMP_DATA_TEMP_SIZE];
+	
+	if(CommErrorAddr[0] == 0)//µÆ²»ÁÁµØÖ·Ð´Èë
+	{
+		if(CommErrorBuff_1[0] == 0)//µÚÒ»È¦ÂÖÑ¯
+		{
+			for(i=0;i<LampAddr.num;i++)
+			{
+				unit_addr_hex = Bcd2ToByte(LampAttrSortTable[i].addr>>8)*100 + Bcd2ToByte(LampAttrSortTable[i].addr & 0x00FF);
+				
+				taskENTER_CRITICAL();//½øÈëÁÙ½çÇø
+				strncpy((char*)UnitBuff, (char*)LampDataTempBuff[unit_addr_hex], LAMP_DATA_TEMP_SIZE);//¶Á³öÉÏÒ»´Îµ¥µÆÊý¾Ý
+				taskEXIT_CRITICAL();//ÍË³öÁÙ½çÇø
+	
+	      unit_state = (chr2hex(UnitBuff[6])<<4 | chr2hex(UnitBuff[7]));
+				
+				if((unit_state & 0x10) == 0x10)
+				{
+					if(index == 0xFFFF)
+					{
+						start_index = i;
+						index = i;
+						num++;
+					}
+					else if((index != 0xFFFF) && (i == (index+1)))
+					{
+						index = i;
+						num++;
+						
+					  if(num >= AlarmParm.ConnectFail_Num)
+					  {
+					    for(j=0;j<AlarmParm.ConnectFail_Num;j++)
+						  {
+							  unit_addr_hex = Bcd2ToByte(LampAttrSortTable[start_index+j].addr>>8)*100 + Bcd2ToByte(LampAttrSortTable[start_index+j].addr & 0x00FF);
+
+								CommErrorBuff_1[j] = LampAttrSortTable[start_index+j].addr;
+								LampRunCtrlTable[unit_addr_hex].query_num = 2*MAX_QUERY_NUM;
+						  }
+							return;
+					  }
+					}
+					else
+					{
+						index = 0xFFFF;
+						start_index = 0;
+						num = 0;
+					}
+				}
+				else if(index != 0xFFFF)
+				{
+					index = 0xFFFF;
+					start_index = 0;
+					num = 0;
+				}
+			}
+		}
+		else if(CommErrorAddr[0] == 0)//µÚ¶þÈ¦ÂÖÑ¯
+		{
+			error_state = 1;
+			for(n=0;n<AlarmParm.ConnectFail_Num;n++)
+			{
+				unit_addr_hex = Bcd2ToByte(CommErrorBuff_1[n]>>8)*100 + Bcd2ToByte(CommErrorBuff_1[n] & 0x00FF);
+				
+				taskENTER_CRITICAL();//½øÈëÁÙ½çÇø
+				strncpy((char*)UnitBuff, (char*)LampDataTempBuff[unit_addr_hex], LAMP_DATA_TEMP_SIZE);//¶Á³öÉÏÒ»´Îµ¥µÆÊý¾Ý
+				taskEXIT_CRITICAL();//ÍË³öÁÙ½çÇø
+				
+				unit_state = (chr2hex(UnitBuff[6])<<4 | chr2hex(UnitBuff[7]));
+				
+				if((unit_addr_hex == 0) || ((unit_state&0x10) == 0x00))
+				{
+					error_state = 0;
+				}
+			}
+			if(error_state == 1)
+			{
+				for(n=0;n<AlarmParm.ConnectFail_Num;n++)
+				{
+					CommErrorAddr[n] = CommErrorBuff_1[n];
+				}
+				
+        WG_AlarmFlag.cont_off = 1;
+				xQueueSend(GSM_GPRS_queue, &WG_query, configTICK_RATE_HZ*5);//Íø¹ØÊý¾Ý²éÑ¯
+			}
+			memset((char*)CommErrorBuff_1, 0, sizeof(CommErrorBuff_1));//Çå¿ÕµÚÒ»´ÎÂÖÑ¯²»ÁÁbuf
+		}
+  }
+	else//²é¿´ÊÇ·ñÎ¬»¤
+	{
+		serv_state = SUCCESS;
+		
+		for(n=0;n<AlarmParm.ConnectFail_Num;n++)
+		{
+			unit_addr_hex = Bcd2ToByte(CommErrorAddr[n]>>8)*100 + Bcd2ToByte(CommErrorAddr[n] & 0x00FF);
+			
+			taskENTER_CRITICAL();//½øÈëÁÙ½çÇø
+			strncpy((char*)UnitBuff, (char*)LampDataTempBuff[unit_addr_hex], LAMP_DATA_TEMP_SIZE);//¶Á³öÉÏÒ»´Îµ¥µÆÊý¾Ý
+			taskEXIT_CRITICAL();//ÍË³öÁÙ½çÇø
+				
+			unit_state = (chr2hex(UnitBuff[6])<<4 | chr2hex(UnitBuff[7]));
+			
+			if((unit_addr_hex == 0) || ((unit_state&0x10) == 0x10))
+			{
+				serv_state = ERROR;
+			}
+		}
+		if(serv_state == SUCCESS)
+		{
+			WG_AlarmFlag.cont_off = 0;
+			xQueueSend(GSM_GPRS_queue, &WG_query, configTICK_RATE_HZ*5);//Íø¹ØÊý¾Ý²éÑ¯
+			memset((char*)CommErrorAddr, 0, sizeof(CommErrorAddr));//Çå¿ÕÁ¬ÐøµÆ²»ÁÁÊý¾Ý
+		}
+	}
+}
+
 void QueryNextAddr(void)
 {
+	u8 WG_query[]= {0x02,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x30,0x38,0x30,0x31,0x30,0x33,0x42,0x03};
+		
 	if(LampAddr.index < (LampAddr.num-1))
 	{
 		LampAddr.index++;
@@ -56,6 +188,33 @@ void QueryNextAddr(void)
 	else
 	{
 		LampAddr.index = 0;
+		UnitQueryCount++;
+	}
+	
+	if(LampAttrSortTable[LampAddr.index].addr == 0)//ÎÞµÆ²ÎÊý
+		return;
+	
+	if((UnitErrorNum < AlarmParm.ConnectFail_Num) && (LampAddr.num >= AlarmParm.ConnectFail_Num))
+	{
+		UnitErrorNum++;
+	}
+		
+	if(UnitErrorNum >= AlarmParm.ConnectFail_Num)
+	{
+		LastAlarmTime = UnitQueryCount;
+		if(WG_AlarmFlag.cont_off == 0)
+		{
+			WG_AlarmFlag.cont_off = 1;
+			xQueueSend(GSM_GPRS_queue, &WG_query, configTICK_RATE_HZ*5);//Íø¹ØÊý¾Ý²éÑ¯
+		}
+	}
+	else if((UnitQueryCount - LastAlarmTime) >= 2)
+	{
+		if(WG_AlarmFlag.cont_off == 1)
+		{
+			WG_AlarmFlag.cont_off = 0;
+			xQueueSend(GSM_GPRS_queue, &WG_query, configTICK_RATE_HZ*5);//Íø¹ØÊý¾Ý²éÑ¯
+		}
 	}
 	
 	ReadUnitData(LampAttrSortTable[LampAddr.index].addr);
@@ -167,7 +326,7 @@ void LampStrategyReload(u16 unit_addr_bcd)
 	
 	for(i=0;i<200;i++)
 	{
-		if((ReadBuff[i] == 0xFF) || (ReadBuff[i] == 0x00))
+		if((ReadBuff[i] == 0xFFFF) || (ReadBuff[i] == 0x0000))
 		{
 			data_size = i;
 			break;
@@ -192,12 +351,12 @@ void LampStrategyReload(u16 unit_addr_bcd)
   ConvertToByte(ReadBuff, data_size , buf+11);//²ßÂÔÊý¾Ý
 	
 	checksum = BCC_CheckSum(buf+2, data_size+9);
-	buf[10+data_size] = hex2chr((checksum>>4)&0x0f);
-  buf[10+data_size+1] = hex2chr( checksum&0x0f  );
-	buf[10+data_size+2] = 0x03;
+	buf[11+data_size] = hex2chr((checksum>>4)&0x0f);
+  buf[11+data_size+1] = hex2chr( checksum&0x0f  );
+	buf[11+data_size+2] = 0x03;
 	
 	UnitWaitFlag = WAIT_STRATEGY_REPLY;
-	UnitComm1DMA_TxBuff(buf, 10+data_size+2+1);
+	UnitComm1DMA_TxBuff(buf, 11+data_size+2+1);
 }
 
 void ReadUnitData(u16 unit_addr_bcd)
@@ -334,30 +493,12 @@ void CtrlBackRun(u16 unit_addr_bcd)
 
 void HandleUnitLightParamReply(u8 *p)
 {
-//	u16 addr_bcd;
-//	
-//	addr_bcd =  chr2hex(*(p+1))<<4;
-//	addr_bcd = (chr2hex(*(p+2))+addr_bcd)<<4;
-//	addr_bcd = (chr2hex(*(p+3))+addr_bcd)<<4;
-//	addr_bcd =  chr2hex(*(p+4))+addr_bcd;
-//	
-//	vTaskDelay(1000/portTICK_RATE_MS);
-//	
-//	ReadUnitData(addr_bcd);//¶Áµ¥µÆÊý¾Ý
+  UnitWaitFlag = WAIT_READDATA_REPLY;
 }
 
 void HandleUnitStrategyReply(u8 *p)
 {
-//	u16 addr_bcd;
-//	
-//	addr_bcd =  chr2hex(*(p+1))<<4;
-//	addr_bcd = (chr2hex(*(p+2))+addr_bcd)<<4;
-//	addr_bcd = (chr2hex(*(p+3))+addr_bcd)<<4;
-//	addr_bcd =  chr2hex(*(p+4))+addr_bcd;
-//	
-//	vTaskDelay(1000/portTICK_RATE_MS);
-//	
-//	ReadUnitData(addr_bcd);//¶Áµ¥µÆÊý¾Ý
+  UnitWaitFlag = WAIT_READDATA_REPLY;
 }
 
 void clear_unit_buff(u8 state, u16 unit_addr_bcd)//¹Ø±ÕÓ² »ò µ¥µÆÍ¨ÐÅÊ§Áª  Êý¾ÝÇå¿Õª
@@ -441,6 +582,8 @@ void HandleUnitReadDataReply(u8 *p)
   if(!Lamp_Protocol_Check(p, &data_size))
     return;
 
+	UnitErrorNum = 0;//Çå³ýÁ¬ÐøµÆ²»ÁÁÊýÄ¿
+	
 	lamp_data.addr_bcd =  chr2hex(*(p+1))<<4;
 	lamp_data.addr_bcd = (chr2hex(*(p+2))+lamp_data.addr_bcd)<<4;
 	lamp_data.addr_bcd = (chr2hex(*(p+3))+lamp_data.addr_bcd)<<4;
@@ -485,7 +628,7 @@ void HandleUnitReadDataReply(u8 *p)
 	now_power_hex = Bcd2ToByte(lamp_data.power>>8)*100 + Bcd2ToByte(lamp_data.power & 0x00FF);
 	last_power_hex = Bcd2ToByte(last_lamp_data.power>>8)*100 + Bcd2ToByte(last_lamp_data.power & 0x00FF);
 	
-  if((lamp_data.state != last_lamp_data.state) || (abs(now_power_hex - last_power_hex) > 5*10))
+  if((lamp_data.state != last_lamp_data.state) || (abs(now_power_hex - last_power_hex) > 5*10) || (UnitQueryState == PASSIVE_QUERY))
 	{
 		xQueueSend(GPRSSendAddrQueue, &lamp_data.addr_bcd, configTICK_RATE_HZ*5);
 	}
@@ -527,7 +670,7 @@ void HandleUnitReadDataReply(u8 *p)
 			{
 				if(NorReadBuff[i] != *(p+55+i))
 				{
-					LampStrategyReload(unit_addr_hex);
+					LampStrategyReload(lamp_data.addr_bcd);
 					return;
 				}
 			}

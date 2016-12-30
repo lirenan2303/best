@@ -78,6 +78,7 @@ const static WGMessageHandlerMap GPRS_MessageMaps[] =  //二位数组的初始化
 	{READLAMPDATA,     HandleReadBSNData},      /*0x06; 读镇流器数据*/
 	{BRANCHCTRL,       HandleBranchOnOff},      /*0x07; 网关回路控制*/
 	{DATAQUERY,        HandleGWDataQuery},      /*0x08; 网关数据查询*/
+	{UNITRUNBACK,      HandleUnitRunBack},      /*0x0A; 单灯自主运行*/
 	{TIMEADJUST,       HandleAdjustTime},       /*0x0B; 校时*/
 	{VERSIONQUERY,     HandleGWVersQuery},      /*0x0C; 查网关软件版本号*/ 
   {ELECVERSION,      HandleElecVersQuery},    /*0x0E; 查电量板软件版本号*/	
@@ -708,7 +709,7 @@ void GSMInit(void)
 	GsmTx_semaphore = xSemaphoreCreateMutex();
 	GSM_GPRS_queue = xQueueCreate(10, sizeof(GsmRxData.Buff));
 	GSM_AT_queue = xQueueCreate(1, sizeof(GsmRxData.Buff));
-	xTaskCreate(vGSMTask, "GSMTask", GSM_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, &xGSMTaskHandle);
+	xTaskCreate(vGSMTask, "GSMTask", GSM_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, &xGSMTaskHandle);
 }
 
 /*******************************END OF FILE************************************/

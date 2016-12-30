@@ -53,4 +53,5 @@
 .\objects\ballast_comm.o: ..\..\USER\common.h
 .\objects\ballast_comm.o: ..\..\USER\ballast_protocol.h
 .\objects\ballast_comm.o: ..\..\USER\gateway_protocol.h
+.\objects\ballast_comm.o: ..\..\USER\electric.h
 .\objects\ballast_comm.o: ..\..\USER\table_process.h

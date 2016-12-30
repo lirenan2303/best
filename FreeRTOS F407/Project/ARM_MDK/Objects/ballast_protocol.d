@@ -59,5 +59,7 @@
 .\objects\ballast_protocol.o: ..\..\ZKLib_STM32F4\stm32\fsmc_nor.h
 .\objects\ballast_protocol.o: ..\..\USER\common.h
 .\objects\ballast_protocol.o: ..\..\USER\ballast_protocol.h
+.\objects\ballast_protocol.o: ..\..\USER\gateway_protocol.h
 .\objects\ballast_protocol.o: ..\..\USER\table_process.h
 .\objects\ballast_protocol.o: ..\..\USER\lat_longitude.h
+.\objects\ballast_protocol.o: ..\..\USER\electric.h

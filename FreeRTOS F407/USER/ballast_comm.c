@@ -12,6 +12,7 @@
 #include "common.h"
 #include "ballast_protocol.h"
 #include "gateway_protocol.h"
+#include "electric.h"
 #include "table_process.h"
 
 
@@ -27,8 +28,12 @@ extern LampRunCtrlType LampRunCtrlTable[MAX_LAMP_NUM];
 extern LampBuffType LampAddr;
 extern xQueueHandle  LampQueryAddrQueue;
 extern xQueueHandle  GPRSSendAddrQueue;
-u8 UnitWaitFlag = WAIT_READDATA_REPLY;
+u8 UnitWaitFlag;
+u8 UnitQueryState;
 extern u16 QueryUnitAddrBCD;
+extern u8 WG_State;
+extern AlarmParmTypeDef AlarmParm;
+extern WG_AlarmFlagDef WG_AlarmFlag;
 
 typedef struct
 {
@@ -220,10 +225,15 @@ static void vBallastComm1Task(void *parameter)
 	
   vTaskDelay(3000/portTICK_RATE_MS);//延迟3s采样单灯数据
 	
+	UnitWaitFlag = WAIT_READDATA_REPLY;
+	UnitQueryState = AUTO_QUERY;
+	
 	for(;;)
 	{
 		while(1)//被动轮询
 		{
+			UnitQueryState = PASSIVE_QUERY;
+			
 			if(uxQueueMessagesWaiting(LampQueryAddrQueue) == 0)
         break;
 			else
@@ -266,7 +276,6 @@ static void vBallastComm1Task(void *parameter)
 						  ReadUnitData(QueueAddrBCD);
 					}
 				}
-//			  xQueueSend(GPRSSendAddrQueue, &QueueAddrBCD, configTICK_RATE_HZ);//地址传送至gprs地址队列
 		  }
 		}
 		
@@ -274,6 +283,8 @@ static void vBallastComm1Task(void *parameter)
 		
 		while(1)//主动轮询
 		{
+			UnitQueryState = AUTO_QUERY;
+			
 			if(uxQueueMessagesWaiting(LampQueryAddrQueue) != 0)
 			{
 				vTaskDelay(3000/portTICK_RATE_MS);//延迟3s被动采样单灯数据
@@ -300,7 +311,9 @@ static void vBallastComm1Task(void *parameter)
 								break;
 							}
 						}
-						QueryNextAddr();
+						
+						if(UnitWaitFlag == WAIT_READDATA_REPLY)
+						  QueryNextAddr();
 						wait_count = 0;
 				  }
 			  }
@@ -314,7 +327,7 @@ static void vBallastComm1Task(void *parameter)
 					{
 						if(wait_count%10 == 0)
 						{
-						  ReadUnitData(LampAttrSortTable[LampAddr.index].addr);
+						  ReadUnitData(QueryUnitAddrBCD);
 					  }
 					}
 					else if((UnitWaitFlag == WAIT_PARAM_REPLY) && (wait_count <= 20))
@@ -327,7 +340,8 @@ static void vBallastComm1Task(void *parameter)
 					{
 						if(UnitWaitFlag == WAIT_READDATA_REPLY)
 						{
-						  clear_unit_buff(CONNECT_FAIL, LampAttrSortTable[LampAddr.index].addr);//通信失败数据更新
+							if(QueryUnitAddrBCD != 0)
+						    clear_unit_buff(CONNECT_FAIL, QueryUnitAddrBCD);//通信失败数据更新
 							
 							if(LampRunCtrlTable[unit_addr_hex].query_num > 1)
 							  LampRunCtrlTable[unit_addr_hex].query_num--;
@@ -350,5 +364,5 @@ void BallastCommInit(void)
 	BallastComm1RxTxDataInit();
 	vSemaphoreCreateBinary(ballastComm1Tx_semaphore);
 	BallastComm1Queue = xQueueCreate(30, sizeof(BallastComm1RxData.Buff));
-	xTaskCreate(vBallastComm1Task, "BallastComm1Task", ZIGBEE_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, &xBallastComm1Task);
+	xTaskCreate(vBallastComm1Task, "BallastComm1Task", ZIGBEE_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &xBallastComm1Task);
 }

@@ -31,6 +31,8 @@ typedef enum
 	UNIT_QUERY_START = 0x00,
 }WAITUNITREPLY;
 
+typedef enum {AUTO_QUERY = 0, PASSIVE_QUERY= !AUTO_QUERY} QuerySchemeStatus;
+
 typedef struct
 {
 	u16 addr_bcd;

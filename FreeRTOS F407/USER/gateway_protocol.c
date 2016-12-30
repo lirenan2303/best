@@ -156,12 +156,12 @@ void zigbee_config(void)
 
 void AlarmParmUpdate(void)
 {
-	u16 WriteBuff[100];
+	u16 WriteBuff[60];
 	u8 temp[10]={0};
 	
-	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_PARA3_BASE, WriteBuff, 100);//读出告警参数
+	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_PARA3_BASE, WriteBuff, 60);//读出告警参数
 	
-	if(NorflashDataCheck(WriteBuff, 100) == EMPTY)
+	if(NorflashDataCheck(WriteBuff, 60) == EMPTY)
 	{
 		AlarmParm.L1_VolHigh = 0x3000;
 		AlarmParm.L2_VolHigh = 0x3000;
@@ -223,8 +223,7 @@ void AlarmParmUpdate(void)
 		ConvertToByte(WriteBuff+53, 4, temp);
 		AlarmParm.Zero_CurHigh = atoi((const char *)temp);
 		
-		ConvertToByte(WriteBuff+57, 1, temp);
-		AlarmParm.ConnectFail_Num = atoi((const char *)temp);
+		AlarmParm.ConnectFail_Num = chr2hex((u8)WriteBuff[57]);
   }
 }
 
@@ -386,15 +385,14 @@ void HandleLampStrategy(u8 *p)
 	
 	if((*(p+15) == 0x41) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))
 	{
-		RTC_TimeToChar(WriteBuff+29);//灯参数同步标识
-		MemStorage_Convert(p+23, data_size-8, WriteBuff+29+12);
+		RTC_TimeToChar(WriteBuff+STRATEGY_UNIT_BASE/2);//策略同步标识
+		MemStorage_Convert(p+23, data_size-8, WriteBuff+STRATEGY_UNIT_BASE/2+12);
 		
 		for(i=0;i<LampAddr.num;i++)
 		{
 			unit_addr_check(LampAttrSortTable[i].addr, &unit_addr_hex);
-			
 			NorFlashRead(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE, WriteBuff, PARAM_SIZE/2);//读出灯参数
-			NorFlashWrite(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE, WriteBuff, PARAM_SIZE/2+12+data_size-8);//写入灯参数和策略
+			NorFlashWrite(NORFLASH_BALLAST_BASE + unit_addr_hex*NORFLASH_SECTOR_SIZE, WriteBuff, 200);//写入灯参数和策略
 		}
 	}
 	
@@ -450,6 +448,26 @@ void branch_state_update(u8 branch, u8 state)//强制开接触器 更新回路单灯状态
 		
 		xQueueSend(LampQueryAddrQueue, &LampAttrSortTable[i].addr, configTICK_RATE_HZ*5);//轮询相应的zigbee地址
 	}
+}
+
+void KM_Unit_branch_state(void)
+{
+	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL1, PIN_KM_CTRL1) == KM_OFF)
+		branch_state_update(1, HARDWARE_CLOSE);
+	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL2, PIN_KM_CTRL2) == KM_OFF)
+		branch_state_update(2, HARDWARE_CLOSE);
+	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL3, PIN_KM_CTRL3) == KM_OFF)
+		branch_state_update(3, HARDWARE_CLOSE);
+	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL4, PIN_KM_CTRL4) == KM_OFF)
+		branch_state_update(4, HARDWARE_CLOSE);
+	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL5, PIN_KM_CTRL5) == KM_OFF)
+		branch_state_update(5, HARDWARE_CLOSE);
+	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL6, PIN_KM_CTRL6) == KM_OFF)
+		branch_state_update(6, HARDWARE_CLOSE);
+	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL7, PIN_KM_CTRL7) == KM_OFF)
+		branch_state_update(7, HARDWARE_CLOSE);
+	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL8, PIN_KM_CTRL8) == KM_OFF)
+		branch_state_update(8, HARDWARE_CLOSE);
 }
 
 void unit_ctrl(u8 branch, u8 segment, u16 addr, u8 cmd, u8 data)//软开关单灯 主辅道 调光
@@ -610,7 +628,6 @@ void HandleLampDimmer(u8 *p)
 	u8 i,j;
 	u8 buf_temp[30];
 	u16 unit_addr_bcd;
-//	u32 delay_n;
 	
 	if(!GatewayAddrCheck(p+1))
 		return;
@@ -622,9 +639,6 @@ void HandleLampDimmer(u8 *p)
 	vTaskDelay(1000/portTICK_RATE_MS);//延迟1000ms
 	CtrlUnitSend(p+11, data_size+4);//ZIGBEE发送调光指令
 	vTaskResume(xBallastComm1Task);
-	
-//	for(delay_n=0;delay_n<0x2800000;delay_n++);//非抢占式
-//	CtrlUnitSend(p+11, data_size+4);//ZIGBEE发送调光指令
 	
 	data = chr2hex(*(p+19))<<4 | chr2hex(*(p+20));
 	
@@ -675,7 +689,7 @@ void HandleLampOnOff(u8 *p)
 	u8 i,j;
 	u8 buf_temp[30];
 	u16 unit_addr_bcd;
-//	u32 delay_n;
+	
 	
 	if(!GatewayAddrCheck(p+1))
 		return;
@@ -687,9 +701,6 @@ void HandleLampOnOff(u8 *p)
 	vTaskDelay(1000/portTICK_RATE_MS);//延迟1000ms
 	CtrlUnitSend(p+11, data_size+4);//ZIGBEE发送单灯开关指令
 	vTaskResume(xBallastComm1Task);
-	
-//	for(delay_n=0;delay_n<0x2800000;delay_n++);//非抢占式
-//	CtrlUnitSend(p+11, data_size+4);//ZIGBEE发送单灯开关指令
 	
 	data = *(p+19);
 	
@@ -731,6 +742,32 @@ void HandleLampOnOff(u8 *p)
 
 	strncpy((char*)buf_temp, (char*)p+15, 5);
 	GPRS_Protocol_Response(LAMPONOFF|0x80, buf_temp, 5);
+}
+
+void HandleUnitRunBack(u8 *p)
+{
+	u8 data_size=0;
+	u8 buf_temp[30];
+//	u16 i;
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!GPRS_Protocol_Check(p, &data_size))
+    return;
+	
+	if((*(p+15) == 0x41) && (*(p+16) == 0x30) && (*(p+17) == 0x30) && (*(p+18) == 0x30))//网关开关灯
+	{
+	  LampRunCtrlTableClear();
+		TunnelStrategyRun();//顺序不能反
+//		for(i=0;i<LampAddr.num;i++)
+//		{
+//			xQueueSend(LampQueryAddrQueue, &LampAttrSortTable[i].addr, configTICK_RATE_HZ*5);//轮询单灯数据
+//		}
+	}
+	
+	strncpy((char*)buf_temp, (char*)p+15, 4);
+	GPRS_Protocol_Response(UNITRUNBACK|0x80, buf_temp, 4);
 }
 
 void GPRSSendUnitDataFun(u16 *addr_bcd, u8 num, u16 pro_type)
@@ -1077,6 +1114,7 @@ void HandleRestart(u8 *p)
 	else if(*(p+15) == 0x33)
 	{
 		EleDMA_TxBuff((char*)p, data_size+18);
+		GPRS_Protocol_Response(RESTART|0x80, p+15, 1);
 	}
 }
 

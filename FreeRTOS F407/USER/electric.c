@@ -2,6 +2,7 @@
 #include "stm32f4xx_usart.h"
 #include "misc.h"
 #include <string.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include "FreeRTOS.h"
 #include "task.h"
@@ -22,6 +23,8 @@
 SemaphoreHandle_t    EleTx_semaphore;
 static xQueueHandle ElectricQueue;
 extern LampBuffType LampAddr;
+extern AlarmParmTypeDef AlarmParm;
+WG_AlarmFlagDef WG_AlarmFlag;
 
 typedef struct 
 {
@@ -34,7 +37,8 @@ const static ElecMessageHandlerMap Electric_MessageMaps[] =  //二位数组的初始化
 {
 	{ELECQUERYACK,      ElecHandleGWDataQuery},       /*0x08; 网关数据查询*/
 	{ELECSOFTQUERYACK,  ElecHandleSoftVerQuery},      /*0x0E; 查电量采集软件版本号*/
-	{ELEFTPUPDATAACK,   ElecHandleFTPUpdata},         /*0x1E; 电量采集模块远程升级*/	                 
+	{ELEFTPUPDATAACK,   ElecHandleFTPUpdata},         /*0x1E; 电量采集模块远程升级*/
+  {ELERESETACK,       ElecHandleReset},            /*0x3F; 电量采集模块复位*/	
 };
 
 
@@ -185,7 +189,6 @@ void DMA2_Stream7_IRQHandler(void)//GSM_DMA发送中断
 	xSemaphoreGive(EleTx_semaphore);
 }
 
-
 void EleDMA_TxBuff(char *buf, u8 buf_size)
 {
 	if(xSemaphoreTake(EleTx_semaphore, configTICK_RATE_HZ * 5) == pdTRUE) 
@@ -206,17 +209,129 @@ static void ElectrolHardwareInit(void)
 	Electric_TX_DMA_Init();
 }
 
+void WG_StateClear(void)
+{
+	WG_AlarmFlag.cable_fault = 0;
+	WG_AlarmFlag.water_alarm = 0;
+	WG_AlarmFlag.door_open = 0;
+	WG_AlarmFlag.temp_fault = 0;
+	
+	WG_AlarmFlag.light_fault = 0;
+  WG_AlarmFlag.cont_off = 0;
+	WG_AlarmFlag.work_cur_high = 0;
+	WG_AlarmFlag.noload_cur_high = 0;
+	
+	WG_AlarmFlag.vol_low = 0;
+	WG_AlarmFlag.vol_high = 0;
+	WG_AlarmFlag.power_down = 0;
+	WG_AlarmFlag.end_loss = 0;
+
+	WG_AlarmFlag.lose_phase = 0;
+	WG_AlarmFlag.pole_fault = 0;
+}
+
+void WG_AlarmFlagCheck(u8 *buf)
+{
+	WG_EleTypeDef WG_Ele;
+	u8 temp[5]={0};
+	
+	strncpy((char *)temp, (char *)buf, 4);
+	WG_Ele.L1_Vol = atoi((const char *)temp);
+	
+	strncpy((char *)temp, (char *)buf+4, 4);
+	WG_Ele.L2_Vol = atoi((const char *)temp);
+	
+	strncpy((char *)temp, (char *)buf+8, 4);
+	WG_Ele.L3_Vol = atoi((const char *)temp);
+	
+	strncpy((char *)temp, (char *)+12, 4);
+	WG_Ele.L1_Cur = atoi((const char *)temp);
+	
+	strncpy((char *)temp, (char *)+16, 4);
+	WG_Ele.L2_Cur = atoi((const char *)temp);
+	
+	strncpy((char *)temp, (char *)+20, 4);
+	WG_Ele.L3_Cur = atoi((const char *)temp);
+	
+	strncpy((char *)temp, (char *)+24, 4);
+	WG_Ele.Zero_Cur = atoi((const char *)temp);
+	
+	if((WG_Ele.L1_Vol <= 5) && (WG_Ele.L2_Vol <= 5) && (WG_Ele.L3_Vol <= 5))//掉电
+	  WG_AlarmFlag.power_down = 1;
+	else if((WG_Ele.L1_Vol <= 5) || (WG_Ele.L2_Vol <= 5) || (WG_Ele.L3_Vol <= 5))//缺相
+	  WG_AlarmFlag.power_down = 1;
+	else if((WG_Ele.L1_Vol < AlarmParm.L1_VolLow) || (WG_Ele.L2_Vol < AlarmParm.L2_VolLow) || (WG_Ele.L3_Vol < AlarmParm.L3_VolLow))//电压过低
+	  WG_AlarmFlag.vol_low = 1;
+	
+	if((WG_Ele.L1_Vol > AlarmParm.L1_VolHigh) || (WG_Ele.L2_Vol > AlarmParm.L2_VolHigh) || (WG_Ele.L3_Vol > AlarmParm.L3_VolHigh))//电压过高
+	  WG_AlarmFlag.vol_high = 1;
+
+  if((WG_Ele.L1_Cur > AlarmParm.L1_CurHigh) || (WG_Ele.L2_Cur > AlarmParm.L2_CurHigh) || (WG_Ele.L3_Cur > AlarmParm.L3_CurHigh) || (WG_Ele.Zero_Cur > AlarmParm.Zero_CurHigh))//电流过高
+	  WG_AlarmFlag.work_cur_high = 1;
+}
+
+u16 WG_StateCheck(void)
+{
+	u16 state=0;
+	
+	if(WG_AlarmFlag.cable_fault == 1)
+		state |= 0x0001; 
+	if(WG_AlarmFlag.water_alarm == 1)
+		state |= 0x0002;
+	if(WG_AlarmFlag.door_open == 1)
+		state |= 0x0004;
+	if(WG_AlarmFlag.temp_fault == 1)
+	  state |= 0x0008;
+	if(WG_AlarmFlag.light_fault == 1)
+		state |= 0x0010;
+  if(WG_AlarmFlag.cont_off == 1)
+	  state |= 0x0020;
+	if(WG_AlarmFlag.work_cur_high == 1)
+		state |= 0x0040;
+	if(WG_AlarmFlag.noload_cur_high == 1)
+		state |= 0x0080;
+	if(WG_AlarmFlag.vol_low == 1)
+		state |= 0x0100;
+	if(WG_AlarmFlag.vol_high == 1)
+		state |= 0x0200;
+	if(WG_AlarmFlag.power_down == 1)
+		state |= 0x0400;
+	if(WG_AlarmFlag.end_loss == 1)
+    state |= 0x0800;
+	if(WG_AlarmFlag.lose_phase == 1)
+		state |= 0x1000;
+	if(WG_AlarmFlag.pole_fault == 1)
+		state |= 0x2000;
+	
+	if((state&0x3FFF) != 0)
+		state |= 0x8000;
+	
+	return state;
+}
+
 void ElecHandleGWDataQuery(u8 *p)
 {
 	u8 data_size=0;
+	u8 *Alar_buf;
 	u16 WriteBuff[20];
 	u16 lamp_num_bcd;
+	u16 WG_State;
+	
+	Alar_buf = p+16;
 	
 	if(!GatewayAddrCheck(p+1))
 		return;
 	
 	if(!GPRS_Protocol_Check(p, &data_size))
     return;
+	
+  WG_AlarmFlagCheck(Alar_buf);
+	WG_State = WG_StateCheck();
+	
+	*(p+16) = hex2chr((WG_State>>12) & 0x000F);
+	*(p+17) = hex2chr((WG_State>>8) & 0x000F);
+	*(p+18) = hex2chr((WG_State>>4) & 0x000F);
+	*(p+19) = hex2chr((WG_State) & 0x000F);
 	
 	NorFlashRead(NORFLASH_MANAGER_PARA1_BASE + NORFLASH_MANAGER_ID_OFFSET, WriteBuff, 6); 
   ConvertToByte(WriteBuff, 6, p+134);
@@ -249,6 +364,20 @@ void ElecHandleSoftVerQuery(u8 *p)
 
 void ElecHandleFTPUpdata(u8 *p)
 {
+	
+}
+
+void ElecHandleReset(u8 *p)
+{
+	u8 data_size;
+	
+	if(!GatewayAddrCheck(p+1))
+		return;
+	
+	if(!GPRS_Protocol_Check(p, &data_size))
+    return;
+	
+	GPRS_Protocol_Response(ELERESETACK, p+15, 1);
 }
 
 static void vElectTask(void *parameter)
@@ -258,7 +387,7 @@ static void vElectTask(void *parameter)
 	
 	for(;;)
 	{
-		if(xQueueReceive(ElectricQueue, &message, configTICK_RATE_HZ / 10) == pdTRUE)
+		if(xQueueReceive(ElectricQueue, &message, portMAX_DELAY) == pdTRUE)
 		{
 			protocol_type = (chr2hex(message[11])<<4 | chr2hex(message[12]));
 			const ElecMessageHandlerMap *map = Electric_MessageMaps;
@@ -282,5 +411,6 @@ void ElectricInit(void)
 	EleRxTxDataInit();
 	EleTx_semaphore = xSemaphoreCreateMutex();
   ElectricQueue = xQueueCreate(10, sizeof(EleRxData.Buff));	
-	xTaskCreate(vElectTask, "ElectTask", ELECTRIC_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &xElectTask);
+	WG_StateClear();
+	xTaskCreate(vElectTask, "ElectTask", ELECTRIC_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, &xElectTask);
 }

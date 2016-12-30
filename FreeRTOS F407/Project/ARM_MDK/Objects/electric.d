@@ -36,6 +36,7 @@
 .\objects\electric.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h
 .\objects\electric.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h
 .\objects\electric.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\electric.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\electric.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\electric.o: ..\..\FreeRTOS\Source\include\FreeRTOS.h
 .\objects\electric.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h

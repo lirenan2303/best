@@ -65,7 +65,7 @@ static void vTimePlanTask(void *parameter)
 	TimeTypeDef time,upload_time;
 	u32 last_upload_time_min,now_time_min,time_invl;
 	u16 i,temp[10];
-	u8 WG_query[]= {0x02,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x30,0x38,0x30,0x31,0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x33,0x42,0x03};
+	u8 WG_query[]= {0x02,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x30,0x38,0x30,0x39,0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x33,0x42,0x03};
 	int NetTimeResetMonth;
 	
 	if((RTC_ReadBackupRegister(UP_DATE_BACKUP) == 0) && (RTC_ReadBackupRegister(UP_TIME_BACKUP) == 0))
@@ -78,7 +78,7 @@ static void vTimePlanTask(void *parameter)
 		NorFlashRead(NORFLASH_MANAGER_PARA1_BASE + NORFLASH_DATA_UPDATA_INVL_OPPSET, temp, 2);
 		
 		if((temp[0] == 0xFFFF) || (temp[1] == 0xFFFF))
-			time_invl = 30;
+			time_invl = 60;
 		else
 			time_invl = (chr2hex(temp[0])<<4) + chr2hex(temp[1]);//上传时间间隔
 		
@@ -128,5 +128,5 @@ TaskHandle_t xTimePlanTask;
 
 void TimePlanInit(void)
 {
-  xTaskCreate(vTimePlanTask, "TimePlanTask", UPLOAD_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 5, &xTimePlanTask);
+  xTaskCreate(vTimePlanTask, "TimePlanTask", UPLOAD_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, &xTimePlanTask);
 }

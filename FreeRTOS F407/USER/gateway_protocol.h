@@ -21,6 +21,7 @@ typedef enum
 	READLAMPDATA = 0x06,    /*读镇流器数据*/
 	BRANCHCTRL = 0x07,      /*网关回路控制*/
 	DATAQUERY = 0x08,       /*网关数据查询*/
+	UNITRUNBACK = 0x0A,     /*单灯自主运行*/
 	TIMEADJUST = 0x0B,      /*校时*/
 	VERSIONQUERY = 0x0C,    /*网关软件版本号查询*/ 
   ELECVERSION = 0x0E,     /*电量采集软件版本号查询*/	
@@ -86,6 +87,7 @@ void GPRSSendUnitDataFun(u16 *addr_bcd, u8 num, u16 pro_type);
 void HandleReadBSNData(u8 *p);
 void HandleBranchOnOff(u8 *p);
 void HandleGWDataQuery(u8 *p);
+void HandleUnitRunBack(u8 *p);
 void HandleGWVersQuery(u8 *p);
 void HandleElecVersQuery(u8 *p);
 void HandleGWAddrQuery(u8 *p);
