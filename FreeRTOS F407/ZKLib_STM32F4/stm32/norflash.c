@@ -5,14 +5,43 @@
 #include "semphr.h"
 #include "norflash.h"
 #include "sys_debug.h"
+#include "gsm.h"
+#include "norflash.h"
+#include <string.h>
 
 static SemaphoreHandle_t norflash_semaphore;
+
+void NorFlashDataInit(void)
+{
+	u16 readbuff[15]={0};
+	u16 buff[50]={0};
+	WG_ServerParameterType   DebugWG_ServerPara;
+	
+	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_ADDR, readbuff, (MANAGER_ADDR_LENGTH + 1) / 2);
+	if(NorflashDataCheck(readbuff, (MANAGER_ADDR_LENGTH + 1) / 2) == EMPTY)
+	{
+		strcpy((char*)buff, "9999999999");
+		NorFlashWrite(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_ADDR, buff, (MANAGER_ADDR_LENGTH + 1) / 2);
+	}
+	
+	memset(buff, 0, sizeof(buff));
+	
+	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_IP1_PORT1, readbuff, (sizeof(DebugWG_ServerPara) + 1)/ 2);	
+	if(NorflashDataCheck(readbuff, (sizeof(DebugWG_ServerPara) + 1)/2) == EMPTY)
+	{
+		strcpy((char*)buff, "61.190.38.46");
+		strcpy((char*)buff+16, "30001");	
+		NorFlashWrite(NORFLASH_ADDR_BASE + NORFLASH_IP1_PORT1, buff, sizeof(buff)/2);
+	}
+}
 
 void NorFlashInit(void)
 {
   FSMC_NOR_Init();
-	
+
 	norflash_semaphore = xSemaphoreCreateMutex();
+	
+	NorFlashDataInit();
 }
 
 void NorFlashWrite(u32 addr, const u16 *ram, int len)

@@ -32,6 +32,7 @@ u8 UnitWaitFlag;
 u8 UnitQueryState;
 extern u16 QueryUnitAddrBCD;
 extern u8 WG_State;
+extern u8 UnitErrorNum;
 extern AlarmParmTypeDef AlarmParm;
 extern WG_AlarmFlagDef WG_AlarmFlag;
 
@@ -223,7 +224,7 @@ static void vBallastComm1Task(void *parameter)
 	u8 wait_count = 0;
 	u16 QueueAddrBCD,recv_addr_bcd,unit_addr_hex;
 	
-  vTaskDelay(3000/portTICK_RATE_MS);//延迟3s采样单灯数据
+  vTaskDelay(2000/portTICK_RATE_MS);//延迟2s采样单灯数据
 	
 	UnitWaitFlag = WAIT_READDATA_REPLY;
 	UnitQueryState = AUTO_QUERY;
@@ -287,7 +288,7 @@ static void vBallastComm1Task(void *parameter)
 			
 			if(uxQueueMessagesWaiting(LampQueryAddrQueue) != 0)
 			{
-				vTaskDelay(3000/portTICK_RATE_MS);//延迟3s被动采样单灯数据
+				vTaskDelay(1200/portTICK_RATE_MS);//延迟1.2s被动采样单灯数据
 			  break;
 			}
       else
@@ -301,6 +302,8 @@ static void vBallastComm1Task(void *parameter)
 					
 					if(recv_addr_bcd == QueryUnitAddrBCD)
 					{
+						UnitErrorNum = 0;//清除连续灯不亮数目
+						
 						protocol_type = (chr2hex(message[5])<<4 | chr2hex(message[6]));
 						const UnitMessageHandlerMap *map = Ballast_MessageMaps;
 						for(; map->type != UNITPROTOCOL_NULL; ++map)
@@ -313,7 +316,9 @@ static void vBallastComm1Task(void *parameter)
 						}
 						
 						if(UnitWaitFlag == WAIT_READDATA_REPLY)
-						  QueryNextAddr();
+							QueryNextAddr();
+						
+
 						wait_count = 0;
 				  }
 			  }

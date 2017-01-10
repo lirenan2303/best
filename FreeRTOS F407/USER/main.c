@@ -19,7 +19,7 @@
 
 extern void WatchdogInit(void);
 extern void NorFlashInit(void);
-
+	
 const char Sofeware_Version[] = "Software Version: V1.01  \r\n";
 const char Complie_Time[] = "Compile Date: " __DATE__ "  " __TIME__;
 
@@ -38,10 +38,10 @@ int main(void)
 	AllParaInit();
 	AllTableInit();
 
-  printf_str("\r\n/********************************************************/\r\n"); 
-  printf_str((char*)Sofeware_Version);
-	printf_str((char*)Complie_Time);
-  printf_str("\r\n/****************  COPYRIGHT  2016  DMKJ  ***************/\r\n");
+//  printf_str("\r\n/********************************************************/\r\n"); 
+//  printf_str((char*)Sofeware_Version);
+//	printf_str((char*)Complie_Time);
+//  printf_str("\r\n/****************  COPYRIGHT  2016  DMKJ  ***************/\r\n");
   vTaskStartScheduler();
 	
 	return 0;

@@ -52,4 +52,8 @@
 .\objects\sys_debug.o: ..\..\ZKLib_STM32F4\stm32\norflash.h
 .\objects\sys_debug.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\sys_debug.o: ..\..\ZKLib_STM32F4\stm32\fsmc_nor.h
+.\objects\sys_debug.o: ..\..\USER\table_process.h
 .\objects\sys_debug.o: ..\..\USER\gsm.h
+.\objects\sys_debug.o: ..\..\ZKLib_STM32F4\stm32\rtc.h
+.\objects\sys_debug.o: ..\..\USER\common.h
+.\objects\sys_debug.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h

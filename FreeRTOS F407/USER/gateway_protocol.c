@@ -367,7 +367,7 @@ void HandleLampParam(u8 *p)
 		}
 	}
 	buf_temp[4*lamp_param_num] = *(p+15);
-	GPRS_Protocol_Response(LAMPPARAM|0xC0, buf_temp, 4*lamp_param_num+1);
+	GPRS_Protocol_Response(LAMPPARAM|0x80, buf_temp, 4*lamp_param_num+1);
 }
 
 void HandleLampStrategy(u8 *p)
@@ -448,26 +448,6 @@ void branch_state_update(u8 branch, u8 state)//强制开接触器 更新回路单灯状态
 		
 		xQueueSend(LampQueryAddrQueue, &LampAttrSortTable[i].addr, configTICK_RATE_HZ*5);//轮询相应的zigbee地址
 	}
-}
-
-void KM_Unit_branch_state(void)
-{
-	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL1, PIN_KM_CTRL1) == KM_OFF)
-		branch_state_update(1, HARDWARE_CLOSE);
-	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL2, PIN_KM_CTRL2) == KM_OFF)
-		branch_state_update(2, HARDWARE_CLOSE);
-	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL3, PIN_KM_CTRL3) == KM_OFF)
-		branch_state_update(3, HARDWARE_CLOSE);
-	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL4, PIN_KM_CTRL4) == KM_OFF)
-		branch_state_update(4, HARDWARE_CLOSE);
-	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL5, PIN_KM_CTRL5) == KM_OFF)
-		branch_state_update(5, HARDWARE_CLOSE);
-	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL6, PIN_KM_CTRL6) == KM_OFF)
-		branch_state_update(6, HARDWARE_CLOSE);
-	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL7, PIN_KM_CTRL7) == KM_OFF)
-		branch_state_update(7, HARDWARE_CLOSE);
-	if(GPIO_ReadOutputDataBit(GPIO_KM_CTRL8, PIN_KM_CTRL8) == KM_OFF)
-		branch_state_update(8, HARDWARE_CLOSE);
 }
 
 void unit_ctrl(u8 branch, u8 segment, u16 addr, u8 cmd, u8 data)//软开关单灯 主辅道 调光
@@ -962,7 +942,7 @@ void HandleElecVersQuery(u8 *p)
 void HandleGWAddrQuery(u8 *p)
 {
 	u8 data_size=0;
-	u8 buf_temp[5];
+	u8 buf_temp[20];
 	
 	if(!GatewayAddrCheck(p+1))
 		return;
@@ -970,8 +950,8 @@ void HandleGWAddrQuery(u8 *p)
 	if(!GPRS_Protocol_Check(p, &data_size))
     return;
 	
-	strncpy((char*)buf_temp, (char*)p+15, 4);
-	GPRS_Protocol_Response(GWADDRQUERY|0x80, buf_temp, 4);
+	strncpy((char*)buf_temp, (char*)p+15, 16);
+	GPRS_Protocol_Response(GWADDRQUERY|0x80, buf_temp, 16);
 }
 
 void HandleSetIPPort(u8 *p)
@@ -1030,12 +1010,12 @@ void CSQ_Reply(char *p)
 			NVIC_SystemReset();
 	}
 	
-  sscanf(p,"+CSQ: %d,%d", &signel_value, &error_rate);
+  sscanf(p,"%*[^:]:%x,%x", &signel_value, &error_rate);
 	
-	buf_temp[0] = hex2chr(signel_value & 0x0F);
-	buf_temp[1] = hex2chr((signel_value>>4) & 0x0F);
-	buf_temp[2] = hex2chr(error_rate & 0x0F);
-	buf_temp[3] = hex2chr((error_rate>>4) & 0x0F);
+	buf_temp[0] = hex2chr((signel_value>>4) & 0x0F);
+	buf_temp[1] = hex2chr(signel_value & 0x0F);
+	buf_temp[2] = hex2chr((error_rate>>4) & 0x0F);
+	buf_temp[3] = hex2chr(error_rate & 0x0F);
 	
 	GPRS_Protocol_Response(GPRSQUALITY|0x80, buf_temp, 4);//信号强度表示方法
 }
@@ -1116,6 +1096,18 @@ void HandleRestart(u8 *p)
 		EleDMA_TxBuff((char*)p, data_size+18);
 		GPRS_Protocol_Response(RESTART|0x80, p+15, 1);
 	}
+}
+
+void HandleSend(u8 *p)
+{
+	u8 data_size=0;
+	u8 function;
+	
+	if(!GPRS_Protocol_Check(p, &data_size))
+		return;
+			
+	function = (chr2hex(*(p+11))<<4 | chr2hex(*(p+12)));
+	GPRS_Protocol_Response(function, p+15, data_size);
 }
 
 void AllParaInit(void)

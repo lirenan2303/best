@@ -16,14 +16,16 @@
 #include "gateway_protocol.h"
 #include "table_process.h"
 #include "sys_debug.h"
+#include "km_ctrl.h"
 
 #define ELECTRIC_TASK_STACK_SIZE		(configMINIMAL_STACK_SIZE + 1024*1)
-#define ELECTRIC_BUFF_SIZE  200
+#define ELECTRIC_BUFF_SIZE  200 //与gprs队列必须相等
 
 SemaphoreHandle_t    EleTx_semaphore;
-static xQueueHandle ElectricQueue;
+xQueueHandle ElectricQueue;
 extern LampBuffType LampAddr;
 extern AlarmParmTypeDef AlarmParm;
+extern xQueueHandle  GSM_GPRS_queue;
 WG_AlarmFlagDef WG_AlarmFlag;
 
 typedef struct 
@@ -38,7 +40,7 @@ const static ElecMessageHandlerMap Electric_MessageMaps[] =  //二位数组的初始化
 	{ELECQUERYACK,      ElecHandleGWDataQuery},       /*0x08; 网关数据查询*/
 	{ELECSOFTQUERYACK,  ElecHandleSoftVerQuery},      /*0x0E; 查电量采集软件版本号*/
 	{ELEFTPUPDATAACK,   ElecHandleFTPUpdata},         /*0x1E; 电量采集模块远程升级*/
-  {ELERESETACK,       ElecHandleReset},            /*0x3F; 电量采集模块复位*/	
+  {ELERESETACK,       ElecHandleReset},             /*0x3F; 电量采集模块复位*/	
 };
 
 
@@ -164,7 +166,7 @@ void USART1_IRQHandler(void)
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
 	{
     data = USART_ReceiveData(USART1);
-		printf_buff(&data, 1);//调试
+//		printf_buff(&data, 1);//调试
 	  if(data == 0x02)
 		{
 			ElectricRxDataClear(&EleRxData);
@@ -270,6 +272,30 @@ void WG_AlarmFlagCheck(u8 *buf)
 	  WG_AlarmFlag.work_cur_high = 1;
 }
 
+void WG_DataSample(u8 branch)
+{
+	u8 checksum;
+  u8 buf_1[30]= {0x02,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x30,0x38,0x30,0x31};
+	u8 buf_2[]= {0x02,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x30,0x38,0x30,0x39,0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x33,0x42,0x03};
+  
+	if(branch == 0xFF)
+	{
+		xQueueSend(GSM_GPRS_queue, &buf_2, configTICK_RATE_HZ*5);//网关数据查询
+	}
+	else if(branch <= 8)
+	{
+		buf_1[15] = hex2chr(branch);
+		
+		checksum = BCC_CheckSum(buf_1, 16);
+		buf_1[16] = hex2chr((checksum>>4)&0x0F);
+		buf_1[17] = hex2chr( checksum & 0x0F  );
+		
+		buf_1[18] = 0x03;
+		
+		xQueueSend(GSM_GPRS_queue, &buf_1, configTICK_RATE_HZ*5);//网关数据查询
+	}
+}
+
 u16 WG_StateCheck(void)
 {
 	u16 state=0;
@@ -309,13 +335,13 @@ u16 WG_StateCheck(void)
 	return state;
 }
 
-void ElecHandleGWDataQuery(u8 *p)
+void ElecHandleGWDataQuery(u8 *p) 
 {
 	u8 data_size=0;
 	u8 *Alar_buf;
 	u16 WriteBuff[20];
 	u16 lamp_num_bcd;
-	u16 WG_State;
+	u16 WG_State,KM_State;
 	
 	Alar_buf = p+16;
 	
@@ -327,11 +353,14 @@ void ElecHandleGWDataQuery(u8 *p)
 	
   WG_AlarmFlagCheck(Alar_buf);
 	WG_State = WG_StateCheck();
-	
 	*(p+16) = hex2chr((WG_State>>12) & 0x000F);
 	*(p+17) = hex2chr((WG_State>>8) & 0x000F);
 	*(p+18) = hex2chr((WG_State>>4) & 0x000F);
 	*(p+19) = hex2chr((WG_State) & 0x000F);
+	
+	KM_State = KM_Unit_branch_state();
+	*(p+20) = hex2chr((KM_State>>4) & 0x000F);
+	*(p+21) = hex2chr((KM_State) & 0x000F);
 	
 	NorFlashRead(NORFLASH_MANAGER_PARA1_BASE + NORFLASH_MANAGER_ID_OFFSET, WriteBuff, 6); 
   ConvertToByte(WriteBuff, 6, p+134);
@@ -346,7 +375,8 @@ void ElecHandleGWDataQuery(u8 *p)
 	RTC_TimeToChar(WriteBuff);
   ConvertToByte(WriteBuff, 12, p+144);
 	
-	GPRS_Protocol_Response(ELECQUERYACK, p+15, data_size);
+//	GPRS_Protocol_Response(ELECQUERYACK, p+15, data_size);
+  xQueueSend(GSM_GPRS_queue, p, configTICK_RATE_HZ*5);
 }
 
 void ElecHandleSoftVerQuery(u8 *p)
@@ -359,7 +389,8 @@ void ElecHandleSoftVerQuery(u8 *p)
 	if(!GPRS_Protocol_Check(p, &data_size))
     return;
 	
-	GPRS_Protocol_Response(ELECSOFTQUERYACK, p+15, 3);
+//	GPRS_Protocol_Response(ELECSOFTQUERYACK, p+15, 3);
+	xQueueSend(GSM_GPRS_queue, p, configTICK_RATE_HZ*5);
 }
 
 void ElecHandleFTPUpdata(u8 *p)
@@ -377,7 +408,8 @@ void ElecHandleReset(u8 *p)
 	if(!GPRS_Protocol_Check(p, &data_size))
     return;
 	
-	GPRS_Protocol_Response(ELERESETACK, p+15, 1);
+//	GPRS_Protocol_Response(ELERESETACK, p+15, 1);
+	xQueueSend(GSM_GPRS_queue, p, configTICK_RATE_HZ*5);
 }
 
 static void vElectTask(void *parameter)

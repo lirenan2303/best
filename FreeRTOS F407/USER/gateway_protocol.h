@@ -33,6 +33,10 @@ typedef enum
 	TUNNELSTRATEGY = 0x22,  /*隧道内网关策略下载*/
 	LUXVALUE = 0x43,        /*接收到光强度值*/
 	RESTART = 0x3F,         /*设备复位*/
+	SENDELEC = 0x88,        /*网关数据查询*/
+	SENDELECSOFT = 0x8E,    /*电量板版本号查询*/
+	SENDELEFTPUP = 0x9E,    /*电量板FTP升级*/
+	SENDELERESET = 0xBF,    /*电量板复位*/
 	WGPROTOCOL_NULL,        /*保留*/
 }WGProtocolType;
 
@@ -96,6 +100,7 @@ void HandleSignalQuality(u8 *p);
 void HandleRestart(u8 *p);
 void HandleAdjustTime(u8 *p);
 void HandleGWUpgrade(u8 *P);
+void HandleSend(u8 *p);
 
 void AllParaInit(void);
 

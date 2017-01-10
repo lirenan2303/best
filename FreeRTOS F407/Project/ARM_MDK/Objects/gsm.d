@@ -56,5 +56,6 @@
 .\objects\gsm.o: ..\..\ZKLib_STM32F4\stm32\rtc.h
 .\objects\gsm.o: ..\..\USER\gateway_protocol.h
 .\objects\gsm.o: ..\..\USER\ballast_protocol.h
+.\objects\gsm.o: ..\..\USER\electric.h
 .\objects\gsm.o: ..\..\USER\common.h
 .\objects\gsm.o: ..\..\USER\sys_debug.h

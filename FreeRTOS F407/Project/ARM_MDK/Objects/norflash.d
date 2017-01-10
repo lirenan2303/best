@@ -51,3 +51,5 @@
 .\objects\norflash.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\norflash.o: ..\..\ZKLib_STM32F4\stm32\fsmc_nor.h
 .\objects\norflash.o: ..\..\USER\sys_debug.h
+.\objects\norflash.o: ..\..\USER\gsm.h
+.\objects\norflash.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

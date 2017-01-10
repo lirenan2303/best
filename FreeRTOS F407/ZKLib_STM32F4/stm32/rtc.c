@@ -1,53 +1,42 @@
 #include "stdio.h"
+#include <stdlib.h>
+#include <string.h>
 #include "rtc.h"
 #include "stm32f4xx_exti.h"
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_pwr.h"
 #include "stm32f4xx_gpio.h"
+#include "lat_longitude.h"
 #include "misc.h"
 #include "FreeRTOS.h"
 #include "semphr.h"
 #include "task.h"
 #include "delay.h"
 #include "common.h"
+#include "time_plan.h"
 
 SemaphoreHandle_t RTC_SystemRunningSemaphore;
 NVIC_InitTypeDef   NVIC_InitStructure;
 
-//void RTC_WKUP_IRQHandler(void)
-//{
-//	if(RTC_GetFlagStatus(RTC_FLAG_WUTF)==SET)//WK_UP中断
-//  {
-//		portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-//		RTC_ClearFlag(RTC_FLAG_WUTF);	//清除中断标志
-//		xSemaphoreGiveFromISR(RTC_SystemRunningSemaphore, &xHigherPriorityTaskWoken);
-//		if (xHigherPriorityTaskWoken) 
-//		{
-//			taskYIELD();
-//		}
-//  }
-//}
-
-//cnt:自动重装载值.减到0,产生中断
-//void RTC_Set_WakeUp(u32 wksel,u16 cnt)
-//{
-//	RTC_WakeUpCmd(DISABLE);//关闭WAKE UP
-//	
-//	RTC_WakeUpClockConfig(wksel);//唤醒时钟选择
-//	
-//	RTC_SetWakeUpCounter(cnt);//设置WAKE UP自动重装载寄存器
-
-//	RTC_ClearITPendingBit(RTC_IT_WUT); //清除RTC WAKE UP的标志
-//	 
-//	RTC_ITConfig(RTC_IT_WUT,ENABLE);//开启WAKE UP 定时器中断
-//	RTC_WakeUpCmd(ENABLE);//开启WAKE UP 定时器　
-//	
-//	NVIC_InitStructure.NVIC_IRQChannel = RTC_WKUP_IRQn; 
-//  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 15;//抢占优先级1
-//  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;//子优先级2
-//  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;//使能外部中断通道
-//  NVIC_Init(&NVIC_InitStructure);//配置
-//}
+void RTC_BackUpCheck(void)
+{
+	u32 temp[2]={0};
+	char Zone_re[4] = "+8\r";
+	
+	if(RTC_ReadBackupRegister(CENTURY_BACKUP) != 20)
+	{
+		PWR_BackupAccessCmd(ENABLE);	
+		RTC_WriteBackupRegister(CENTURY_BACKUP,20);	//世纪备份
+	}
+	
+	temp[0] = RTC_ReadBackupRegister(ZONE_BACKUP);
+	if(strstr((char*)temp, "\r") == NULL)
+	{
+		strcpy((char*)temp, Zone_re);
+		PWR_BackupAccessCmd(ENABLE);	
+		RTC_WriteBackupRegister(ZONE_BACKUP,temp[0]);	//时区备份
+	}
+}
 
 
 u8 RtcInit(void)
@@ -59,7 +48,7 @@ u8 RtcInit(void)
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);//使能PWR时钟
 	PWR_BackupAccessCmd(ENABLE);	//使能后备寄存器访问 
 	
-	if(RTC_ReadBackupRegister(RTC_BKP_DR0)!=0xA5A5)		//是否第一次配置? 0xA5A5为人为定义是否配置标准
+	if(RTC_ReadBackupRegister(RTC_INIT_FLAG)!=0xA5A5)		//是否第一次配置? 0xA5A5为人为定义是否配置标准
 	{
 		RCC_LSEConfig(RCC_LSE_ON);//LSE 开启
 		while (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET);	//检查指定的RCC标志位设置与否,等待低速晶振就绪
@@ -72,12 +61,10 @@ u8 RtcInit(void)
     RTC_InitStructure.RTC_HourFormat   = RTC_HourFormat_24;//RTC设置为,24小时格式
     RTC_Init(&RTC_InitStructure);
 	 
-		RTC_WriteBackupRegister(RTC_BKP_DR0,0xA5A5);	//标记已经初始化过了
-		
-		RTC_WriteBackupRegister(RTC_BKP_DR1,20);	//世纪备份
-		
-		RTC_WriteBackupRegister(RTC_BKP_DR2,32);	//时区备份
+		RTC_WriteBackupRegister(RTC_INIT_FLAG,0xA5A5);	//标记已经初始化过了
 	}
+	
+	RTC_BackUpCheck();
 	
 	return true;
 }
@@ -113,19 +100,19 @@ void UpdataNetTime(char *p)
   RTC_TimeTypeDef RTC_TimeTypeInitStructure;
 	char buf[30];
 	short temp[10];
-	int Zone_value = 0;
+//	int Zone_value = 0;
 	
 	sscanf(p, "%*s%s", buf); 
 	
   if(sscanf(buf,"\"%hd/%hd/%hd,%hd:%hd:%hd+%hd\"",&temp[0],&temp[1],&temp[2],&temp[3],&temp[4], &temp[5], &temp[6]) != 7)//检查校时字符串格式是否正确
     return;
 	
-	Zone_value = temp[6];
-	if(RTC_ReadBackupRegister(ZONE_BACKUP) != Zone_value)
-	{
-	  PWR_BackupAccessCmd(ENABLE);	//使能后备寄存器访问 
-	  RTC_WriteBackupRegister(ZONE_BACKUP,Zone_value);	//时区备份
-	}
+//	Zone_value = temp[6];
+//	if(RTC_ReadBackupRegister(ZONE_BACKUP) != Zone_value)
+//	{
+//	  PWR_BackupAccessCmd(ENABLE);	//使能后备寄存器访问 
+//	  RTC_WriteBackupRegister(ZONE_BACKUP,Zone_value);	//时区备份
+//	}
 
 	RTC_DateTypeInitStructure.RTC_Year = Bcd2ToByte(chr2hex(buf[1])<<4 | chr2hex(buf[2]));
 	RTC_DateTypeInitStructure.RTC_Month = Bcd2ToByte(chr2hex(buf[4])<<4 | chr2hex(buf[5]));
@@ -195,18 +182,5 @@ void ReadRTC_Time(uint32_t rtc_format, TimeTypeDef* TimeStruct)
 	  TimeStruct->week = RTC_DateTypeInitStructure.RTC_WeekDay;
 		
 		xSemaphoreGive(RTC_SystemRunningSemaphore);
-	}
-}
-
-void ReadUpload_Time(u32 type, TimeTypeDef *TimeStruct)
-{
-	if(type == RTC_Format_BIN)
-	{
-		TimeStruct->sec = (RTC_ReadBackupRegister(UP_TIME_BACKUP)&0x000000FF);
-	  TimeStruct->min = ((RTC_ReadBackupRegister(UP_TIME_BACKUP)>>8)&0x000000FF);
-	  TimeStruct->hour = (RTC_ReadBackupRegister(UP_TIME_BACKUP)>>16);
-	  TimeStruct->day = (RTC_ReadBackupRegister(UP_DATE_BACKUP)&0x000000FF);
-	  TimeStruct->mon = ((RTC_ReadBackupRegister(UP_DATE_BACKUP)>>8)&0x000000FF);
-	  TimeStruct->year = (RTC_ReadBackupRegister(UP_DATE_BACKUP)>>16);
 	}
 }

@@ -60,3 +60,4 @@
 .\objects\electric.o: ..\..\USER\gateway_protocol.h
 .\objects\electric.o: ..\..\USER\table_process.h
 .\objects\electric.o: ..\..\USER\sys_debug.h
+.\objects\electric.o: ..\..\USER\km_ctrl.h

@@ -1,5 +1,7 @@
 .\objects\rtc.o: ..\..\ZKLib_STM32F4\stm32\rtc.c
 .\objects\rtc.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\rtc.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\rtc.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\rtc.o: ..\..\ZKLib_STM32F4\stm32\rtc.h
 .\objects\rtc.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\rtc.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
@@ -38,6 +40,7 @@
 .\objects\rtc.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dac.h
 .\objects\rtc.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_dcmi.h
 .\objects\rtc.o: ..\..\Libraries\FWLIB\inc\stm32f4xx_fsmc.h
+.\objects\rtc.o: ..\..\USER\lat_longitude.h
 .\objects\rtc.o: ..\..\FreeRTOS\Source\include\FreeRTOS.h
 .\objects\rtc.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\rtc.o: ..\..\FreeRTOS\FreeRTOSConfig.h
@@ -52,3 +55,4 @@
 .\objects\rtc.o: ..\..\FreeRTOS\Source\include\list.h
 .\objects\rtc.o: ..\..\ZKLib_STM32F4\stm32\delay.h
 .\objects\rtc.o: ..\..\USER\common.h
+.\objects\rtc.o: ..\..\USER\time_plan.h

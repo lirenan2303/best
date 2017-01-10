@@ -14,6 +14,7 @@
 #include "rtc.h"
 #include "gateway_protocol.h"
 #include "ballast_protocol.h"
+#include "electric.h"
 #include "common.h"
 #include "sys_debug.h"
 
@@ -35,6 +36,7 @@ TaskHandle_t xGSMTaskHandle;
 SemaphoreHandle_t    GsmTx_semaphore;
 xQueueHandle  GSM_GPRS_queue;
 extern xQueueHandle  GPRSSendAddrQueue;
+extern xQueueHandle ElectricQueue;
 xQueueHandle  GSM_AT_queue;
 
 WG_ServerParameterType   WG_ServerParameter;
@@ -70,25 +72,29 @@ FrameTypeList FrameType_Flag;
 
 const static WGMessageHandlerMap GPRS_MessageMaps[] =  //二位数组的初始化
 {
-	{GATEPARAM,        HandleGatewayParam},     /*0x01; 网关参数下载*/           
-	{LAMPPARAM,        HandleLampParam},        /*0x02; 灯参数下载*/  
-	{LAMPSTRATEGY,     HandleLampStrategy},     /*0x03; 灯策略下载*/
-	{LAMPDIMMING,      HandleLampDimmer},       /*0x04; 灯调光控制*/
-	{LAMPONOFF,        HandleLampOnOff},        /*0x05; 灯开关控制*/
-	{READLAMPDATA,     HandleReadBSNData},      /*0x06; 读镇流器数据*/
-	{BRANCHCTRL,       HandleBranchOnOff},      /*0x07; 网关回路控制*/
-	{DATAQUERY,        HandleGWDataQuery},      /*0x08; 网关数据查询*/
-	{UNITRUNBACK,      HandleUnitRunBack},      /*0x0A; 单灯自主运行*/
-	{TIMEADJUST,       HandleAdjustTime},       /*0x0B; 校时*/
-	{VERSIONQUERY,     HandleGWVersQuery},      /*0x0C; 查网关软件版本号*/ 
-  {ELECVERSION,      HandleElecVersQuery},    /*0x0E; 查电量板软件版本号*/	
-	{GWADDRQUERY,      HandleGWAddrQuery},      /*0x11; 查网关地址*/
-	{SETSERVERIPPORT,  HandleSetIPPort},        /*0x14; 设置目标服务器IP和端口*/
-	{GATEUPGRADE,      HandleGWUpgrade},        /*0x15; 网关远程升级*/
-	{GPRSQUALITY,      HandleSignalQuality},    /*0x17; gprs信号强度*/
-	{TUNNELSTRATEGY,   HandleTunnelStrategy},   /*0x22; 隧道策略下载*/                    
-	{RESTART,          HandleRestart},          /*0x3F; 设备复位*/    
-  {WGPROTOCOL_NULL,  NULL},                   /*保留*/  	
+	{GATEPARAM,         HandleGatewayParam},     /*0x01; 网关参数下载*/           
+	{LAMPPARAM,         HandleLampParam},        /*0x02; 灯参数下载*/  
+	{LAMPSTRATEGY,      HandleLampStrategy},     /*0x03; 灯策略下载*/
+	{LAMPDIMMING,       HandleLampDimmer},       /*0x04; 灯调光控制*/
+	{LAMPONOFF,         HandleLampOnOff},        /*0x05; 灯开关控制*/
+	{READLAMPDATA,      HandleReadBSNData},      /*0x06; 读镇流器数据*/
+	{BRANCHCTRL,        HandleBranchOnOff},      /*0x07; 网关回路控制*/
+	{DATAQUERY,         HandleGWDataQuery},      /*0x08; 网关数据查询*/
+	{UNITRUNBACK,       HandleUnitRunBack},      /*0x0A; 单灯自主运行*/
+	{TIMEADJUST,        HandleAdjustTime},       /*0x0B; 校时*/
+	{VERSIONQUERY,      HandleGWVersQuery},      /*0x0C; 查网关软件版本号*/ 
+  {ELECVERSION,       HandleElecVersQuery},    /*0x0E; 查电量板软件版本号*/	
+	{GWADDRQUERY,       HandleGWAddrQuery},      /*0x11; 查网关地址*/
+	{SETSERVERIPPORT,   HandleSetIPPort},        /*0x14; 设置目标服务器IP和端口*/
+	{GATEUPGRADE,       HandleGWUpgrade},        /*0x15; 网关远程升级*/
+	{GPRSQUALITY,       HandleSignalQuality},    /*0x17; gprs信号强度*/
+	{TUNNELSTRATEGY,    HandleTunnelStrategy},   /*0x22; 隧道策略下载*/                    
+	{RESTART,           HandleRestart},          /*0x3F; 设备复位*/
+	{SENDELEC,          HandleSend},             /*0x88; 网关数据查询*/
+	{SENDELECSOFT,      HandleSend},             /*0x8E; 查电量采集软件版本号*/
+	{SENDELEFTPUP,      HandleSend},             /*0x9E; 电量采集模块远程升级*/
+  {SENDELERESET,      HandleSend},             /*0x3F; 电量采集模块复位*/	
+  {WGPROTOCOL_NULL,   NULL},                    /*保留*/  	
 };
  
 static void GSM_USART_Init(void)
@@ -245,7 +251,7 @@ void USART3_IRQHandler(void)
 	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET) 
 	{
     data = USART_ReceiveData(GSM_COM);
-		printf_buff(&data, 1);
+//		printf_buff(&data, 1);
     Frame_Judge(&GsmRxData,data);
 		if(FrameType_Flag == GPRS_TYPE)
 		{
@@ -421,6 +427,10 @@ void SimSendData(u8 *buf,u8 buf_size)//发送gprs数据到服务器
 			}
 		}
 	}
+#if (RUN_DEBUG_MODE == 1)
+	printf_str("\r\nSend: ");
+	printf_buff(buf, buf_size);
+#endif
   GsmDMA_TxBuff((char*)buf,buf_size);
 	
 	Heart_lastT = xTaskGetTickCount();
@@ -578,11 +588,9 @@ static void HeartRemainTCPConnect(void)
 	u8 ManagementAddr[MANAGER_ADDR_LENGTH];
 	
 	NorFlashRead(NORFLASH_ADDR_BASE + NORFLASH_MANAGER_ADDR, (u16 *)ManagementAddr, (MANAGER_ADDR_LENGTH + 1)/ 2);
-	*p = 0x02;
-	strncpy((char*)(p+1), (char*)ManagementAddr, MANAGER_ADDR_LENGTH);
-	*(p+MANAGER_ADDR_LENGTH+1) = 0x03;
-	
-  SimSendData(buf,12);
+	strncpy((char*)p, (char*)ManagementAddr+7, 3);
+
+  SimSendData(buf,3);
 }
 
 static void GSMInitHardware(void)
@@ -595,7 +603,7 @@ static void GSMInitHardware(void)
 static void vGSMTask(void *parameter)
 {
 	u8 message[sizeof(GsmRxData.Buff)];
-	u8 protocol_type,i;
+	u8 protocol_type,i,prin_size;
 	u8 num,reset_flag = 0x31;
 	u16 addr[10];
   portTickType CSQ_TCP_lastT=0;
@@ -620,6 +628,10 @@ static void vGSMTask(void *parameter)
 		{
 			if(GsmStartConnect() == ERROR)
 			  NVIC_SystemReset();
+		}
+		if(uxQueueMessagesWaiting(GSM_GPRS_queue) <= 1)//发送网关数据
+		{
+			WG_DataSample(0xFF);
 		}
 
 		GPRS_Protocol_Response(RESTART|0x80, &reset_flag, 1);
@@ -662,6 +674,11 @@ static void vGSMTask(void *parameter)
 			{
 				if(xQueueReceive(GSM_GPRS_queue, message, 500/portTICK_RATE_MS) == pdTRUE)
 				{
+#if (RUN_DEBUG_MODE == 1)
+					printf_str("\r\nReceive: ");
+					prin_size = (chr2hex(*(message+13))<<4 | chr2hex(*(message+14)));
+					printf_buff(message, prin_size+18);
+#endif			
 					protocol_type = (chr2hex(message[11])<<4 | chr2hex(message[12]));
 					const WGMessageHandlerMap *map = GPRS_MessageMaps;
 					for(; map->type != WGPROTOCOL_NULL; ++map)
@@ -710,6 +727,9 @@ void GSMInit(void)
 	GSM_GPRS_queue = xQueueCreate(10, sizeof(GsmRxData.Buff));
 	GSM_AT_queue = xQueueCreate(1, sizeof(GsmRxData.Buff));
 	xTaskCreate(vGSMTask, "GSMTask", GSM_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, &xGSMTaskHandle);
+	/*************************************************************************************************
+	 由于GSM模块包含透传和非透传模式，而且在工作过程中需要切换，故GPRS发送接收必须在一个任务内
+	 *************************************************************************************************/
 }
 
 /*******************************END OF FILE************************************/

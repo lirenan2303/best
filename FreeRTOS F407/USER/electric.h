@@ -52,6 +52,8 @@ typedef struct
 	u8 pole_fault;
 }WG_AlarmFlagDef; 
 
+
+void WG_DataSample(u8 branch);
 void EleDMA_TxBuff(char *buf, u8 buf_size);
 void ElecHandleGWDataQuery(u8 *p);
 void ElecHandleSoftVerQuery(u8 *p);

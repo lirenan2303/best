@@ -32,8 +32,8 @@ extern AlarmParmTypeDef AlarmParm;
 u16 QueryUnitAddrBCD;
 static u16 CommErrorBuff_1[20]={0},CommErrorAddr[20]={0};
 extern WG_AlarmFlagDef WG_AlarmFlag;
-static u8 UnitErrorNum = 0;
-static u32 UnitQueryCount=0,LastAlarmTime=0;
+u8 UnitErrorNum = 0;
+static u32 UnitQueryCount=0,LastAlarmCount=0;
 
 ErrorStatus Lamp_Protocol_Check(u8 *buf, u8 *BufData_Size)
 {
@@ -58,7 +58,6 @@ ErrorStatus Lamp_Protocol_Check(u8 *buf, u8 *BufData_Size)
 
 void unit_comm_fail_check(void)
 {
-	u8 WG_query[]= {0x02,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x30,0x38,0x30,0x31,0x30,0x33,0x42,0x03};
 	u16 unit_addr_hex,i;
 	u16 index=0xFFFF,num=0,start_index=0;
 	u8 n,j,error_state=0,serv_state = ERROR,unit_state;
@@ -144,7 +143,7 @@ void unit_comm_fail_check(void)
 				}
 				
         WG_AlarmFlag.cont_off = 1;
-				xQueueSend(GSM_GPRS_queue, &WG_query, configTICK_RATE_HZ*5);//网关数据查询
+				WG_DataSample(0x00);
 			}
 			memset((char*)CommErrorBuff_1, 0, sizeof(CommErrorBuff_1));//清空第一次轮询不亮buf
 		}
@@ -171,7 +170,7 @@ void unit_comm_fail_check(void)
 		if(serv_state == SUCCESS)
 		{
 			WG_AlarmFlag.cont_off = 0;
-			xQueueSend(GSM_GPRS_queue, &WG_query, configTICK_RATE_HZ*5);//网关数据查询
+		  WG_DataSample(0x00);
 			memset((char*)CommErrorAddr, 0, sizeof(CommErrorAddr));//清空连续灯不亮数据
 		}
 	}
@@ -179,8 +178,11 @@ void unit_comm_fail_check(void)
 
 void QueryNextAddr(void)
 {
-	u8 WG_query[]= {0x02,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x39,0x30,0x38,0x30,0x31,0x30,0x33,0x42,0x03};
-		
+	u16 last_index;
+	
+	
+	last_index = LampAddr.index;
+	
 	if(LampAddr.index < (LampAddr.num-1))
 	{
 		LampAddr.index++;
@@ -194,26 +196,51 @@ void QueryNextAddr(void)
 	if(LampAttrSortTable[LampAddr.index].addr == 0)//无灯参数
 		return;
 	
-	if((UnitErrorNum < AlarmParm.ConnectFail_Num) && (LampAddr.num >= AlarmParm.ConnectFail_Num))
+
+	if(LampAddr.num >= AlarmParm.ConnectFail_Num)
 	{
-		UnitErrorNum++;
-	}
-		
-	if(UnitErrorNum >= AlarmParm.ConnectFail_Num)
-	{
-		LastAlarmTime = UnitQueryCount;
-		if(WG_AlarmFlag.cont_off == 0)
+		if(UnitErrorNum <= AlarmParm.ConnectFail_Num)
 		{
-			WG_AlarmFlag.cont_off = 1;
-			xQueueSend(GSM_GPRS_queue, &WG_query, configTICK_RATE_HZ*5);//网关数据查询
+			if(UnitErrorNum != 0)
+			{
+				if((LampAttrSortTable[last_index].branch == LampAttrSortTable[LampAddr.index].branch) && 
+					 (UnitWaitFlag == WAIT_READDATA_REPLY))
+				{
+					UnitErrorNum++;
+				}
+				else
+				{
+					UnitErrorNum = 1;
+				}
+			}
+			else
+				UnitErrorNum++;
 		}
-	}
-	else if((UnitQueryCount - LastAlarmTime) >= 2)
+			
+		if(UnitErrorNum > AlarmParm.ConnectFail_Num)
+		{
+			LastAlarmCount = UnitQueryCount;
+			if(WG_AlarmFlag.cont_off == 0)
+			{
+				WG_AlarmFlag.cont_off = 1;
+				WG_DataSample(0x00);
+			}
+		}
+		else if((UnitQueryCount - LastAlarmCount) >= 2)
+		{
+			if(WG_AlarmFlag.cont_off == 1)
+			{
+				WG_AlarmFlag.cont_off = 0;
+				WG_DataSample(0x00);
+			}
+		}
+  }
+	else
 	{
 		if(WG_AlarmFlag.cont_off == 1)
 		{
 			WG_AlarmFlag.cont_off = 0;
-			xQueueSend(GSM_GPRS_queue, &WG_query, configTICK_RATE_HZ*5);//网关数据查询
+			WG_DataSample(0x00);
 		}
 	}
 	
@@ -553,10 +580,18 @@ void unit_state_ctrl(u16 unit_addr_bcd, u8 now_state, u8 ctrl_state)
 		if((ctrl_state == DIMMING_RUN) && (run_state != SMART_RUN))
 		{
 		  UnitDimmmingCtrl(unit_addr_bcd, LampRunCtrlTable[unit_addr_hex].dimming_value);
+			
+#if (RUN_DEBUG_MODE == 1)
+			vTaskDelay(2000/portTICK_RATE_MS);//延迟2s被动采样单灯数据
+#endif
 		}
 		else if(ctrl_state == SOFTWARE_CLOSE)
 		{
 			UnitOnOffCtrl(unit_addr_bcd, 0x31);
+			
+#if (RUN_DEBUG_MODE == 1)
+			vTaskDelay(2000/portTICK_RATE_MS);//延迟2s被动采样单灯数据
+#endif
 		}
 		else if(ctrl_state == MAINRUN_FULL)
 		{
@@ -564,6 +599,10 @@ void unit_state_ctrl(u16 unit_addr_bcd, u8 now_state, u8 ctrl_state)
 			  CtrlBackRun(unit_addr_bcd);
 			else if(run_state == SOFTWARE_CLOSE)
 				UnitOnOffCtrl(unit_addr_bcd, 0x30);
+			
+#if (RUN_DEBUG_MODE == 1)
+			vTaskDelay(2000/portTICK_RATE_MS);//延迟2s被动采样单灯数据
+#endif
 		}
 	}
 }
@@ -578,11 +617,9 @@ void HandleUnitReadDataReply(u8 *p)
 	u16 NorReadBuff[12]={0};
 	u16 unit_addr_hex;
 	u8 data_size,i,buf[6],LastBuff[LAMP_DATA_TEMP_SIZE];
-
+	
   if(!Lamp_Protocol_Check(p, &data_size))
     return;
-
-	UnitErrorNum = 0;//清除连续灯不亮数目
 	
 	lamp_data.addr_bcd =  chr2hex(*(p+1))<<4;
 	lamp_data.addr_bcd = (chr2hex(*(p+2))+lamp_data.addr_bcd)<<4;

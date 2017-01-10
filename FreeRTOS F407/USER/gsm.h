@@ -13,7 +13,7 @@ typedef enum
 }GSM_TranModeType;
 
 #define MANAGER_ADDR_LENGTH  10
-#define GSM_BUFF_SIZE        200
+#define GSM_BUFF_SIZE        200 //与电量队列必须相等
 #define GSM_RESTART_TIME     100
 
 void GSMInit(void); 

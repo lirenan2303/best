@@ -55,4 +55,6 @@
 .\objects\time_plan.o: ..\..\FreeRTOS\Source\include\task.h
 .\objects\time_plan.o: ..\..\FreeRTOS\Source\include\list.h
 .\objects\time_plan.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\time_plan.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\time_plan.o: ..\..\USER\sys_debug.h
+.\objects\time_plan.o: ..\..\USER\electric.h
